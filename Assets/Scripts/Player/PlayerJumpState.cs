@@ -9,7 +9,7 @@ public class PlayerJumpState : IState
     public void Enter()
     {
         player.SpawnDustEffect(player.IsFacingRight);
-        player.Anim.Play(player.IsFacingRight ? "Jump_Right" : "Jump_Left");
+        player.Anim.Play("Jump");
         player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, player.JumpForce);
     }
 

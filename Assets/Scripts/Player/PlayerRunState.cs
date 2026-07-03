@@ -11,17 +11,12 @@ public class PlayerRunState : IState
 
     public void Enter()
     {
-        player.Anim.Play(player.IsFacingRight ? "Walk_Right" : "Walk_Left");
+        player.Anim.Play("Walk");
     }
 
     public void Update()
     {
         player.Rb.linearVelocity = new Vector2(player.MovementInput.x * player.MoveSpeed, player.Rb.linearVelocity.y);
-
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            player.Anim.Play("Walk_Left");
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            player.Anim.Play("Walk_Right");
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {

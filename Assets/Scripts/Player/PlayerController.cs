@@ -40,8 +40,16 @@ public class PlayerController : MonoBehaviour
 
         MovementInput = new Vector2(horizontalInput, verticalInput).normalized;
 
-        if (MovementInput.x > 0) IsFacingRight = true;
-        else if (MovementInput.x < 0) IsFacingRight = false;
+        if (MovementInput.x > 0)
+        {
+            IsFacingRight = true;
+            SpriteRendererComponent.flipX = false; 
+        }
+        else if (MovementInput.x < 0)
+        {
+            IsFacingRight = false;
+            SpriteRendererComponent.flipX = true;  
+        }
 
         if (currentState != null) currentState.Update();
     }

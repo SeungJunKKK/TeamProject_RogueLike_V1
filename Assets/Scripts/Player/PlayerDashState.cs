@@ -11,10 +11,9 @@ public class PlayerDashState : IState
     public void Enter()
     {
         player.SpawnDustEffect(player.IsFacingRight);
-        player.Anim.Play(player.IsFacingRight ? "Dash_Right" : "Dash_Left");
+        player.Anim.Play("Dash");
 
         dashTimer = player.DashDuration;
-
         float dirX = player.MovementInput.x != 0 ? Mathf.Sign(player.MovementInput.x) : (player.IsFacingRight ? 1f : -1f);
         dashDirection = new Vector2(dirX, 0f);
 

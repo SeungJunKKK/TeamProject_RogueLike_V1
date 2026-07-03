@@ -13,7 +13,7 @@ public class PlayerIdleState : IState
     public void Enter()
     {
         Debug.Log("시스템: 대기(Idle) 상태 진입 완료.");
-         player.Anim.Play("Idle_Down"); 
+         player.Anim.Play("Idle"); 
 
         player.Rb.linearVelocity = Vector2.zero;
     }
