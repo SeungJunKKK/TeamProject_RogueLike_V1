@@ -1405,10 +1405,10 @@ TextureImporter:
       name: Risk of Rain - Playable Characters - Commando_33
       rect:
         serializedVersion: 2
-        x: 15
-        y: 371
-        width: 9
-        height: 9
+        x: 6
+        y: 368
+        width: 18
+        height: 12
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1429,7 +1429,7 @@ TextureImporter:
         serializedVersion: 2
         x: 31
         y: 368
-        width: 16
+        width: 17
         height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
@@ -1471,10 +1471,10 @@ TextureImporter:
       name: Risk of Rain - Playable Characters - Commando_36
       rect:
         serializedVersion: 2
-        x: 64
-        y: 370
-        width: 7
-        height: 10
+        x: 54
+        y: 368
+        width: 17
+        height: 12
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1496,7 +1496,7 @@ TextureImporter:
         x: 79
         y: 368
         width: 16
-        height: 11
+        height: 12
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1517,8 +1517,8 @@ TextureImporter:
         serializedVersion: 2
         x: 103
         y: 368
-        width: 11
-        height: 11
+        width: 12
+        height: 12
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1581,10 +1581,10 @@ TextureImporter:
       name: Risk of Rain - Playable Characters - Commando_42
       rect:
         serializedVersion: 2
-        x: 15
-        y: 344
-        width: 18
-        height: 5
+        x: 4
+        y: 338
+        width: 29
+        height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1625,10 +1625,10 @@ TextureImporter:
       name: Risk of Rain - Playable Characters - Commando_48
       rect:
         serializedVersion: 2
-        x: 50
-        y: 345
-        width: 22
-        height: 4
+        x: 41
+        y: 338
+        width: 32
+        height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1649,7 +1649,7 @@ TextureImporter:
         serializedVersion: 2
         x: 77
         y: 338
-        width: 29
+        width: 9
         height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
@@ -1671,7 +1671,7 @@ TextureImporter:
         serializedVersion: 2
         x: 113
         y: 338
-        width: 19
+        width: 9
         height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
@@ -1693,7 +1693,7 @@ TextureImporter:
         serializedVersion: 2
         x: 150
         y: 338
-        width: 14
+        width: 9
         height: 11
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
@@ -4886,7 +4886,7 @@ TextureImporter:
         width: 20
         height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4908,7 +4908,7 @@ TextureImporter:
         width: 16
         height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4930,7 +4930,7 @@ TextureImporter:
         width: 16
         height: 5
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4952,7 +4952,7 @@ TextureImporter:
         width: 18
         height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -4961,6 +4961,72 @@ TextureImporter:
       bones: []
       spriteID: 79ec720cbf20c3345bdd788d358ba17b
       internalID: 1933992039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Risk of Rain - Playable Characters - Commando_16
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 338
+        width: 30
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85a9f7fe9321b5e4da2df2ad23fd4f5a
+      internalID: 1274797671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Risk of Rain - Playable Characters - Commando_17
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 338
+        width: 25
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33f7d28deb227a048a43256490553b17
+      internalID: -263463902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Risk of Rain - Playable Characters - Commando_20
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 338
+        width: 19
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed8cad04b045104c9a16150e1f5d73b
+      internalID: 1879369416
       vertices: []
       indices: 
       edges: []

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private IState currentState;
+    private IState m_CurrentState;
 
     public Rigidbody2D Rb { get; private set; }
     public Animator Anim { get; private set; }
@@ -51,14 +51,14 @@ public class PlayerController : MonoBehaviour
             SpriteRendererComponent.flipX = true;  
         }
 
-        if (currentState != null) currentState.Update();
+        if (m_CurrentState != null) m_CurrentState.Update();
     }
 
     public void ChangeState(IState newState)
     {
-        if (currentState != null) currentState.Exit();
-        currentState = newState;
-        currentState.Enter();
+        if (m_CurrentState != null) m_CurrentState.Exit();
+        m_CurrentState = newState;
+        m_CurrentState.Enter();
     }
 
     public void SpawnDustEffect(bool isFacingRight)
