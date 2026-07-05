@@ -31,6 +31,12 @@ public class PoolManager : Singleton<PoolManager>
 
     public void Return(GameObject prefab, GameObject obj)
     {
+        if (!m_Pools.ContainsKey(prefab))
+        {
+            Destroy(obj);
+            return;
+        }
+
         obj.GetComponent<IPoolable>()?.OnDespawn();
         obj.SetActive(false);
         m_Pools[prefab].Enqueue(obj);
