@@ -73,4 +73,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public virtual IState GetPrimaryAttackState() { return null; }
+    public virtual IState GetSecondaryAttackState() { return null; }
 }

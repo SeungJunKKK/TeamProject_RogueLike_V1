@@ -19,7 +19,7 @@ public class PlayerJumpState : IState
 
         if (m_Player.Rb.linearVelocity.y <= 0.01f && m_Player.Rb.linearVelocity.y >= -0.01f)
         {
-            if (m_Player.MovementInput.x != 0) m_Player.ChangeState(new PlayerRunState(m_Player));
+            if (m_Player.MovementInput.x != 0) m_Player.ChangeState(new PlayerWalkState(m_Player));
             else m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
     }

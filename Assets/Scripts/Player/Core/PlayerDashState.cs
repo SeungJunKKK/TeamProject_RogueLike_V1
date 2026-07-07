@@ -10,6 +10,7 @@ public class PlayerDashState : IState
 
     public void Enter()
     {
+
         m_Player.SpawnDustEffect(m_Player.IsFacingRight);
         m_Player.Anim.Play("Dash");
 
@@ -27,7 +28,7 @@ public class PlayerDashState : IState
 
         if (m_DashTimer <= 0)
         {
-            if (m_Player.MovementInput.x != 0) m_Player.ChangeState(new PlayerRunState(m_Player));
+            if (m_Player.MovementInput.x != 0) m_Player.ChangeState(new PlayerWalkState(m_Player));
             else m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
     }

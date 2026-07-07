@@ -23,20 +23,43 @@ public class PlayerIdleState : IState
     {
         if(m_Player.MovementInput.sqrMagnitude > 0.01f)
         {
-            m_Player.ChangeState(new PlayerRunState(m_Player));
+            m_Player.ChangeState(new PlayerWalkState(m_Player));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            m_Player.ChangeState(new PlayerJumpState(m_Player));
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            m_Player.ChangeState(new PlayerDashState(m_Player));
+            return;
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            m_Player.ChangeState(new Player.Commando.DoubleTapState(m_Player, 0.4f));
-            return;
+            IState attackState = m_Player.GetPrimaryAttackState();
+            if (attackState != null)
+            {
+                m_Player.ChangeState(attackState);
+                return;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            m_Player.ChangeState(new Player.Commando.FullMetalJacketState(m_Player, 0.2f));
-            return;
+            IState attackState = m_Player.GetSecondaryAttackState();
+            if (attackState != null)
+            {
+                m_Player.ChangeState(attackState);
+                return;
+            }
         }
+
+
+
 
     }
 

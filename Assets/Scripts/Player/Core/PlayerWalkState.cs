@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class PlayerRunState : IState
+public class PlayerWalkState : IState
 {
-    private readonly PlayerController m_Player; 
+    private readonly PlayerController m_Player;
 
-    public PlayerRunState(PlayerController player)
+    public PlayerWalkState(PlayerController player)
     {
         this.m_Player = player;
     }
@@ -18,7 +18,7 @@ public class PlayerRunState : IState
     {
         m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.MoveSpeed, m_Player.Rb.linearVelocity.y);
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             m_Player.ChangeState(new PlayerDashState(m_Player));
             return;
@@ -37,14 +37,22 @@ public class PlayerRunState : IState
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            m_Player.ChangeState(new Player.Commando.DoubleTapState(m_Player, 0.4f));
-            return;
+            IState attackState = m_Player.GetPrimaryAttackState();
+            if (attackState != null)
+            {
+                m_Player.ChangeState(attackState);
+                return;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            m_Player.ChangeState(new Player.Commando.FullMetalJacketState(m_Player, 0.2f));
-            return;
+            IState attackState = m_Player.GetSecondaryAttackState();
+            if (attackState != null)
+            {
+                m_Player.ChangeState(attackState);
+                return;
+            }
         }
     }
 
