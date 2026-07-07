@@ -5,13 +5,13 @@ public class TitleSceneManager : MonoBehaviour
 {
     [SerializeField] private TitleMenu titleMenu;
 
-    private void OnEnable()
+    private void OnEnable() // 이벤트
     {
         if (titleMenu != null)
         {
-            // UI 이벤트
             titleMenu.OnStartSinglePlayerPressed += HandleStartSinglePlayer;
-            titleMenu.OnOptionsPressed += HandleOptions;
+            titleMenu.OnFullscreenToggled += HandleFullscreenToggle;
+            titleMenu.OnVolumeChanged += HandleVolumeChange;
             titleMenu.OnQuitPressed += HandleQuit;
         }
     }
@@ -20,32 +20,36 @@ public class TitleSceneManager : MonoBehaviour
     {
         if (titleMenu != null)
         {
-            // 메모리 해제
             titleMenu.OnStartSinglePlayerPressed -= HandleStartSinglePlayer;
-            titleMenu.OnOptionsPressed -= HandleOptions;
             titleMenu.OnQuitPressed -= HandleQuit;
+            titleMenu.OnFullscreenToggled -= HandleFullscreenToggle;
+            titleMenu.OnVolumeChanged -= HandleVolumeChange;
         }
     }
 
-    private void HandleStartSinglePlayer()
+    private void HandleStartSinglePlayer() // 게임 시작 - GameScene 로드
     {
-        Debug.Log("GameScene으로 이동");
         SceneManager.LoadScene("GameScene");
     }
 
-    private void HandleOptions()
+    private void HandleQuit() // 게임 종료
     {
-        Debug.Log("Options 버튼이 눌림");
-        // 추후 옵션 팝업 추가 예정
-    }
-
-    private void HandleQuit()
-    {
-        Debug.Log("게임 종료");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
+    }
+
+    private void HandleFullscreenToggle(bool isFullscreen) // 전체화면 및 창모드 전환
+    {
+        Debug.Log($"전체화면 설정 변경: {isFullscreen}");
+        Screen.fullScreen = isFullscreen;
+    }
+
+    private void HandleVolumeChange(float volume) // 소리 줄이기 바
+    {
+        Debug.Log($"마스터 볼륨 변경: {volume}");
+        AudioListener.volume = volume;
     }
 }
