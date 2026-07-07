@@ -44,7 +44,16 @@ public class TitleSceneManager : MonoBehaviour
     private void HandleFullscreenToggle(bool isFullscreen) // 전체화면 및 창모드 전환
     {
         Debug.Log($"전체화면 설정 변경: {isFullscreen}");
-        Screen.fullScreen = isFullscreen;
+        if (isFullscreen)
+        {
+            // 체크됨 - 모니터 최대 해상도로 전체화면 전환
+            Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, FullScreenMode.FullScreenWindow);
+        }
+        else
+        {
+            // false- 창모드
+            Screen.SetResolution(1280, 720, false);
+        }
     }
 
     private void HandleVolumeChange(float volume) // 소리 줄이기 바
