@@ -9,7 +9,7 @@ public class TitleSceneManager : MonoBehaviour
     {
         if (titleMenu != null)
         {
-            // UI 이벤트 구독 (Subscribe)
+            // UI 이벤트
             titleMenu.OnStartSinglePlayerPressed += HandleStartSinglePlayer;
             titleMenu.OnOptionsPressed += HandleOptions;
             titleMenu.OnQuitPressed += HandleQuit;
@@ -20,7 +20,7 @@ public class TitleSceneManager : MonoBehaviour
     {
         if (titleMenu != null)
         {
-            // 메모리 누수 방지를 위한 구독 해제
+            // 메모리 해제
             titleMenu.OnStartSinglePlayerPressed -= HandleStartSinglePlayer;
             titleMenu.OnOptionsPressed -= HandleOptions;
             titleMenu.OnQuitPressed -= HandleQuit;
@@ -29,23 +29,23 @@ public class TitleSceneManager : MonoBehaviour
 
     private void HandleStartSinglePlayer()
     {
-        Debug.Log("GameScene으로 전환합니다.");
+        Debug.Log("GameScene으로 이동");
         SceneManager.LoadScene("GameScene");
     }
 
     private void HandleOptions()
     {
-        Debug.Log("Options 버튼이 눌렸습니다. (현재 미구현)");
-        // 추후 옵션 팝업을 띄우는 로직 등이 들어올 자리
+        Debug.Log("Options 버튼이 눌림");
+        // 추후 옵션 팝업 추가 예정
     }
 
     private void HandleQuit()
     {
-        Debug.Log("게임 프로그램을 종료합니다.");
+        Debug.Log("게임 종료");
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // 에디터 환경에서 작동
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit(); // 빌드된 게임에서 작동
+        Application.Quit();
 #endif
     }
 }
