@@ -24,6 +24,7 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         m_IsLoading = true;
         m_LoadingScreen.SetActive(true);
+        EventBus.Publish(new SceneLoadStartedEvent { SceneName = scene });
 
         PoolManager.Instance.ClearAll();
 
@@ -39,7 +40,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
         op.allowSceneActivation = false;
         // test
-        //yield return new WaitForSecondsRealtime(2f);
+        // yield return new WaitForSecondsRealtime(2f);
 
         while (!op.isDone)
         {
@@ -51,6 +52,7 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null; 
         }
 
+        EventBus.Publish(new SceneLoadCompletedEvent { SceneName = scene });
         m_LoadingScreen.SetActive(false);
         m_IsLoading = false;
     }
