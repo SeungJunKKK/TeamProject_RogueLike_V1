@@ -57,10 +57,6 @@ public class PlayerIdleState : IState
                 return;
             }
         }
-
-
-
-
     }
 
     public void Exit()
