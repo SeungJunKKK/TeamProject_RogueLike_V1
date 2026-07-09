@@ -41,7 +41,8 @@ public class DoubleTapState : PlayerAttackState
             TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
             if (dummy != null)
             {
-                dummy.TakeDamage(10f); 
+                dummy.TakeDamage(10f,shootDirection,1f);
+                m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
                 break;
             }
         }

@@ -25,8 +25,8 @@ public class FullMetalJacketState : PlayerAttackState
             TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
             if (dummy != null)
             {
-                dummy.TakeDamage(25f); 
-                
+                dummy.TakeDamage(25f, shootDirection, 2f);
+                m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
             }
         }
     }
