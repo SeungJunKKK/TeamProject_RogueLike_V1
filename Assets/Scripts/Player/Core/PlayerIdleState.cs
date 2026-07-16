@@ -31,31 +31,35 @@ public class PlayerIdleState : IState
             m_Player.ChangeState(new PlayerJumpState(m_Player));
             return;
         }
-
-        if (Input.GetKeyDown(KeyCode.C))
+        // Z 스킬
+        if (Input.GetKeyDown(KeyCode.Z) && m_Player.CooldownManager.IsSkillReady(SkillType.Primary_Z))
         {
-            m_Player.ChangeState(new PlayerDashState(m_Player));
+            IState state = m_Player.GetPrimaryAttackState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
+        }
+        // X 스킬
+        if (Input.GetKeyDown(KeyCode.X) && m_Player.CooldownManager.IsSkillReady(SkillType.Secondary_X))
+        {
+            IState state = m_Player.GetSecondaryAttackState();
+            if (state != null) m_Player.ChangeState(state);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        // C 스킬 
+        if (Input.GetKeyDown(KeyCode.C) && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            IState attackState = m_Player.GetPrimaryAttackState();
-            if (attackState != null)
-            {
-                m_Player.ChangeState(attackState);
-                return;
-            }
+            IState state = m_Player.GetUtilitySkillState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        // V 스킬 
+        if (Input.GetKeyDown(KeyCode.V) && m_Player.CooldownManager.IsSkillReady(SkillType.Ultimate_V))
         {
-            IState attackState = m_Player.GetSecondaryAttackState();
-            if (attackState != null)
-            {
-                m_Player.ChangeState(attackState);
-                return;
-            }
+            IState state = m_Player.GetUltimateSkillState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
         }
 
 

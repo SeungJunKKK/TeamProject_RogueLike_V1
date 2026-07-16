@@ -18,41 +18,41 @@ public class PlayerWalkState : IState
     {
         m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.MoveSpeed, m_Player.Rb.linearVelocity.y);
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            m_Player.ChangeState(new PlayerDashState(m_Player));
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            m_Player.ChangeState(new PlayerJumpState(m_Player));
-            return;
-        }
-
         if (m_Player.MovementInput.x == 0)
         {
             m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        // Z 스킬 (평타)
+        if (Input.GetKeyDown(KeyCode.Z) && m_Player.CooldownManager.IsSkillReady(SkillType.Primary_Z))
         {
-            IState attackState = m_Player.GetPrimaryAttackState();
-            if (attackState != null)
-            {
-                m_Player.ChangeState(attackState);
-                return;
-            }
+            IState state = m_Player.GetPrimaryAttackState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        // X 스킬 (강공격)
+        if (Input.GetKeyDown(KeyCode.X) && m_Player.CooldownManager.IsSkillReady(SkillType.Secondary_X))
         {
-            IState attackState = m_Player.GetSecondaryAttackState();
-            if (attackState != null)
-            {
-                m_Player.ChangeState(attackState);
-                return;
-            }
+            IState state = m_Player.GetSecondaryAttackState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
+        }
+
+        // C 스킬 (유틸기)
+        if (Input.GetKeyDown(KeyCode.C) && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
+        {
+            IState state = m_Player.GetUtilitySkillState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
+        }
+
+        // V 스킬 (궁극기)
+        if (Input.GetKeyDown(KeyCode.V) && m_Player.CooldownManager.IsSkillReady(SkillType.Ultimate_V))
+        {
+            IState state = m_Player.GetUltimateSkillState();
+            if (state != null) m_Player.ChangeState(state);
+            return;
         }
     }
 

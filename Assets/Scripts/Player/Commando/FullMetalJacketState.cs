@@ -6,7 +6,7 @@ namespace Player.Commando
 public class FullMetalJacketState : PlayerAttackState
 {
     public FullMetalJacketState(PlayerController player, float duration)
-        : base(player, "X_FullMetalJacket", duration)
+        : base(player, "X_FullMetalJacket", duration,SkillType.Secondary_X)
     {
     }
 

@@ -10,17 +10,22 @@ public abstract class PlayerAttackState : IState
     protected readonly string m_AnimName;
     protected float m_AttackTimer;
 
-    public PlayerAttackState(PlayerController player, string animName, float duration)
+    protected readonly SkillType m_SkillType;
+
+
+    public PlayerAttackState(PlayerController player, string animName, float duration, SkillType skillType)
     {
         m_Player = player;
         m_AnimName = animName;
         m_AttackTimer = duration;
+        m_SkillType = skillType;
     }
 
     public virtual void Enter()
     {
         m_Player.Rb.linearVelocity = Vector2.zero;
         m_Player.Anim.Play(m_AnimName);
+        m_Player.CooldownManager.UseSkill(m_SkillType);
 
         ExecuteShoot();
     }

@@ -9,7 +9,7 @@ public class DoubleTapState : PlayerAttackState
     private bool m_HasFiredSecondShot;
 
     public DoubleTapState(PlayerController player, float duration)
-        : base(player, "Z_DoubleTap", duration) 
+        : base(player, "Z_DoubleTap", duration,SkillType.Primary_Z) 
     {
         m_TotalDuration = duration;
         m_HasFiredSecondShot = false;

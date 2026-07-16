@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 3693393217399646514}
   - component: {fileID: 2157723758274326119}
   - component: {fileID: 3231689884246160202}
+  - component: {fileID: 1396024979322899933}
   m_Layer: 0
   m_Name: Commando
   m_TagString: Player
@@ -417,6 +418,32 @@ MonoBehaviour:
   DashSpeed: 15
   DashDuration: 0.2
   ImpulseSource: {fileID: 2157723758274326119}
+  CooldownManager: {fileID: 0}
+--- !u!114 &1396024979322899933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435904605620967543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863c7332926aa554a9b9fd76a63dcd10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCooldownManager
+  Skills:
+  - Type: 0
+    MaxCooldown: 0
+    CurrentCooldown: 0
+  - Type: 1
+    MaxCooldown: 5
+    CurrentCooldown: 0
+  - Type: 2
+    MaxCooldown: 2
+    CurrentCooldown: 0
+  - Type: 3
+    MaxCooldown: 10
+    CurrentCooldown: 0
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0

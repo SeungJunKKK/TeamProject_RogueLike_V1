@@ -12,24 +12,24 @@ public class PlayerController : MonoBehaviour
     public int OriginalLayer { get; private set; }  // 원래 레이어 기억용
     public virtual IState GetPrimaryAttackState() { return null; }
     public virtual IState GetSecondaryAttackState() { return null; }
+    public virtual IState GetUtilitySkillState() { return null; }
+    public virtual IState GetUltimateSkillState() { return null; }
 
     public SpriteRenderer SpriteRendererComponent { get; private set; }
 
     [Header("Player Stats")]
     public float MoveSpeed = 5f;
     public float JumpForce = 12f;
-  
     [Header("Effects")]
     public GameObject DustPrefab;
     public Transform FeetPos;
-
     [Header("Dash Settings")]
     public float DashSpeed = 15f;
     public float DashDuration = 0.2f;
-
     [Header("Hit Feedback")]
     public CinemachineImpulseSource ImpulseSource;
-
+    [Header("Skill System")]
+    public SkillCooldownManager CooldownManager;
 
 
     public Vector2 MovementInput { get; private set; }
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         Rb = GetComponent<Rigidbody2D>();
         Anim = GetComponentInChildren<Animator>();
         SpriteRendererComponent = GetComponentInChildren<SpriteRenderer>();
-
+        CooldownManager = GetComponent<SkillCooldownManager>();
         OriginalLayer = gameObject.layer;
     }
 
