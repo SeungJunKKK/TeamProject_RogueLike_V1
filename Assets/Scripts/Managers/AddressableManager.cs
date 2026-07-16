@@ -7,6 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class AddressableManager : Singleton<AddressableManager>
 {
     // 로드된 에셋들의 핸들(Handle)을 관리하는 딕셔너리 (메모리 해제할 때 주소로 찾기 위함)
+    // 테스트
     private readonly Dictionary<string, AsyncOperationHandle> _loadedAssets = new();
 
 
