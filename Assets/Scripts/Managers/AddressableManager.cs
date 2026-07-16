@@ -4,26 +4,11 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class AddressableManager : MonoBehaviour
+public class AddressableManager : Singleton<AddressableManager>
 {
-    // 싱글톤 인스턴스
-    public static AddressableManager Instance { get; private set; }
-
     // 로드된 에셋들의 핸들(Handle)을 관리하는 딕셔너리 (메모리 해제할 때 주소로 찾기 위함)
     private readonly Dictionary<string, AsyncOperationHandle> _loadedAssets = new();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     #region Load (에셋 로드)
     public void LoadAssetAsync<T>(string key, Action<T> onComplete) where T : UnityEngine.Object
