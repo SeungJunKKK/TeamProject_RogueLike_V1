@@ -47,10 +47,10 @@ public class PlayerIdleState : IState
         }
 
         // C 스킬 
-        if (Input.GetKeyDown(KeyCode.C) && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.C))
+             && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            IState state = m_Player.GetUtilitySkillState();
-            if (state != null) m_Player.ChangeState(state);
+            m_Player.ChangeState(new PlayerDashState(m_Player));
             return;
         }
 
