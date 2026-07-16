@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
+    [Header("Title Menu")]
+    [SerializeField] private Image backgroundImage;
+
     [Header("Main Menu Buttons")]
     [SerializeField] private Button startSinglePlayerButton;
     [SerializeField] private Button optionsButton;
@@ -42,6 +45,14 @@ public class TitleMenu : MonoBehaviour
     {
         fullscreenToggle.isOn = Screen.fullScreen;
         volumeSlider.value = AudioListener.volume;
+    }
+
+    public void SetBackgroundImage(Sprite sprite)
+    {
+        if (backgroundImage != null)
+        {
+            backgroundImage.sprite = sprite;
+        }
     }
 
     public void OpenOptionsPopup()

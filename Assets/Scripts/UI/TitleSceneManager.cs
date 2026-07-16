@@ -4,6 +4,20 @@ using UnityEngine.SceneManagement;
 public class TitleSceneManager : MonoBehaviour
 {
     [SerializeField] private TitleMenu titleMenu;
+    [SerializeField] private string m_BackgroundAddress = "MainMenuBackground"; // Addressable 적용
+
+    private void Start()
+    {
+        // 씬이 시작되면 어드레서블 매니저를 통해 배경 이미지를 비동기로 로드
+        AddressableManager.Instance.LoadAssetAsync<Sprite>(m_BackgroundAddress, (sprite) =>
+        {
+            if (sprite != null && titleMenu != null)
+            {
+                // 로드가 완료되면 TitleScene에 적용
+                titleMenu.SetBackgroundImage(sprite);
+            }
+        });
+    }
 
     private void OnEnable() // 이벤트
     {
@@ -29,6 +43,9 @@ public class TitleSceneManager : MonoBehaviour
 
     private void HandleStartSinglePlayer() // 게임 시작 - GameScene 로드
     {
+        // 게임 씬으로 넘어가기 전에 사용 완료한 배경 이미지 메모리 해제
+        AddressableManager.Instance.UnloadAsset(m_BackgroundAddress);
+        
         SceneManager.LoadScene("GameScene");
     }
 

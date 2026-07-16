@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: 26d2b5cf672bcc3458d514c5cd797ed5
   m_SerializeEntries:
   - m_GUID: dcd62aaa222268e4ea885aa3aef719b7
-    m_Address: Assets/Sprites/UI/MainMenu/MainMenu.jpg
+    m_Address: MainMenuBackground
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
