@@ -10,6 +10,12 @@ public struct SceneLoadCompletedEvent
     public string SceneName;
 }
 
+public struct GameStateChangedEvent
+{
+    public GameState Previous;
+    public GameState Current;
+}
+
 // 몬스터가 피격 P4가 발행, P3 플로팅 텍스트 구독
 public struct MonsterDamagedEvent
 {
