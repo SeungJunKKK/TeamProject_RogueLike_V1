@@ -35,17 +35,28 @@ public class DoubleTapState : PlayerAttackState
 
             if (m_Player.DoubleTapProjectilePrefab != null)
             {
+                DamageInfo attackInfo = new DamageInfo
+                {
+                    Amount = 10f,
+                    HitDirection = shootDirection,
+                    KnockbackForce = 15f,
+                    Attacker = m_Player.gameObject,
+                    IsCrit = false,
+                    CanProc = true
+                };
                 EventBus.Publish(new SpawnProjectileEvent
                 {
                     ProjectilePrefab = m_Player.DoubleTapProjectilePrefab,
                     Position = shootOrigin,
                     Rotation = m_Player.transform.rotation,
                     Direction = shootDirection,
-                    Damage = 10f,
                     Speed = 20f,
-                    IsPiercing = false 
+                    IsPiercing = false,
+
+                    AttackData = attackInfo 
                 });
             }
+
             m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
         }
     }

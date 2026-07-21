@@ -10,17 +10,21 @@ public struct SceneLoadCompletedEvent
     public string SceneName;
 }
 
+//총알 생성 및 물리적만 담당 
 public struct SpawnProjectileEvent
 {
+    //시각/물리 데이터 
     public GameObject ProjectilePrefab;
     public Vector3 Position;
     public Quaternion Rotation;
     public Vector2 Direction;
-    public float Damage;
     public float Speed; 
-
     public bool IsPiercing;
+    //===============//데미지 데이터
+    public DamageInfo AttackData;     
 }
+
+
 public struct SpawnVFXEvent
 {
     public GameObject VFXPrefab;
@@ -40,7 +44,6 @@ public struct MonsterDamagedEvent
     public Vector2 HitPoint; // 텍스트 뜰 위치
     public bool IsCrit; // 크리티컬 여부
 }
-
 // 몬스터 사망 P4가 발행, P3 경험치·UI 킬카운트가 구독
 public struct MonsterDiedEvent
 {

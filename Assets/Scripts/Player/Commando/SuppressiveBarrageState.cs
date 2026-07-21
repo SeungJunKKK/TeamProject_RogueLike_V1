@@ -66,10 +66,21 @@ namespace Player.Commando
 
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(18f, shootDirection, 20f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = 30f,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 20f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = false,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }

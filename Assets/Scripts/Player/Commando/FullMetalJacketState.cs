@@ -22,15 +22,25 @@ namespace Player.Commando
 
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(25f, shootDirection, 25f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = 25f,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 25f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = false,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }
 
-            // 💡 3. 레이저의 중심점 보정 (총구 위치에서 7.5만큼 앞으로!)
             Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
 
             if (m_Player.FullMetalJacketPrefab != null)
@@ -39,7 +49,6 @@ namespace Player.Commando
                 {
                     VFXPrefab = m_Player.FullMetalJacketPrefab,
                     Position = vfxPosition,
-                    // 💡 4. 플레이어의 각도를 그대로 복사해서 레이저에 적용하면 끝!
                     Rotation = m_Player.transform.rotation
                 });
             }

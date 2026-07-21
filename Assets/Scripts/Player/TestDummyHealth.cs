@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestDummyHealth : MonoBehaviour
+public class TestDummyHealth : MonoBehaviour, IDamageable
 {
     public float MaxHealth = 100f;
     private float m_CurrentHealth;
@@ -16,21 +16,20 @@ public class TestDummyHealth : MonoBehaviour
         m_CurrentHealth = MaxHealth;
     }
 
-    public void TakeDamage(float damage, Vector2 knockbackDir, float knockbackForce)
+    public void TakeDamage(DamageInfo info)
     {
-        m_CurrentHealth -= damage;
-
-        Debug.Log($"[적중] {gameObject.name}이 {damage}의 피해를 입었습니다. (남은 체력: {m_CurrentHealth})");
+        m_CurrentHealth -= info.Amount;
+        Debug.Log($"<color=red>맞았다!</color> 입은 데미지: {info.Amount} / 남은 체력: {m_CurrentHealth}");
 
         if (m_Rb != null)
         {
-            m_Rb.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+            m_Rb.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);
         }
 
         if (m_CurrentHealth <= 0)
         {
             Debug.Log($"{gameObject.name} 파괴됨!");
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
     }
 }
