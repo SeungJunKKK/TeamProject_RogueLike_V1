@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 3001933326296065099}
   - component: {fileID: 2991529063280056685}
   - component: {fileID: 3552086359507536679}
-  - component: {fileID: 735540619405035887}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -216,24 +215,6 @@ CapsuleCollider2D:
   m_Offset: {x: -0.05, y: 0}
   m_Size: {x: 0.15, y: 0.4}
   m_Direction: 0
---- !u!114 &735540619405035887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7294628522276878946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14723c7780b3a344ea991b38e8823c5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CommandoController
-  MoveSpeed: 3
-  JumpForce: 5
-  DashSpeed: 5
-  DashDuration: 0.75
-  DustPrefab: {fileID: 3824649983267012304, guid: 6ec33161be7b9a848a07b66646a5c304, type: 3}
-  FeetPos: {fileID: 0}
 --- !u!1 &7397461434482303296
 GameObject:
   m_ObjectHideFlags: 0
