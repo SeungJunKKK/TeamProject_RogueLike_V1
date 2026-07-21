@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
     [Header("Skill Prefabs")]
     public GameObject DoubleTapProjectilePrefab;
     public GameObject FullMetalJacketPrefab;
+    public GameObject SuppressiveFireVFXPrefab; 
+    public GameObject SuppressiveBarrageVFXPrefab;
+
+
     [Header("Muzzle Position")]
     public Transform MuzzlePos;
 

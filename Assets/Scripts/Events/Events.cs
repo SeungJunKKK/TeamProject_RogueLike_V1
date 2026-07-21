@@ -17,7 +17,7 @@ public struct SpawnProjectileEvent
     public Quaternion Rotation;
     public Vector2 Direction;
     public float Damage;
-    public float Speed;
+    public float Speed; 
 
     public bool IsPiercing;
 }
