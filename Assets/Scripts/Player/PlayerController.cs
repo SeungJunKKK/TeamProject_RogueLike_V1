@@ -30,9 +30,15 @@ public class PlayerController : MonoBehaviour
     public CinemachineImpulseSource ImpulseSource;
     [Header("Skill System")]
     public SkillCooldownManager CooldownManager;
+    [Header("Skill Prefabs")]
+    public GameObject DoubleTapProjectilePrefab;
+    public GameObject FullMetalJacketPrefab;
+    [Header("Muzzle Position")]
+    public Transform MuzzlePos;
 
 
     public Vector2 MovementInput { get; private set; }
+
     public bool IsFacingRight { get; private set; } = true;
 
     private void Awake()
@@ -59,17 +65,19 @@ public class PlayerController : MonoBehaviour
         if (MovementInput.x > 0)
         {
             IsFacingRight = true;
-            SpriteRendererComponent.flipX = false; 
+            //SpriteRendererComponent.flipX = false;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         else if (MovementInput.x < 0)
         {
             IsFacingRight = false;
-            SpriteRendererComponent.flipX = true;  
+            //SpriteRendererComponent.flipX = true;
+            transform.rotation = Quaternion.Euler(0, 180, 0);
         }
 
         if (m_CurrentState != null) m_CurrentState.Update();
     }
-
+ 
     public void ChangeState(IState newState)
     {
         if (m_CurrentState != null) m_CurrentState.Exit();
@@ -105,6 +113,14 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0.1f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
+    }
+
+    public void OnSkillActionTrigger()
+    {
+        if (m_CurrentState is PlayerAttackState attackState)
+        {
+            attackState.OnActionTriggered();
+        }
     }
 
 }

@@ -23,6 +23,12 @@ public class PlayerWalkState : IState
             m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            m_Player.ChangeState(new PlayerJumpState(m_Player));
+            return;
+        }
+
         // Z 스킬 (평타)
         if (Input.GetKeyDown(KeyCode.Z) && m_Player.CooldownManager.IsSkillReady(SkillType.Primary_Z))
         {
@@ -40,10 +46,10 @@ public class PlayerWalkState : IState
         }
 
         // C 스킬 (유틸기)
-        if (Input.GetKeyDown(KeyCode.C) && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.C))
+             && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            IState state = m_Player.GetUtilitySkillState();
-            if (state != null) m_Player.ChangeState(state);
+            m_Player.ChangeState(new PlayerDashState(m_Player));
             return;
         }
 

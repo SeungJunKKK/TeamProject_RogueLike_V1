@@ -13,9 +13,7 @@ public class PlayerIdleState : IState
     public void Enter()
     {
         //Debug.Log("시스템: 대기(Idle) 상태 진입 완료.");
-
-         m_Player.Anim.Play("Idle"); 
-
+        m_Player.Anim.Play("Idle"); 
         m_Player.Rb.linearVelocity = Vector2.zero;
     }
 
@@ -25,7 +23,6 @@ public class PlayerIdleState : IState
         {
             m_Player.ChangeState(new PlayerWalkState(m_Player));
         }
-
         if (Input.GetKeyDown(KeyCode.Space))
         {
             m_Player.ChangeState(new PlayerJumpState(m_Player));
@@ -61,10 +58,6 @@ public class PlayerIdleState : IState
             if (state != null) m_Player.ChangeState(state);
             return;
         }
-
-
-
-
     }
 
     public void Exit()

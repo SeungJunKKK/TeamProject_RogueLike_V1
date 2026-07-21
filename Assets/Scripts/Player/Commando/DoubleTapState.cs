@@ -25,29 +25,28 @@ public class DoubleTapState : PlayerAttackState
             m_HasFiredSecondShot = true;
         }
     }
-
-    protected override void ExecuteShoot()
-    {
-        float facingDir = m_Player.IsFacingRight ? 1f : -1f;
-        Vector2 shootDirection = new Vector2(facingDir, 0f);
-        Vector2 shootOrigin = new Vector2(m_Player.transform.position.x, m_Player.transform.position.y + 0.2f);
-
-        Debug.DrawRay(shootOrigin, shootDirection * 10f, Color.red, 1f);
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, 10f);
-
-        foreach (RaycastHit2D hit in hits)
+        protected override void ExecuteShoot()
         {
-            TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-            if (dummy != null)
+            Vector2 shootDirection = m_Player.transform.right;
+
+            Vector2 shootOrigin = m_Player.MuzzlePos != null
+                                  ? (Vector2)m_Player.MuzzlePos.position
+                                  : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
+
+            if (m_Player.DoubleTapProjectilePrefab != null)
             {
-                dummy.TakeDamage(10f,shootDirection,1f);
-                m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
-                break;
+                EventBus.Publish(new SpawnProjectileEvent
+                {
+                    ProjectilePrefab = m_Player.DoubleTapProjectilePrefab,
+                    Position = shootOrigin,
+                    Rotation = m_Player.transform.rotation,
+                    Direction = shootDirection,
+                    Damage = 10f,
+                    Speed = 20f,
+                    IsPiercing = false 
+                });
             }
+            m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
         }
     }
-}
-
-
 }

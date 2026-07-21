@@ -27,7 +27,7 @@ public abstract class PlayerAttackState : IState
         m_Player.Anim.Play(m_AnimName);
         m_Player.CooldownManager.UseSkill(m_SkillType);
 
-        ExecuteShoot();
+        //ExecuteShoot();
     }
 
     public virtual void Update()
@@ -39,10 +39,13 @@ public abstract class PlayerAttackState : IState
             m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
     }
-
     public virtual void Exit()
     {
         // 상태를 나갈 때의 초기화 
+    }
+    public virtual void OnActionTriggered()
+    {
+        ExecuteShoot();
     }
 
     protected abstract void ExecuteShoot();

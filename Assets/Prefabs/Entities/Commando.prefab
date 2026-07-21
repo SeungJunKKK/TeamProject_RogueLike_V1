@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &432366941883918593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2341271734446087110}
+  m_Layer: 0
+  m_Name: MuzzlePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2341271734446087110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432366941883918593}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.093, y: 0.078, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3144383756409554526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6293781722361756835
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,6 +275,7 @@ Transform:
   - {fileID: 5023713092067731245}
   - {fileID: 8819557065366225776}
   - {fileID: 213504185392303094}
+  - {fileID: 2341271734446087110}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1464858525559069734
@@ -338,8 +370,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.25967377
-        value: 0.05036572
+        time: 0.24673432
+        value: 0.06943157
         inSlope: 0.00043046635
         outSlope: 0.00043046635
         tangentMode: 0
@@ -347,8 +379,8 @@ MonoBehaviour:
         inWeight: 0.33333334
         outWeight: 0.24924785
       - serializedVersion: 3
-        time: 0.7029766
-        value: -0.017764542
+        time: 0.69614065
+        value: -0.027286027
         inSlope: -0.099623084
         outSlope: -0.099623084
         tangentMode: 0
@@ -419,6 +451,9 @@ MonoBehaviour:
   DashDuration: 0.2
   ImpulseSource: {fileID: 2157723758274326119}
   CooldownManager: {fileID: 0}
+  DoubleTapProjectilePrefab: {fileID: 3489686623871416965, guid: db6d94772477c0f47852e41cbc582871, type: 3}
+  FullMetalJacketPrefab: {fileID: 7992673069117770076, guid: fdc55c7d997756740b42ebbbd16518f2, type: 3}
+  MuzzlePos: {fileID: 2341271734446087110}
 --- !u!114 &1396024979322899933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,9 +472,6 @@ MonoBehaviour:
     CurrentCooldown: 0
   - Type: 1
     MaxCooldown: 5
-    CurrentCooldown: 0
-  - Type: 2
-    MaxCooldown: 2
     CurrentCooldown: 0
   - Type: 3
     MaxCooldown: 10
