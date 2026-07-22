@@ -3,17 +3,19 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public GameState State { get; private set; }
-    public bool IsPaused =>  State == GameState.Paused;
-
+    public bool IsPaused => State == EGameState.Paused;
     private Coroutine m_HitStopCoroutine;
+
+    public EGameState State { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
 
         if (Instance != null && Instance != this)
+        {
             return;
+        }
 
         EventBus.Subscribe<PlayerDiedEvent>(OnPlayerDied);
     }
@@ -24,12 +26,50 @@ public class GameManager : Singleton<GameManager>
     }
     public void RequestHitStop(float duration)
     {
-        if (State != GameState.Playing) return;
+        if (State != EGameState.Playing)
+        {
+            return;
+        }
 
-        StopHitStop();
+        CancelHitStop();
 
         m_HitStopCoroutine = StartCoroutine(HitStopRoutine(duration));
     }
+
+    public void StartGame()
+    {
+        if (State != EGameState.Ready)
+        {
+            return;
+        }
+
+        ChangeState(EGameState.Playing);
+    }
+
+    public void SetPause(bool paused)
+    {
+        if (paused)
+        {
+            if (State != EGameState.Playing)
+            {
+                return;
+            }
+            CancelHitStop();
+            ChangeState(EGameState.Paused);
+            Time.timeScale = 0.0f;
+        }
+        else
+        {
+            if (State != EGameState.Paused)
+            {
+                return;
+            }
+
+            ChangeState(EGameState.Playing);
+            Time.timeScale = 1.0f;
+        }
+    }
+
 
     private IEnumerator HitStopRoutine(float duration)
     {
@@ -41,57 +81,36 @@ public class GameManager : Singleton<GameManager>
         m_HitStopCoroutine = null;
     }
 
-    private void StopHitStop()
+    private void CancelHitStop()
     {
         if (m_HitStopCoroutine == null)
+        {
             return;
+        }
         StopCoroutine(m_HitStopCoroutine);
         m_HitStopCoroutine = null;
     }
 
-    private void ChangeState(GameState next)
+    private void ChangeState(EGameState next)
     {
-        if (State == next) return;
-        GameState prev = State;
+        if (State == next)
+        {
+            return;
+        }
+        EGameState prev = State;
         State = next;
 
-        EventBus.Publish(new GameStateChangedEvent { Previous = prev, Current = State});
+        EventBus.Publish(new GameStateChangedEvent { Previous = prev, Current = State });
     }
 
     private void OnPlayerDied(PlayerDiedEvent e)
     {
-        if (State != GameState.Playing)
+        if (State != EGameState.Playing)
+        {
             return;
-        StopHitStop();
-        ChangeState(GameState.GameOver);
+        }
+        CancelHitStop();
+        ChangeState(EGameState.GameOver);
         Time.timeScale = 0.0f;
-    }
-
-    public void StartGame()
-    {
-        if (State != GameState.Ready)
-            return;
-
-        ChangeState(GameState.Playing);
-    }
-
-    public void SetPause(bool paused)
-    {
-        if (paused)
-        {
-            if (State != GameState.Playing)
-                return;
-            StopHitStop();
-            ChangeState(GameState.Paused);
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            if (State != GameState.Paused)
-                return;
-
-            ChangeState(GameState.Playing);
-            Time.timeScale = 1.0f;
-        }
     }
 }

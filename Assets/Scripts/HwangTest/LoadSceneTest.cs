@@ -14,7 +14,7 @@ public class LoadSceneTest : MonoBehaviour
             Debug.Log($"[Test] Current Scene: {SceneManager.GetActiveScene().name}");
 
             string target = SceneManager.GetActiveScene().name == "BootScene" 
-                                                                ? "TestScene" 
+                                                                ? "HwangTestScene" 
                                                                 : "BootScene";
 
             SceneLoader.Instance.LoadScene(target);
