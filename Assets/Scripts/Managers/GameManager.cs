@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public bool IsPaused => State == EGameState.Paused;
     private Coroutine m_HitStopCoroutine;
 
     public EGameState State { get; private set; }
+    public int Gold { get; private set; }
+    public bool IsPaused => State == EGameState.Paused;
 
     protected override void Awake()
     {
@@ -18,11 +19,13 @@ public class GameManager : Singleton<GameManager>
         }
 
         EventBus.Subscribe<PlayerDiedEvent>(OnPlayerDied);
+        EventBus.Subscribe<MonsterDiedEvent>(OnMonsterDied);
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<PlayerDiedEvent>(OnPlayerDied);
+        EventBus.Unsubscribe<MonsterDiedEvent>(OnMonsterDied);
     }
     public void RequestHitStop(float duration)
     {
@@ -42,7 +45,7 @@ public class GameManager : Singleton<GameManager>
         {
             return;
         }
-
+        Gold = 0;
         ChangeState(EGameState.Playing);
     }
 
@@ -70,6 +73,26 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// 골드를 추가하고 GoldChangedEvent를 발행. 몬스터 처치 등에서 호출
+    /// </summary>
+    /// <param name="amount"></param>
+    public void AddGold(int amount)
+    {
+        Gold += amount;
+        EventBus.Publish(new GoldChangedEvent { Current = Gold, Delta = amount });
+    }
+
+    public bool TrySpendGold(int amount)
+    {
+        if (Gold < amount)
+        {
+            return false;
+        }
+        Gold -= amount;
+        EventBus.Publish(new GoldChangedEvent { Current = Gold, Delta = -amount });
+        return true;
+    }
 
     private IEnumerator HitStopRoutine(float duration)
     {
@@ -112,5 +135,10 @@ public class GameManager : Singleton<GameManager>
         CancelHitStop();
         ChangeState(EGameState.GameOver);
         Time.timeScale = 0.0f;
+    }
+
+    private void OnMonsterDied(MonsterDiedEvent e)
+    {
+        AddGold(e.Gold);
     }
 }
