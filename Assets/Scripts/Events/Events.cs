@@ -12,8 +12,8 @@ public struct SceneLoadCompletedEvent
 
 public struct GameStateChangedEvent
 {
-    public GameState Previous;
-    public GameState Current;
+    public EGameState Previous;
+    public EGameState Current;
 }
 
 // 몬스터가 피격 P4가 발행, P3 플로팅 텍스트 구독
