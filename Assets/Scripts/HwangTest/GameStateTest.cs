@@ -45,5 +45,17 @@ public class GameStateTest : MonoBehaviour
         {
             Debug.Log($"[GameStateTest] Current GameState: {GameManager.Instance.State} / timeScale: {Time.timeScale}");
         }
+
+        if (Keyboard.current.kKey.wasPressedThisFrame)
+        {
+            EventBus.Publish(new MonsterDiedEvent { Exp = 5, Gold = 15, Position = Vector2.zero });
+            Debug.Log($"[GameStateTest] Call MonsterDiedEvent -> Current Gold: {GameManager.Instance.Gold}");
+        }
+
+        if (Keyboard.current.lKey.wasPressedThisFrame)
+        {
+            bool success = GameManager.Instance.TrySpendGold(50);
+            Debug.Log($"[GameStateTest] TrySpendGlod(50) -> {success} / Current Gold: {GameManager.Instance.Gold}");
+        }
     }
 }

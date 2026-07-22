@@ -45,6 +45,7 @@ public struct MonsterDamagedEvent
 public struct MonsterDiedEvent
 {
     public float Exp; // 획득 경험치
+    public int Gold;
     public Vector2 Position; // 사망 위치
 }
 
@@ -58,3 +59,9 @@ public struct PlayerDamagedEvent
 
 // 플레이어 사망 P1이 발행, UI가 구독
 public struct PlayerDiedEvent { }
+
+public struct GoldChangedEvent
+{
+    public int Current; // 현재 총 골드
+    public int Delta;   // 증감량
+}
