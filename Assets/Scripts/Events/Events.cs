@@ -61,3 +61,15 @@ public struct PlayerDamagedEvent
 
 // 플레이어 사망 P1이 발행, UI가 구독
 public struct PlayerDiedEvent { }
+
+// 어떤 스탯을 올려주는 아이템인지 구분하기 위한 열거형
+public enum EStatType
+{
+    MoveSpeed, Damage, AttackSpeed, MaxHealth, CritChance, CritDamage
+}
+public struct ItemPickedUpEvent
+{
+    public string ItemName;      // 예: "군인의 주사기"
+    public EStatType TargetStat;  // 예: StatType.AttackSpeed
+    public StatModifier Modifier; // 예: (0.15f, PercentAdd) 
+}

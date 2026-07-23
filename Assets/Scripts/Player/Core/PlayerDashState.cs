@@ -13,7 +13,7 @@ public class PlayerDashState : IState
 
     public void Enter()
     {
-        m_Player.SpawnDustEffect(m_Player.IsFacingRight);
+        m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Dash);
         m_Player.Anim.Play("Dash");
 
         m_DashTimer = m_Player.DashDuration;

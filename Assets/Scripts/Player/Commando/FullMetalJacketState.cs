@@ -10,6 +10,8 @@ namespace Player.Commando
         protected override void ExecuteShoot()
         {
             Vector2 shootDirection = m_Player.transform.right;
+            bool isShootingRight = shootDirection.x > 0;
+            m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
             Vector2 shootOrigin = m_Player.MuzzlePos != null
                                   ? (Vector2)m_Player.MuzzlePos.position

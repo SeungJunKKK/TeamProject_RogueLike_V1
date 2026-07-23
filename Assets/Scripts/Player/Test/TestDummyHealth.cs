@@ -29,6 +29,13 @@ public class TestDummyHealth : MonoBehaviour, IDamageable
             Debug.Log($"<color=red>맞았다!</color> 입은 데미지: {info.Amount} / 남은 체력: {m_CurrentHealth}");
         }
 
+        EventBus.Publish(new MonsterDamagedEvent
+        {
+            Amount = info.Amount,
+            HitPoint = info.HitPoint,
+            IsCrit = info.IsCrit
+        });
+
         if (m_Rb != null)
         {
             m_Rb.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);

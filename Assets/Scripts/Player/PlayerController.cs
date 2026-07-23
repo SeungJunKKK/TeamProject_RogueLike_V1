@@ -1,7 +1,14 @@
-using System.Collections;
 using Cinemachine;
+using System;
+using System.Collections;
 using UnityEngine;
 
+public enum EDustType
+{
+    Dash,
+    Jump,
+    Recoil
+}
 public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
@@ -81,8 +88,37 @@ public class PlayerController : MonoBehaviour
         }
 
         if (m_CurrentState != null) m_CurrentState.Update();
+
+        //===============================아이템 테스트===============================
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            EventBus.Publish(new ItemPickedUpEvent
+            {
+                ItemName = "군인의 주사기",
+                TargetStat = EStatType.AttackSpeed,
+                Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
+            });
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            EventBus.Publish(new ItemPickedUpEvent
+            {
+                ItemName = "안경 메이커의 안경",
+                TargetStat = EStatType.CritChance,
+                Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
+            });
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Stats.AddExp(50f);
+        }
+        //===============================아이템 테스트===============================
+
+
+
     }
- 
+
     public void ChangeState(IState newState)
     {
         if (m_CurrentState != null) m_CurrentState.Exit();
@@ -90,20 +126,43 @@ public class PlayerController : MonoBehaviour
         m_CurrentState.Enter();
     }
 
-    public void SpawnDustEffect(bool isFacingRight)
+    public void SpawnDustEffect(bool isFacingRight, EDustType dustType)
     {
         if (DustPrefab != null && FeetPos != null)
         {
-            GameObject dust = Instantiate(DustPrefab, FeetPos.position, Quaternion.identity);
+            Vector3 spawnPos = FeetPos.position;
+            string animName = "";
+
+            switch (dustType)
+            {
+                case EDustType.Dash:
+                    animName = isFacingRight ? "Dash_Right_Dust" : "Dash_Left_Dust";
+                    break;
+                case EDustType.Jump:
+                    animName = isFacingRight ? "Jump_Right_Dust" : "Jump_Left_Dust";
+                    break;
+                case EDustType.Recoil:
+                    animName = isFacingRight ? "Dash_Left_Dust" : "Dash_Right_Dust";
+                    float offsetX = isFacingRight ? -0.5f : 0.5f;
+                    spawnPos = new Vector3(spawnPos.x + offsetX, spawnPos.y, spawnPos.z);
+                    break;
+                default:
+                    throw new NotImplementedException($"unhandled: {dustType}");
+            }
+
+            GameObject dust = Instantiate(DustPrefab, spawnPos, Quaternion.identity);
             Animator dustAnim = dust.GetComponent<Animator>();
+
             if (dustAnim != null)
             {
-                dustAnim.Play(isFacingRight ? "Dust_Right" : "Dust_Left");
+                dustAnim.Play(animName);
             }
 
             Destroy(dust, 0.5f);
         }
     }
+
+
     public void TriggerHitFeedback(Vector2 direction, float shakeForce, float hitStopDuration)
     {
         if (ImpulseSource != null)

@@ -3,6 +3,7 @@
 public class PlayerStats : MonoBehaviour
 {
     [Header("Core Stats")]
+    public float CurrentHealth => MaxHealth.Value; // 현재 체력은 최대 체력과 동일하게 설정 (추후 체력 감소 로직 추가 가능)
     public CharacterStat MaxHealth;
     public CharacterStat MoveSpeed;
     public CharacterStat Damage;
@@ -23,6 +24,15 @@ public class PlayerStats : MonoBehaviour
         AttackSpeed = new CharacterStat(1f); 
         CritChance = new CharacterStat(0.01f); 
         CritDamage = new CharacterStat(2.0f); 
+    }
+    private void OnEnable()
+    {
+        EventBus.Subscribe<ItemPickedUpEvent>(OnItemPickedUp);
+    }
+
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe<ItemPickedUpEvent>(OnItemPickedUp);
     }
 
     // 크리티컬 체크 도우미 함수 
@@ -51,15 +61,35 @@ public class PlayerStats : MonoBehaviour
             LevelUp();
         }
     }
+    private void OnItemPickedUp(ItemPickedUpEvent e)
+    {
+        Debug.Log($"<color=green>[아이템 획득]</color> {e.ItemName} 적용 완료!");
+
+        switch (e.TargetStat)
+        {
+            case EStatType.MoveSpeed: MoveSpeed.AddModifier(e.Modifier); break;
+            case EStatType.Damage: Damage.AddModifier(e.Modifier); break;
+            case EStatType.AttackSpeed: AttackSpeed.AddModifier(e.Modifier); break;
+            case EStatType.MaxHealth: MaxHealth.AddModifier(e.Modifier); break;
+            case EStatType.CritChance: CritChance.AddModifier(e.Modifier); break;
+            case EStatType.CritDamage: CritDamage.AddModifier(e.Modifier); break;
+
+            default: Debug.LogWarning($"알 수 없는 스탯 타입: {e.TargetStat}"); break;
+        }
+    }
 
     private void LevelUp()
     {
         CurrentLevel++;
-        Debug.Log($"<color=cyan>레벨 업! 현재 레벨: {CurrentLevel}</color>");
+        MaxHealth.BaseValue += 20f;
+        Damage.BaseValue += 2f;
 
-       //추후 로그라이크 특성에 따라 능력 뽑기 추가 가능 
-        MaxHealth.BaseValue += 20f;  
-        Damage.BaseValue += 2f;      
-
+        // 체력 스탯이 변했으니 UI 업데이트 발행
+        EventBus.Publish(new PlayerDamagedEvent
+        {
+            Amount = 0,
+            CurrentHp = CurrentHealth,
+            MaxHp = MaxHealth.Value
+        });
     }
 }
