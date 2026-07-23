@@ -250,8 +250,9 @@ GameObject:
   - component: {fileID: 1464858525559069734}
   - component: {fileID: 3693393217399646514}
   - component: {fileID: 2157723758274326119}
-  - component: {fileID: 3231689884246160202}
   - component: {fileID: 1396024979322899933}
+  - component: {fileID: 3231689884246160202}
+  - component: {fileID: 4741739346734497859}
   m_Layer: 0
   m_Name: Commando
   m_TagString: Player
@@ -431,32 +432,6 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: -1, y: 0, z: 0}
---- !u!114 &3231689884246160202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7435904605620967543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14723c7780b3a344ea991b38e8823c5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CommandoController
-  MoveSpeed: 5
-  JumpForce: 7
-  DustPrefab: {fileID: 3824649983267012304, guid: 6ec33161be7b9a848a07b66646a5c304, type: 3}
-  FeetPos: {fileID: 213504185392303094}
-  DashSpeed: 5
-  DashDuration: 0.2
-  ImpulseSource: {fileID: 2157723758274326119}
-  CooldownManager: {fileID: 0}
-  DoubleTapProjectilePrefab: {fileID: 3489686623871416965, guid: db6d94772477c0f47852e41cbc582871, type: 3}
-  FullMetalJacketPrefab: {fileID: 7992673069117770076, guid: fdc55c7d997756740b42ebbbd16518f2, type: 3}
-  SuppressiveFireVFXPrefab: {fileID: 7992673069117770076, guid: d5549b54848018547880f7709e207af5, type: 3}
-  SuppressiveBarrageVFXPrefab: {fileID: 7992673069117770076, guid: 3e6436df55d487241851be30faaaa4bc, type: 3}
-  MuzzlePos: {fileID: 2341271734446087110}
-  IsBarrageMode: 0
 --- !u!114 &1396024979322899933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,6 +457,55 @@ MonoBehaviour:
   - Type: 3
     MaxCooldown: 1
     CurrentCooldown: 0
+--- !u!114 &3231689884246160202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435904605620967543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14723c7780b3a344ea991b38e8823c5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CommandoController
+  JumpForce: 7
+  DustPrefab: {fileID: 3824649983267012304, guid: 6ec33161be7b9a848a07b66646a5c304, type: 3}
+  FeetPos: {fileID: 213504185392303094}
+  DashSpeed: 5
+  DashDuration: 0.2
+  ImpulseSource: {fileID: 2157723758274326119}
+  CooldownManager: {fileID: 0}
+  DoubleTapProjectilePrefab: {fileID: 3489686623871416965, guid: db6d94772477c0f47852e41cbc582871, type: 3}
+  FullMetalJacketPrefab: {fileID: 7992673069117770076, guid: fdc55c7d997756740b42ebbbd16518f2, type: 3}
+  SuppressiveFireVFXPrefab: {fileID: 7992673069117770076, guid: d5549b54848018547880f7709e207af5, type: 3}
+  SuppressiveBarrageVFXPrefab: {fileID: 7992673069117770076, guid: 3e6436df55d487241851be30faaaa4bc, type: 3}
+  MuzzlePos: {fileID: 2341271734446087110}
+  IsBarrageMode: 0
+--- !u!114 &4741739346734497859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435904605620967543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6d0a117562fa445aa26df55a720005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  MaxHealth:
+    BaseValue: 0
+  MoveSpeed:
+    BaseValue: 0
+  Damage:
+    BaseValue: 0
+  AttackSpeed:
+    BaseValue: 0
+  CritChance:
+    BaseValue: 0
+  CritDamage:
+    BaseValue: 0
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0

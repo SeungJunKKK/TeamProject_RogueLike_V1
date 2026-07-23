@@ -12,6 +12,7 @@ namespace Player.Commando
 
         public override void Enter()
         {
+            base.Enter();
             m_Player.Rb.linearVelocity = Vector2.zero;
             m_Player.CooldownManager.UseSkill(m_SkillType);
 
@@ -65,6 +66,11 @@ namespace Player.Commando
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 4.0f;
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
+
             foreach (RaycastHit2D hit in hits)
             {
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
@@ -72,12 +78,12 @@ namespace Player.Commando
                 {
                     DamageInfo info = new DamageInfo
                     {
-                        Amount = 10f,
+                        Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
                         KnockbackForce = 10f,
                         Attacker = m_Player.gameObject,
-                        IsCrit = false,
+                        IsCrit = isCrit,
                         CanProc = true
                     };
 

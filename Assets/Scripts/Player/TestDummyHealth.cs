@@ -19,7 +19,15 @@ public class TestDummyHealth : MonoBehaviour, IDamageable
     public void TakeDamage(DamageInfo info)
     {
         m_CurrentHealth -= info.Amount;
-        Debug.Log($"<color=red>맞았다!</color> 입은 데미지: {info.Amount} / 남은 체력: {m_CurrentHealth}");
+
+        if (info.IsCrit)
+        {
+            Debug.Log($"<color=yellow>[크리티컬!]</color> 입은 데미지: {info.Amount} / 남은 체력: {m_CurrentHealth}");
+        }
+        else
+        {
+            Debug.Log($"<color=red>맞았다!</color> 입은 데미지: {info.Amount} / 남은 체력: {m_CurrentHealth}");
+        }
 
         if (m_Rb != null)
         {

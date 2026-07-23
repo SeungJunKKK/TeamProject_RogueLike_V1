@@ -23,6 +23,7 @@ public abstract class PlayerAttackState : IState
 
     public virtual void Enter()
     {
+        m_Player.Anim.speed = m_Player.Stats.AttackSpeed.Value;
         m_Player.Rb.linearVelocity = Vector2.zero;
         m_Player.Anim.Play(m_AnimName);
         m_Player.CooldownManager.UseSkill(m_SkillType);
@@ -41,7 +42,7 @@ public abstract class PlayerAttackState : IState
     }
     public virtual void Exit()
     {
-        // 상태를 나갈 때의 초기화 
+        m_Player.Anim.speed = 1.0f;
     }
     public virtual void OnActionTriggered()
     {

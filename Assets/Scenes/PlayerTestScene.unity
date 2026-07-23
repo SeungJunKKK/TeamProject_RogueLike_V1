@@ -1764,6 +1764,10 @@ PrefabInstance:
       propertyPath: SuppressiveBarrageVFXPrefab
       value: 
       objectReference: {fileID: 7992673069117770076, guid: 3e6436df55d487241851be30faaaa4bc, type: 3}
+    - target: {fileID: 4741739346734497859, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: CritChance.BaseValue
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6293781722361756835, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: m_Layer
       value: 0

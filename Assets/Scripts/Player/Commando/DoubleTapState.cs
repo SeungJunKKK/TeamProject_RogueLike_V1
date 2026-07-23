@@ -35,15 +35,20 @@ public class DoubleTapState : PlayerAttackState
 
             if (m_Player.DoubleTapProjectilePrefab != null)
             {
+                bool isCrit = m_Player.Stats.RollCriticalHit();
+                float baseDamage = m_Player.Stats.Damage.Value * 1.0f;
+                float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
                 DamageInfo attackInfo = new DamageInfo
                 {
-                    Amount = 10f,
+                    Amount = finalDamage, 
                     HitDirection = shootDirection,
                     KnockbackForce = 15f,
                     Attacker = m_Player.gameObject,
-                    IsCrit = false,
+                    IsCrit = isCrit, 
                     CanProc = true
                 };
+
                 EventBus.Publish(new SpawnProjectileEvent
                 {
                     ProjectilePrefab = m_Player.DoubleTapProjectilePrefab,
@@ -52,8 +57,7 @@ public class DoubleTapState : PlayerAttackState
                     Direction = shootDirection,
                     Speed = 20f,
                     IsPiercing = false,
-
-                    AttackData = attackInfo 
+                    AttackData = attackInfo
                 });
             }
 

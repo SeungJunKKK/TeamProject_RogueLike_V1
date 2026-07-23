@@ -64,6 +64,10 @@ namespace Player.Commando
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 5.0f;
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
             foreach (RaycastHit2D hit in hits)
             {
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
@@ -71,12 +75,12 @@ namespace Player.Commando
                 {
                     DamageInfo info = new DamageInfo
                     {
-                        Amount = 30f,
+                        Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
                         KnockbackForce = 20f,
                         Attacker = m_Player.gameObject,
-                        IsCrit = false,
+                        IsCrit = isCrit,
                         CanProc = true
                     };
 

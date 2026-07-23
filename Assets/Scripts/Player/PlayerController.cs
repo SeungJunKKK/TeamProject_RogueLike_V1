@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
 
+    public PlayerStats Stats { get; private set; }
     public Rigidbody2D Rb { get; private set; }
     public Animator Anim { get; private set; }
     public bool IsInvincible { get; set; } = false; // 무적 상태 스위치
@@ -18,13 +19,12 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer SpriteRendererComponent { get; private set; }
 
     [Header("Player Stats")]
-    public float MoveSpeed = 5f;
-    public float JumpForce = 12f;
+    public float JumpForce = 5f;
     [Header("Effects")]
     public GameObject DustPrefab;
     public Transform FeetPos;
     [Header("Dash Settings")]
-    public float DashSpeed = 15f;
+    public float DashSpeed = 5f;
     public float DashDuration = 0.2f;
     [Header("Hit Feedback")]
     public CinemachineImpulseSource ImpulseSource;
@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         SpriteRendererComponent = GetComponentInChildren<SpriteRenderer>();
         CooldownManager = GetComponent<SkillCooldownManager>();
         OriginalLayer = gameObject.layer;
+        Stats = GetComponent<PlayerStats>();
     }
 
     private void Start()

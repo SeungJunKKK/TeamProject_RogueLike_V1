@@ -15,7 +15,7 @@ public class PlayerJumpState : IState
 
     public void Update()
     {
-        m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.MoveSpeed, m_Player.Rb.linearVelocity.y);
+        m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.Stats.MoveSpeed.Value, m_Player.Rb.linearVelocity.y);
 
         if (m_Player.Rb.linearVelocity.y <= 0.01f && m_Player.Rb.linearVelocity.y >= -0.01f)
         {
