@@ -65,3 +65,9 @@ public struct GoldChangedEvent
     public int Current; // 현재 총 골드
     public int Delta;   // 증감량
 }
+
+public struct DifficultyChangedEvent
+{
+    public EDifficultyLevel Level;
+    public float Coefficient;
+}

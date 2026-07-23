@@ -57,5 +57,10 @@ public class GameStateTest : MonoBehaviour
             bool success = GameManager.Instance.TrySpendGold(50);
             Debug.Log($"[GameStateTest] TrySpendGlod(50) -> {success} / Current Gold: {GameManager.Instance.Gold}");
         }
+
+        if (Keyboard.current.dKey.wasPressedThisFrame)
+        {
+            Debug.Log($"[GameStateTest] {Time.time:F0} sec / coeff = {DifficultyManager.Instance.Coefficient:F2} / Level = {DifficultyManager.Instance.Level}");
+        }
     }
 }
