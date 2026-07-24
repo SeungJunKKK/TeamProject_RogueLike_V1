@@ -22,7 +22,7 @@ public class ProjectileSpawner : MonoBehaviour
 
         if (obj.TryGetComponent<Projectile>(out Projectile proj))
         {
-            proj.Setup(e.Direction, e.Speed, e.Damage, e.IsPiercing);
+            proj.Setup(e);
         }
     }
 

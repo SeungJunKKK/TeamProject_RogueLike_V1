@@ -12,6 +12,7 @@ namespace Player.Commando
 
         public override void Enter()
         {
+            base.Enter();
             m_Player.Rb.linearVelocity = Vector2.zero;
             m_Player.CooldownManager.UseSkill(m_SkillType);
 
@@ -39,6 +40,9 @@ namespace Player.Commando
             if (m_IsSingleMode)
             {
                 shootDirection = m_Player.transform.right;
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
+
                 shootOrigin = m_Player.MuzzlePos != null
                               ? (Vector2)m_Player.MuzzlePos.position
                               : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
@@ -47,6 +51,8 @@ namespace Player.Commando
             {
                 float dir = (m_CurrentShotCount % 2 == 1) ? 1f : -1f;
                 shootDirection = new Vector2(dir, 0f);
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
                 if (m_Player.MuzzlePos != null)
                 {
@@ -64,12 +70,27 @@ namespace Player.Commando
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 5.0f;
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(18f, shootDirection, 20f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 20f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }
