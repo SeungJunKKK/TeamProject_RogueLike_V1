@@ -27,8 +27,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Stats")]
     public float JumpForce = 5f;
-    [Header("Effects")]
-    public GameObject DustPrefab;
+    [Header("Effects (Addressable)")]
+    public string DustAddress = "PlayerDustEffect";
     public Transform FeetPos;
     [Header("Dash Settings")]
     public float DashSpeed = 5f;
@@ -128,38 +128,46 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnDustEffect(bool isFacingRight, EDustType dustType)
     {
-        if (DustPrefab != null && FeetPos != null)
+        if (FeetPos == null)
         {
-            Vector3 spawnPos = FeetPos.position;
-            string animName = "";
-
-            switch (dustType)
-            {
-                case EDustType.Dash:
-                    animName = isFacingRight ? "Dash_Right_Dust" : "Dash_Left_Dust";
-                    break;
-                case EDustType.Jump:
-                    animName = isFacingRight ? "Jump_Right_Dust" : "Jump_Left_Dust";
-                    break;
-                case EDustType.Recoil:
-                    animName = isFacingRight ? "Dash_Left_Dust" : "Dash_Right_Dust";
-                    float offsetX = isFacingRight ? -0.5f : 0.5f;
-                    spawnPos = new Vector3(spawnPos.x + offsetX, spawnPos.y, spawnPos.z);
-                    break;
-                default:
-                    throw new NotImplementedException($"unhandled: {dustType}");
-            }
-
-            GameObject dust = Instantiate(DustPrefab, spawnPos, Quaternion.identity);
-            Animator dustAnim = dust.GetComponent<Animator>();
-
-            if (dustAnim != null)
-            {
-                dustAnim.Play(animName);
-            }
-
-            Destroy(dust, 0.5f);
+            return;
         }
+
+        AddressableManager.Instance.LoadAssetAsync<GameObject>(DustAddress, (prefab) =>
+        {
+            if (prefab != null)
+            {
+                Vector3 spawnPos = FeetPos.position;
+                string animName = "";
+
+                switch (dustType)
+                {
+                    case EDustType.Dash:
+                        animName = isFacingRight ? "Dash_Right_Dust" : "Dash_Left_Dust";
+                        break;
+                    case EDustType.Jump:
+                        animName = isFacingRight ? "Jump_Right_Dust" : "Jump_Left_Dust";
+                        break;
+                    case EDustType.Recoil:
+                        animName = isFacingRight ? "Dash_Left_Dust" : "Dash_Right_Dust";
+                        float offsetX = isFacingRight ? -0.5f : 0.5f;
+                        spawnPos = new Vector3(spawnPos.x + offsetX, spawnPos.y, spawnPos.z);
+                        break;
+                    default:
+                        throw new NotImplementedException($"unhandled: {dustType}");
+                }
+
+                GameObject dust = Instantiate(prefab, spawnPos, Quaternion.identity);
+                Animator dustAnim = dust.GetComponent<Animator>();
+
+                if (dustAnim != null)
+                {
+                    dustAnim.Play(animName);
+                }
+
+                Destroy(dust, 0.5f);
+            }
+        });
     }
 
 

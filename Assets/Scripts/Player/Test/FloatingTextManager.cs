@@ -3,7 +3,8 @@ using TMPro;
 
 public class FloatingTextManager : MonoBehaviour
 {
-    public GameObject DamageTextPrefab;
+    [Header("Addressable Keys")]
+    public string DamageTextAddress = "DamageText";
 
     private void OnEnable()
     {
@@ -17,38 +18,37 @@ public class FloatingTextManager : MonoBehaviour
 
     private void OnMonsterDamaged(MonsterDamagedEvent e)
     {
-        if (DamageTextPrefab == null)
+        AddressableManager.Instance.LoadAssetAsync<GameObject>(DamageTextAddress, (prefab) =>
         {
-            return;
-        }
-
-        GameObject textObj = PoolManager.Instance.Get(DamageTextPrefab, e.HitPoint, Quaternion.identity);
-
-        PooledObject pooledObj = textObj.GetComponent<PooledObject>();
-
-        if (pooledObj != null)
-        {
-            pooledObj.Init(DamageTextPrefab);
-        }
-
-        TextMeshPro textMesh = textObj.GetComponent<TextMeshPro>();
-
-        if (textMesh != null)
-        {
-            textMesh.text = Mathf.Round(e.Amount).ToString();
-
-            if (e.IsCrit)
+            if (prefab != null)
             {
-                textMesh.color = Color.yellow;
-                textMesh.fontSize = 8f;
-                textMesh.fontStyle = FontStyles.Bold;
+                GameObject textObj = PoolManager.Instance.Get(prefab, e.HitPoint, Quaternion.identity);
+
+                PooledObject pooledObj = textObj.GetComponent<PooledObject>();
+                if (pooledObj != null)
+                {
+                    pooledObj.Init(prefab);
+                }
+
+                TextMeshPro textMesh = textObj.GetComponent<TextMeshPro>();
+                if (textMesh != null)
+                {
+                    textMesh.text = Mathf.Round(e.Amount).ToString();
+
+                    if (e.IsCrit)
+                    {
+                        textMesh.color = Color.yellow;
+                        textMesh.fontSize = 8f;
+                        textMesh.fontStyle = FontStyles.Bold;
+                    }
+                    else
+                    {
+                        textMesh.color = Color.white;
+                        textMesh.fontSize = 5f;
+                        textMesh.fontStyle = FontStyles.Normal;
+                    }
+                }
             }
-            else
-            {
-                textMesh.color = Color.white;
-                textMesh.fontSize = 5f;
-                textMesh.fontStyle = FontStyles.Normal;
-            }
-        }
+        });
     }
 }

@@ -67,9 +67,16 @@ public enum EStatType
 {
     MoveSpeed, Damage, AttackSpeed, MaxHealth, CritChance, CritDamage
 }
+
 public struct ItemPickedUpEvent
 {
     public string ItemName;      // 예: "군인의 주사기"
     public EStatType TargetStat;  // 예: StatType.AttackSpeed
     public StatModifier Modifier; // 예: (0.15f, PercentAdd) 
+}
+public struct WeaponFiredEvent
+{
+    public string SoundAddress;  // 예: "Commando_Shoot_SFX"
+    public string EffectAddress; // 예: "MuzzleFlash_FX"
+    public Vector3 Position;
 }
