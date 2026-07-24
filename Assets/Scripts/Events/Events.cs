@@ -33,8 +33,8 @@ public struct SpawnVFXEvent
 }
 public struct GameStateChangedEvent
 {
-    public GameState Previous;
-    public GameState Current;
+    public EGameState Previous;
+    public EGameState Current;
 }
 
 // 몬스터가 피격 P4가 발행, P3 플로팅 텍스트 구독
@@ -48,6 +48,7 @@ public struct MonsterDamagedEvent
 public struct MonsterDiedEvent
 {
     public float Exp; // 획득 경험치
+    public int Gold;
     public Vector2 Position; // 사망 위치
 }
 
@@ -79,4 +80,14 @@ public struct WeaponFiredEvent
     public string SoundAddress;  // 예: "Commando_Shoot_SFX"
     public string EffectAddress; // 예: "MuzzleFlash_FX"
     public Vector3 Position;
+public struct GoldChangedEvent
+{
+    public int Current; // 현재 총 골드
+    public int Delta;   // 증감량
+}
+
+public struct DifficultyChangedEvent
+{
+    public EDifficultyLevel Level;
+    public float Coefficient;
 }
