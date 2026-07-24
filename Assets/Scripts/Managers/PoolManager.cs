@@ -8,11 +8,15 @@ public class PoolManager : Singleton<PoolManager>
     public GameObject Get(GameObject prefab, Vector3 pos, Quaternion rot)
     {
         if (!m_Pools.ContainsKey(prefab))
+        {
             m_Pools[prefab] = new Queue<GameObject>();
+        }
 
         GameObject obj;
         if (m_Pools[prefab].Count > 0)
+        {
             obj = m_Pools[prefab].Dequeue();
+        }
         else
         {
             obj = Instantiate(prefab);
@@ -22,7 +26,6 @@ public class PoolManager : Singleton<PoolManager>
 
         obj.transform.SetPositionAndRotation(pos, rot);
         obj.SetActive(true);
-
 
         obj.GetComponent<IPoolable>()?.OnSpawn();
 
@@ -47,7 +50,9 @@ public class PoolManager : Singleton<PoolManager>
         foreach (var q in m_Pools.Values)
         {
             while (q.Count > 0)
+            {
                 Destroy(q.Dequeue());
+            }
         }
         m_Pools.Clear();
     }
