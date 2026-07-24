@@ -9,6 +9,7 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
+
             Vector2 shootDirection = m_Player.transform.right;
             bool isShootingRight = shootDirection.x > 0;
             m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
@@ -18,12 +19,12 @@ namespace Player.Commando
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
             float attackRange = 15f;
+
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
 
             bool hitSomething = false;
-
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 2.5f;
+            float baseDamage = m_Player.Stats.Damage.Value * 2.5f; // 데미지 배수[cite: 13]
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             foreach (RaycastHit2D hit in hits)
@@ -36,7 +37,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 25f,
+                        KnockbackForce = 25f, // 넉백 수치[cite: 13]
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -46,23 +47,17 @@ namespace Player.Commando
                     hitSomething = true;
                 }
             }
+            m_Player.PlayAddressableSFX(m_Player.X_SFXAddress);
 
-            Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
-
-            if (m_Player.FullMetalJacketPrefab != null)
-            {
-                EventBus.Publish(new SpawnVFXEvent
-                {
-                    VFXPrefab = m_Player.FullMetalJacketPrefab,
-                    Position = vfxPosition,
-                    Rotation = m_Player.transform.rotation
-                });
-            }
 
             if (hitSomething)
+            {
                 m_Player.TriggerHitFeedback(shootDirection, 0.6f, 0.1f);
+            }
             else
+            {
                 m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
+            }
         }
     }
 }

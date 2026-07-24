@@ -14,7 +14,7 @@ public struct SceneLoadCompletedEvent
 public struct SpawnProjectileEvent
 {
     //시각/물리 데이터 
-    public GameObject ProjectilePrefab;
+    public string ProjectileAddress;
     public Vector3 Position;
     public Quaternion Rotation;
     public Vector2 Direction;
@@ -27,7 +27,7 @@ public struct SpawnProjectileEvent
 
 public struct SpawnVFXEvent
 {
-    public GameObject VFXPrefab;
+    public string VFXAddress;
     public Vector3 Position;
     public Quaternion Rotation;
 }
@@ -80,6 +80,8 @@ public struct WeaponFiredEvent
     public string SoundAddress;  // 예: "Commando_Shoot_SFX"
     public string EffectAddress; // 예: "MuzzleFlash_FX"
     public Vector3 Position;
+}
+
 public struct GoldChangedEvent
 {
     public int Current; // 현재 총 골드

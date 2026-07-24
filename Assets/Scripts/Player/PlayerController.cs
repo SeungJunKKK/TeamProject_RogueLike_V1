@@ -37,12 +37,15 @@ public class PlayerController : MonoBehaviour
     public CinemachineImpulseSource ImpulseSource;
     [Header("Skill System")]
     public SkillCooldownManager CooldownManager;
-    [Header("Skill Prefabs")]
-    public GameObject DoubleTapProjectilePrefab;
-    public GameObject FullMetalJacketPrefab;
-    public GameObject SuppressiveFireVFXPrefab; 
-    public GameObject SuppressiveBarrageVFXPrefab;
+    [Header("Skill Sounds (Addressable)")]
+    public string Z_SFXAddress = "";
+    public string X_SFXAddress = "";
+    public string V_SFXAddress = "";
+    public string VStrengthened_SFXAddress = "";
 
+    [Header("Ladder Settings")]
+    public LayerMask LadderLayer; 
+    public float LadderCheckDistance = 0.5f; 
 
     [Header("Muzzle Position")]
     public Transform MuzzlePos;
@@ -126,10 +129,31 @@ public class PlayerController : MonoBehaviour
         m_CurrentState.Enter();
     }
 
+    /// <summary>
+    /// 어드레서블 주소로 오디오 클립을 비동기 로드하여 사운드 매니저를 통해 재생합니다.
+    /// </summary>
+    public void PlayAddressableSFX(string sfxAddress)
+    {
+        if (string.IsNullOrEmpty(sfxAddress)) return;
+
+        AddressableManager.Instance.LoadAssetAsync<AudioClip>(sfxAddress, (clip) =>
+        {
+            if (clip != null)
+            {
+                SoundManager.Instance.PlaySFX(clip);
+            }
+            else
+            {
+                Debug.LogError($"[어드레서블 에러] '{sfxAddress}' 주소로 효과음을 찾을 수 없습니다!");
+            }
+        });
+    }
+
     public void SpawnDustEffect(bool isFacingRight, EDustType dustType)
     {
         if (FeetPos == null)
         {
+            Debug.LogWarning(" FeetPos가 할당되지 않았습니다 ,인스펙터를 확인하세요.");
             return;
         }
 
@@ -167,9 +191,52 @@ public class PlayerController : MonoBehaviour
 
                 Destroy(dust, 0.5f);
             }
+            else 
+            {
+                Debug.LogError($"[어드레서블 에러] '{DustAddress}' 주소로 프리팹을 찾을 수 없습니다! " +
+                    $"Addressables Groups 창의 Key와 이름이 똑같은지 확인하세요.");
+            }
+
         });
     }
 
+    /// <summary>
+    /// 플레이어 몸 중심에서 위로 레이저를 쏴서 사다리를 감지합니다. (사다리 앞에서 위 방향키 누를 때 사용)
+    /// </summary>
+    public Collider2D CheckLadderUp()
+    {
+        // 플레이어 몸의 중심점 (transform.position에서 Y축으로 살짝 올림)
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+
+        RaycastHit2D hit = Physics2D.Raycast(centerPos, Vector2.up, LadderCheckDistance, LadderLayer);
+        return hit.collider;
+    }
+
+    /// <summary>
+    /// 플레이어 발밑에서 아래로 레이저를 쏴서 사다리를 감지합니다. (바닥이나 발판 위에서 아래 방향키 누를 때 사용)
+    /// </summary>
+    public Collider2D CheckLadderDown()
+    {
+        if (FeetPos == null) return null;
+
+        RaycastHit2D hit = Physics2D.Raycast(FeetPos.position, Vector2.down, LadderCheckDistance, LadderLayer);
+        return hit.collider;
+    }
+    /// <summary>
+    /// Scene 뷰에서 플레이어 몸 중심과 발밑에서 레이저를 시각적으로 표시합니다. (디버그용)
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+        Gizmos.DrawRay(centerPos, Vector2.up * LadderCheckDistance);
+
+        if (FeetPos != null)
+        {
+            Gizmos.DrawRay(FeetPos.position, Vector2.down * LadderCheckDistance);
+        }
+    }
 
     public void TriggerHitFeedback(Vector2 direction, float shakeForce, float hitStopDuration)
     {

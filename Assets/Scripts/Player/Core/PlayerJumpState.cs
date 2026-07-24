@@ -17,17 +17,38 @@ public class PlayerJumpState : IState
     {
         m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.Stats.MoveSpeed.Value, m_Player.Rb.linearVelocity.y);
 
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        if (verticalInput > 0.1f && m_Player.CheckLadderUp() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderUp()));
+            return;
+        }
+        else if (verticalInput < -0.1f && m_Player.CheckLadderDown() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderDown()));
+            return;
+        }
+
         if (m_Player.Rb.linearVelocity.y <= 0.01f && m_Player.Rb.linearVelocity.y >= -0.01f)
         {
-            if (m_Player.MovementInput.x != 0) m_Player.ChangeState(new PlayerWalkState(m_Player));
-            else m_Player.ChangeState(new PlayerIdleState(m_Player));
+            if(m_Player.MovementInput.x != 0) 
+            {
+             m_Player.ChangeState(new PlayerWalkState(m_Player));
+            }
+            else
+            {
+             m_Player.ChangeState(new PlayerIdleState(m_Player));
+            }
         }
 
         // Z 스킬 (평타)
         if (Input.GetKeyDown(KeyCode.Z) && m_Player.CooldownManager.IsSkillReady(SkillType.Primary_Z))
         {
             IState state = m_Player.GetPrimaryAttackState();
-            if (state != null) m_Player.ChangeState(state);
+            if (state != null)
+            { 
+             m_Player.ChangeState(state);
+            }
             return;
         }
 
@@ -35,7 +56,10 @@ public class PlayerJumpState : IState
         if (Input.GetKeyDown(KeyCode.X) && m_Player.CooldownManager.IsSkillReady(SkillType.Secondary_X))
         {
             IState state = m_Player.GetSecondaryAttackState();
-            if (state != null) m_Player.ChangeState(state);
+            if (state != null)
+            {
+                m_Player.ChangeState(state);
+            }
             return;
         }
 
@@ -51,7 +75,10 @@ public class PlayerJumpState : IState
         if (Input.GetKeyDown(KeyCode.V) && m_Player.CooldownManager.IsSkillReady(SkillType.Ultimate_V))
         {
             IState state = m_Player.GetUltimateSkillState();
-            if (state != null) m_Player.ChangeState(state);
+            if (state != null)
+            {
+            m_Player.ChangeState(state);
+            } 
             return;
         }
     }

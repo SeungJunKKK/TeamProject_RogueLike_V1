@@ -33,6 +33,7 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
+
             m_CurrentShotCount++;
             Vector2 shootDirection;
             Vector2 shootOrigin;
@@ -66,17 +67,17 @@ namespace Player.Commando
                 }
             }
 
-            float attackRange = 15f;
+            float attackRange = 15f; // 사거리
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 4.0f;
+            float baseDamage = m_Player.Stats.Damage.Value * 4.0f; // 데미지 배수
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
-
 
             foreach (RaycastHit2D hit in hits)
             {
+
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
@@ -85,7 +86,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 10f,
+                        KnockbackForce = 10f, // 넉백 수치
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -96,21 +97,16 @@ namespace Player.Commando
                 }
             }
 
-            Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
-            Quaternion vfxRotation = Quaternion.Euler(0, shootDirection.x > 0 ? 0 : 180, 0);
-
-            if (m_Player.SuppressiveFireVFXPrefab != null)
+            if (hitSomething)
             {
-                EventBus.Publish(new SpawnVFXEvent
-                {
-                    VFXPrefab = m_Player.SuppressiveFireVFXPrefab,
-                    Position = vfxPosition,
-                    Rotation = vfxRotation
-                });
+                m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0.02f);
             }
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
+            }
+            m_Player.PlayAddressableSFX(m_Player.V_SFXAddress);
 
-            if (hitSomething) m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0.02f);
-            else m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
         }
     }
 }
