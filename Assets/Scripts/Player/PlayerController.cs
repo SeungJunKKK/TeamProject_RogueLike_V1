@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
     public string V_SFXAddress = "";
     public string VStrengthened_SFXAddress = "";
 
+    [Header("Ladder Settings")]
+    public LayerMask LadderLayer; 
+    public float LadderCheckDistance = 0.5f; 
 
     [Header("Muzzle Position")]
     public Transform MuzzlePos;
@@ -197,6 +200,43 @@ public class PlayerController : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 플레이어 몸 중심에서 위로 레이저를 쏴서 사다리를 감지합니다. (사다리 앞에서 위 방향키 누를 때 사용)
+    /// </summary>
+    public Collider2D CheckLadderUp()
+    {
+        // 플레이어 몸의 중심점 (transform.position에서 Y축으로 살짝 올림)
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+
+        RaycastHit2D hit = Physics2D.Raycast(centerPos, Vector2.up, LadderCheckDistance, LadderLayer);
+        return hit.collider;
+    }
+
+    /// <summary>
+    /// 플레이어 발밑에서 아래로 레이저를 쏴서 사다리를 감지합니다. (바닥이나 발판 위에서 아래 방향키 누를 때 사용)
+    /// </summary>
+    public Collider2D CheckLadderDown()
+    {
+        if (FeetPos == null) return null;
+
+        RaycastHit2D hit = Physics2D.Raycast(FeetPos.position, Vector2.down, LadderCheckDistance, LadderLayer);
+        return hit.collider;
+    }
+    /// <summary>
+    /// Scene 뷰에서 플레이어 몸 중심과 발밑에서 레이저를 시각적으로 표시합니다. (디버그용)
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+        Gizmos.DrawRay(centerPos, Vector2.up * LadderCheckDistance);
+
+        if (FeetPos != null)
+        {
+            Gizmos.DrawRay(FeetPos.position, Vector2.down * LadderCheckDistance);
+        }
+    }
 
     public void TriggerHitFeedback(Vector2 direction, float shakeForce, float hitStopDuration)
     {

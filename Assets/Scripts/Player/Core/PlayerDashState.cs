@@ -31,6 +31,18 @@ public class PlayerDashState : IState
 
     public void Update()
     {
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        if (verticalInput > 0.1f && m_Player.CheckLadderUp() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderUp()));
+            return;
+        }
+        else if (verticalInput < -0.1f && m_Player.CheckLadderDown() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderDown()));
+            return;
+        }
+
         m_DashTimer -= Time.deltaTime;
 
         m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;
