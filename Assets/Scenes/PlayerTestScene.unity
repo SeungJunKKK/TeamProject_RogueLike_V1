@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18352ea71d7208348b8adf8dd6faa332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHealth
-  MaxHealth: 500
+  MaxHealth: 1000
 --- !u!61 &400621237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18352ea71d7208348b8adf8dd6faa332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHealth
-  MaxHealth: 500
+  MaxHealth: 1000
 --- !u!50 &674552892
 Rigidbody2D:
   serializedVersion: 5
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18352ea71d7208348b8adf8dd6faa332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHealth
-  MaxHealth: 500
+  MaxHealth: 1000
 --- !u!50 &975629621
 Rigidbody2D:
   serializedVersion: 5
@@ -1012,6 +1012,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00f6c20c0e23424891353e9848dbb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileSpawner
+--- !u!114 &1129297241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129297228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34a9cf94368fef4418e04a3f10af9954, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AddressableManager
 --- !u!1 &1228121692
 GameObject:
   m_ObjectHideFlags: 3
@@ -1189,6 +1201,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1129297234}
+    - targetCorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1129297241}
   m_SourcePrefab: {fileID: 100100000, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
 --- !u!1 &1478256187
 GameObject:
@@ -1324,7 +1339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18352ea71d7208348b8adf8dd6faa332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHealth
-  MaxHealth: 500
+  MaxHealth: 1000
 --- !u!61 &1478256192
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1802,6 +1817,18 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: V_SFXAddress
+      value: SFX_Commando_Shoot3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: X_SFXAddress
+      value: SFX_Commando_Shoot2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: Z_SFXAddress
+      value: SFX_Commando_Shoot1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: CooldownManager
       value: 
       objectReference: {fileID: 1424128602}
@@ -1818,9 +1845,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7992673069117770076, guid: d5549b54848018547880f7709e207af5, type: 3}
     - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: VStrengthened_SFXAddress
+      value: SFX_Commando_Shoot3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: DoubleTapProjectilePrefab
       value: 
-      objectReference: {fileID: 3489686623871416965, guid: db6d94772477c0f47852e41cbc582871, type: 3}
+      objectReference: {fileID: 3489686623871416965, guid: a48c6f0c5253b2341b685031e3004441, type: 3}
     - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: SuppressiveBarrageVFXPrefab
       value: 
