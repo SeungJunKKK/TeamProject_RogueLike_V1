@@ -1,89 +1,185 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class BasicEnemyAI : MonoBehaviour, IPoolable
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D), typeof(PooledObject))]
+public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
 {
     [Header("Target Setting")]
     public Transform Player;
 
+    [Header("Stats Setting (기본 스탯)")]
+    [SerializeField] private float m_BaseHp = 80f;
+    [SerializeField] private float m_BaseDamage = 12f;
+    [SerializeField] private int m_BaseGold = 2;
+
+    private float m_MaxHp;
+    private float m_CurrentHp;
+    private float m_Damage;
+
     [Header("Movement Setting")]
     public float MoveSpeed = 3f;
     public float JumpForce = 6f;
-    public float JumpCooldown = 0.5f; // 점프 쿨타임
+    public float JumpCooldown = 0.5f;
     private float m_LastJumpTime;
     public float AttackRange = 1.5f;
-    public float AttackCooldown = 2f; // 공격 후 대기 시간
+    public float AttackCooldown = 2f;
 
-    [Header("Raycast Sensors")]
-    public Transform GroundSensor;
-    public Transform WallSensor;
-    public float RayLength = 1f;
+    [Header("Raycast Sensors (자동 계산)")]
+    public float GroundRayLength = 1.5f;
+    public float WallRayLength = 0.2f;
     public LayerMask GroundLayer;
 
     [Header("Separation Setting (로컬 회피)")]
-    public float SeparationRadius = 0.8f; // 적들을 밀어낼 반경
-    public float SeparationForce = 2.5f;  // 밀어내는 힘의 세기
+    public float SeparationRadius = 0.8f;
+    public float SeparationForce = 2.5f;
     public LayerMask EnemyLayer;
 
-    // 멤버 변수
+    private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
+
     private Rigidbody2D m_Rigidbody;
+    private CapsuleCollider2D m_Collider;
     private PooledObject m_Pooled;
 
     private bool m_IsFacingRight = true;
     private bool m_IsGrounded = true;
-    private bool m_IsAttacking = false; // 현재 공격 중인지 상태 체크
+    private bool m_IsAttacking = false;
+    private bool m_IsDead = false;
+    private bool m_IsKnockback = false;
 
-    // OnSpawn(): 풀에서 꺼내질 때마다 자동 호출
-    public void OnSpawn()
-    {
-        // 몬스터가 재사용될 때 이전 상태가 남아있지 않도록 전부 초기화
-        m_IsFacingRight = true;
-        m_IsAttacking = false;
-        m_IsGrounded = true;
-        m_LastJumpTime = 0f;
+    private Coroutine m_KnockbackCoroutine;
 
-        // 방향을 기본 상태로 리셋
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-    }
+    private const float k_GroundCheckDistance = 0.1f;
+    private const float k_KnockbackDuration = 0.25f;
+    private const float k_AttackWindupDelay = 0.5f;
+    private const float k_SeparationThreshold = 0.01f;
 
-    // OnDespawn(): 풀로 돌아갈 때 자동 호출
-    public void OnDespawn()
-    {
-        // 진행 중이던 공격 코루틴 등이 백그라운드에서 계속 돌지 않도록 강제 종료
-        StopAllCoroutines();
-    }
-
-    // 사망 처리 로직 추가
-    public void Die()
-    {
-        if (m_Pooled != null)
-        {
-            m_Pooled.Return(); // 풀 매니저로 안전하게 반납
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    // Start() 대신 Awake()에서 컴포넌트 사전 캐싱
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
-        m_Pooled = GetComponent<PooledObject>(); // 매번 GetComponent 하지 않도록 캐싱
+        m_Collider = GetComponent<CapsuleCollider2D>();
+        m_Pooled = GetComponent<PooledObject>();
+    }
+
+    public override void SetTarget(Transform target)
+    {
+        Player = target;
+    }
+
+    public void OnSpawn()
+    {
+        ResetState();
+        ResetPhysics();
+        ApplyDifficulty();
+    }
+
+    private void ResetState()
+    {
+        m_IsFacingRight = true;
+        m_IsAttacking = false;
+        m_IsGrounded = true;
+        m_IsDead = false;
+        m_IsKnockback = false;
+        m_LastJumpTime = 0f;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+    }
+
+    private void ResetPhysics()
+    {
+        m_Rigidbody.linearVelocity = Vector2.zero;
+        m_Rigidbody.angularVelocity = 0f;
+        m_Rigidbody.rotation = 0f;
+    }
+
+    private void ApplyDifficulty()
+    {
+        var difficulty = DifficultyManager.Instance;
+        if (difficulty != null)
+        {
+            m_MaxHp = m_BaseHp * difficulty.GetHPMultiplier();
+            m_Damage = m_BaseDamage * difficulty.Coefficient;
+        }
+        else
+        {
+            m_MaxHp = m_BaseHp;
+            m_Damage = m_BaseDamage;
+        }
+
+        m_CurrentHp = m_MaxHp;
+    }
+
+    public void OnDespawn()
+    {
+        StopAllCoroutines();
+        m_Rigidbody.linearVelocity = Vector2.zero;
+        m_IsAttacking = false;
+        m_IsKnockback = false;
+    }
+
+    public void TakeDamage(DamageInfo info)
+    {
+        if (m_IsDead) return;
+
+        m_CurrentHp -= info.Amount;
+
+        EventBus.Publish(new MonsterDamagedEvent
+        {
+            Amount = info.Amount,
+            HitPoint = info.HitPoint,
+            IsCrit = info.IsCrit
+        });
+
+        if (info.KnockbackForce > 0f)
+        {
+            m_Rigidbody.linearVelocity = Vector2.zero;
+            m_Rigidbody.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);
+
+            if (m_KnockbackCoroutine != null)
+            {
+                StopCoroutine(m_KnockbackCoroutine);
+            }
+            m_KnockbackCoroutine = StartCoroutine(KnockbackRoutine());
+        }
+
+        if (m_CurrentHp <= 0)
+        {
+            Die();
+        }
+    }
+
+    private IEnumerator KnockbackRoutine()
+    {
+        m_IsKnockback = true;
+        yield return new WaitForSeconds(KnockbackDuration);
+        m_IsKnockback = false;
+        m_KnockbackCoroutine = null;
+    }
+
+    public void Die()
+    {
+        if (m_IsDead) return;
+        m_IsDead = true;
+
+        float goldMultiplier = DifficultyManager.Instance != null ? DifficultyManager.Instance.GetGoldMultiplier() : 1f;
+        int finalGold = Mathf.Max(1, Mathf.FloorToInt(m_BaseGold * goldMultiplier));
+        float finalExp = finalGold * 0.5f;
+
+        EventBus.Publish(new MonsterDiedEvent
+        {
+            Exp = finalExp,
+            Gold = finalGold,
+            Position = transform.position
+        });
+
+        EnemySpawner.Instance?.UnregisterEnemy(gameObject);
+        m_Pooled.Return();
     }
 
     private void Update()
     {
-        // 플레이어가 없거나, 현재 공격/쿨타임 중이면 이동 로직 중지
-        if (Player == null || m_IsAttacking)
-        {
-            return;
-        }
+        if (Player == null || m_IsAttacking || m_IsDead || m_IsKnockback) return;
 
-        // 발끝 센서를 Update로 빼서 매 프레임 무조건 바닥을 확인하도록 변경
-        m_IsGrounded = Physics2D.Raycast(transform.position, Vector2.down, 1.1f, GroundLayer);
+        Vector2 bottomCenter = new Vector2(m_Collider.bounds.center.x, m_Collider.bounds.min.y);
+        m_IsGrounded = Physics2D.Raycast(bottomCenter, Vector2.down, GroundCheckDistance, GroundLayer);
 
         float distanceToPlayer = Vector2.Distance(transform.position, Player.position);
 
@@ -91,18 +187,13 @@ public class BasicEnemyAI : MonoBehaviour, IPoolable
         {
             ChasePlayer();
         }
+        else if (m_IsGrounded)
+        {
+            StartCoroutine(AttackRoutine());
+        }
         else
         {
-            // [핵심] 사거리 내에 들어왔더라도, '땅에 발이 닿아있을 때만' 멈춰서 공격!
-            if (m_IsGrounded)
-            {
-                StartCoroutine(AttackRoutine());
-            }
-            else
-            {
-                // 공중이라면 허공에서 멈추지 말고 마저 이동 진행
-                ChasePlayer();
-            }
+            ChasePlayer();
         }
     }
 
@@ -110,9 +201,7 @@ public class BasicEnemyAI : MonoBehaviour, IPoolable
     {
         int direction = Player.position.x > transform.position.x ? 1 : -1;
 
-        // 방향 전환
-        if ((direction == 1 && !m_IsFacingRight) ||
-            (direction == -1 && m_IsFacingRight))
+        if ((direction == 1 && !m_IsFacingRight) || (direction == -1 && m_IsFacingRight))
         {
             Flip();
         }
@@ -120,81 +209,47 @@ public class BasicEnemyAI : MonoBehaviour, IPoolable
         float separationX = CalculateSeparation();
         float finalVelocityX = direction * MoveSpeed + separationX;
 
-        // 공중에서는 장애물 판단을 하지 않고 계속 이동만
         if (!m_IsGrounded)
         {
             m_Rigidbody.linearVelocity = new Vector2(finalVelocityX, m_Rigidbody.linearVelocity.y);
             return;
         }
 
-        // 착지 상태에서만 센서 검사
-        bool isGroundAhead = Physics2D.Raycast(
-            GroundSensor.position,
-            Vector2.down,
-            RayLength,
-            GroundLayer);
+        float frontX = m_IsFacingRight ? m_Collider.bounds.max.x : m_Collider.bounds.min.x;
+
+        Vector2 cliffCheckPos = new Vector2(frontX, m_Collider.bounds.min.y);
+        Vector2 wallCheckPos = new Vector2(frontX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
 
         Vector2 wallDir = m_IsFacingRight ? Vector2.right : Vector2.left;
 
-        bool isWallAhead = Physics2D.Raycast(
-            WallSensor.position,
-            wallDir,
-            RayLength,
-            GroundLayer);
+        bool isGroundAhead = Physics2D.Raycast(cliffCheckPos, Vector2.down, GroundRayLength, GroundLayer);
+        bool isWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, WallRayLength, GroundLayer);
 
-        // 장애물 또는 낭떠러지
         if (isWallAhead || !isGroundAhead)
         {
-            if (Time.time - m_LastJumpTime >= JumpCooldown)
-            {
-                Jump();
-            }
-            else
-            {
-                m_Rigidbody.linearVelocity = new Vector2(0f, m_Rigidbody.linearVelocity.y);
-            }
-
+            JumpIfNeeded();
             return;
         }
 
-        // 평지 이동
         m_Rigidbody.linearVelocity = new Vector2(finalVelocityX, m_Rigidbody.linearVelocity.y);
     }
 
-    private float CalculateSeparation()
+    private void JumpIfNeeded()
     {
-        float separationForceX = 0f;
-        // SeparationRadius 반경 내의 모든 EnemyLayer 오브젝트 검출
-        Collider2D[] nearbyEnemies = Physics2D.OverlapCircleAll(transform.position, SeparationRadius, EnemyLayer);
-
-        foreach (Collider2D enemy in nearbyEnemies)
+        if (Time.time - m_LastJumpTime >= JumpCooldown)
         {
-            // 자기 자신은 밀어내기 연산에서 제외
-            if (enemy.gameObject == gameObject)
-            {
-                continue;
-            }
-
-            // X축 거리를 계산
-            float diffX = transform.position.x - enemy.transform.position.x;
-
-            // 좌표가 완벽하게 똑같아 0이 되는 것을 방지
-            if (Mathf.Abs(diffX) < 0.01f)
-            {
-                diffX = Random.Range(-0.01f, 0.01f);
-            }
-
-            // 거리가 가까울수록 더 강한 반발력 적용
-            float force = Mathf.Sign(diffX) * (SeparationRadius - Mathf.Abs(diffX)) * SeparationForce;
-            separationForceX += force;
+            Jump();
         }
-
-        return separationForceX;
+        else
+        {
+            StopMoving();
+        }
     }
 
     private void Jump()
     {
-        m_LastJumpTime = Time.time; // 점프 뛰는 순간 시간 기록
+        m_LastJumpTime = Time.time;
+        m_IsGrounded = false;
         m_Rigidbody.linearVelocity = new Vector2(m_Rigidbody.linearVelocity.x, 0f);
         m_Rigidbody.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
     }
@@ -204,22 +259,50 @@ public class BasicEnemyAI : MonoBehaviour, IPoolable
         m_Rigidbody.linearVelocity = new Vector2(0f, m_Rigidbody.linearVelocity.y);
     }
 
+    private float CalculateSeparation()
+    {
+        float separationForceX = 0f;
+
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, SeparationRadius, m_NearbyEnemies, EnemyLayer);
+
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D enemy = m_NearbyEnemies[i];
+            if (enemy.gameObject == gameObject) continue;
+
+            float diffX = transform.position.x - enemy.transform.position.x;
+            if (Mathf.Abs(diffX) < SeparationThreshold)
+            {
+                diffX = Random.Range(-SeparationThreshold, SeparationThreshold);
+            }
+
+            float force = Mathf.Sign(diffX) * (SeparationRadius - Mathf.Abs(diffX)) * SeparationForce;
+            separationForceX += force;
+        }
+
+        return Mathf.Clamp(separationForceX, -MoveSpeed, MoveSpeed);
+    }
+
     private IEnumerator AttackRoutine()
     {
-        // 공격 시작
         m_IsAttacking = true;
         StopMoving();
 
-        // 공격 애니메이션 재생
-        Debug.Log("플레이어를 공격.");
+        yield return new WaitForSeconds(AttackWindupDelay);
 
-        yield return new WaitForSeconds(0.5f);
+        if (Player == null || m_IsDead)
+        {
+            m_IsAttacking = false;
+            yield break;
+        }
 
-        // 데미지 판정 로직 추가
+        if (Vector2.Distance(transform.position, Player.position) <= AttackRange)
+        {
+            Debug.Log($"플레이어를 {m_Damage} 의 데미지로 공격.");
+        }
 
         yield return new WaitForSeconds(AttackCooldown);
 
-        // 쿨타임 종료시, 다시 추적 가능 상태로 복귀
         m_IsAttacking = false;
     }
 
@@ -233,18 +316,19 @@ public class BasicEnemyAI : MonoBehaviour, IPoolable
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        if (GroundSensor != null)
-        {
-            Gizmos.DrawLine(GroundSensor.position, GroundSensor.position + Vector3.down * RayLength);
-        }
+        if (m_Collider == null) m_Collider = GetComponent<CapsuleCollider2D>();
+        if (m_Collider == null) return;
 
+        float frontX = m_IsFacingRight ? m_Collider.bounds.max.x : m_Collider.bounds.min.x;
+
+        Vector2 cliffCheckPos = new Vector2(frontX, m_Collider.bounds.min.y);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(cliffCheckPos, cliffCheckPos + Vector2.down * GroundRayLength);
+
+        Vector2 wallCheckPos = new Vector2(frontX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
+        Vector2 wallDir = m_IsFacingRight ? Vector2.right : Vector2.left;
         Gizmos.color = Color.blue;
-        if (WallSensor != null)
-        {
-            Vector3 wallDir = m_IsFacingRight ? Vector3.right : Vector3.left;
-            Gizmos.DrawLine(WallSensor.position, WallSensor.position + wallDir * RayLength);
-        }
+        Gizmos.DrawLine(wallCheckPos, wallCheckPos + wallDir * WallRayLength);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, SeparationRadius);
