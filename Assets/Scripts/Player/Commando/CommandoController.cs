@@ -8,7 +8,6 @@ public class CommandoController : PlayerController
 
     public override IState GetPrimaryAttackState()
     {
-        // 💡 0.4초를 내 공격 속도로 나눈다! (공속이 2.0이면 0.2초로 단축됨)
         float duration = 0.4f / Stats.AttackSpeed.Value;
         return new DoubleTapState(this, duration);
     }
