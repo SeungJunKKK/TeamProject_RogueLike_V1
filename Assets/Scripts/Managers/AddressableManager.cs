@@ -7,7 +7,6 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 public class AddressableManager : Singleton<AddressableManager>
 {
     // 로드된 에셋들의 핸들(Handle)을 관리하는 딕셔너리 (메모리 해제할 때 주소로 찾기 위함)
-    // 테스트
     private readonly Dictionary<string, AsyncOperationHandle> _loadedAssets = new();
 
 
@@ -46,6 +45,41 @@ public class AddressableManager : Singleton<AddressableManager>
                 onComplete?.Invoke(null);
             }
         };
+    }
+    #endregion
+
+    #region Instantiate / ReleaseInstance (객체 생성 및 파괴)
+    public void InstantiateAsync(string key, Vector3 position, Quaternion rotation, Transform parent = null, Action<GameObject> onComplete = null) // Addressable 키를 이용해 Prefab을 비동기로 로드하고 Instantiate함
+    {
+        AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(key, position, rotation, parent);
+
+        handle.Completed += (op) =>
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                onComplete?.Invoke(op.Result);
+            }
+            else
+            {
+                Debug.LogError($"[AddressableManager] 객체 생성 실패: {key}");
+                onComplete?.Invoke(null);
+            }
+        };
+    }
+
+    public void ReleaseInstance(GameObject instance) // InstantiateAsync로 생성된 GameObject를 파괴하고 메모리 참조를 해제
+    {
+        if (instance == null) return;
+
+        // Addressables.ReleaseInstance를 호출해야 Destroy()와 함께 메모리 참조 카운트가 감소
+        bool isReleased = Addressables.ReleaseInstance(instance);
+
+        if (!isReleased)
+        {
+            Debug.LogWarning($"[AddressableManager] Addressable 인스턴스가 아니거나 이미 해제된 객체입니다: {instance.name}");
+            // Addressable로 생성된 객체가 아닐 경우 기본 Destroy 처리
+            Destroy(instance);
+        }
     }
     #endregion
 
