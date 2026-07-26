@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D), typeof(PooledObject))]
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
 {
     [Header("Target Setting")]
@@ -18,6 +18,7 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
 
     [Header("Movement Setting")]
     public float MoveSpeed = 3f;
+    public float Acceleration = 15f; // 가속도
     public float JumpForce = 6f;
     public float JumpCooldown = 0.5f;
     private float m_LastJumpTime;
@@ -29,9 +30,11 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
     public float WallRayLength = 0.2f;
     public LayerMask GroundLayer;
 
-    [Header("Separation Setting (로컬 회피)")]
+    [Header("Steering & Separation Setting")]
     public float SeparationRadius = 0.8f;
     public float SeparationForce = 2.5f;
+    [Range(0f, 1f)] public float AllyBlockPenalty = 0.3f;
+    public float ArrivalRadius = 1.2f;
     public LayerMask EnemyLayer;
 
     private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
@@ -110,6 +113,7 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
     public void OnDespawn()
     {
         StopAllCoroutines();
+        m_KnockbackCoroutine = null;
         m_Rigidbody.linearVelocity = Vector2.zero;
         m_IsAttacking = false;
         m_IsKnockback = false;
@@ -149,7 +153,7 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
     private IEnumerator KnockbackRoutine()
     {
         m_IsKnockback = true;
-        yield return new WaitForSeconds(KnockbackDuration);
+        yield return new WaitForSeconds(k_KnockbackDuration);
         m_IsKnockback = false;
         m_KnockbackCoroutine = null;
     }
@@ -171,21 +175,51 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
         });
 
         EnemySpawner.Instance?.UnregisterEnemy(gameObject);
-        m_Pooled.Return();
+
+        if (m_Pooled != null)
+        {
+            m_Pooled.Return();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
     {
-        if (Player == null || m_IsAttacking || m_IsDead || m_IsKnockback) return;
+        if (Player == null || m_IsDead || m_IsKnockback) return;
 
         Vector2 bottomCenter = new Vector2(m_Collider.bounds.center.x, m_Collider.bounds.min.y);
-        m_IsGrounded = Physics2D.Raycast(bottomCenter, Vector2.down, GroundCheckDistance, GroundLayer);
+        m_IsGrounded = Physics2D.Raycast(bottomCenter, Vector2.down, k_GroundCheckDistance, GroundLayer);
 
         float distanceToPlayer = Vector2.Distance(transform.position, Player.position);
+        int direction = Player.position.x > transform.position.x ? 1 : -1;
+
+        if (m_IsAttacking)
+        {
+            // Error Steering (공격 중 앞뒤 미세 이동)
+            float desiredDistance = AttackRange * 0.8f;
+            float error = distanceToPlayer - desiredDistance;
+            float attackMove = Mathf.Clamp(error, -MoveSpeed * 0.4f, MoveSpeed * 0.4f);
+
+            Move(direction * attackMove);
+            return;
+        }
 
         if (distanceToPlayer > AttackRange)
         {
-            ChasePlayer();
+            // Arrival Steering (목표 접근 시 감속)
+            float distanceToAttack = distanceToPlayer - AttackRange;
+            float desiredSpeed = MoveSpeed;
+
+            if (distanceToAttack < ArrivalRadius)
+            {
+                float arrivalRatio = distanceToAttack / ArrivalRadius;
+                desiredSpeed = MoveSpeed * Mathf.Max(arrivalRatio, 0.2f);
+            }
+
+            ChasePlayer(direction, desiredSpeed);
         }
         else if (m_IsGrounded)
         {
@@ -193,33 +227,55 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
         }
         else
         {
-            ChasePlayer();
+            ChasePlayer(direction, MoveSpeed);
         }
     }
 
-    private void ChasePlayer()
+    private void Move(float desiredMoveX)
     {
-        int direction = Player.position.x > transform.position.x ? 1 : -1;
+        float frontX = m_IsFacingRight ? m_Collider.bounds.max.x : m_Collider.bounds.min.x;
+        Vector2 forwardCheckPos = new Vector2(frontX, m_Collider.bounds.center.y);
+        Vector2 forwardDir = m_IsFacingRight ? Vector2.right : Vector2.left;
 
+        // 전방 아군 감속 (방향 체크)
+        RaycastHit2D allyAhead = Physics2D.Raycast(forwardCheckPos, forwardDir, 0.4f, EnemyLayer);
+        if (allyAhead.collider != null && allyAhead.collider.gameObject != gameObject)
+        {
+            bool isMovingForward = (m_IsFacingRight && desiredMoveX > 0f) || (!m_IsFacingRight && desiredMoveX < 0f);
+            if (isMovingForward)
+            {
+                desiredMoveX *= AllyBlockPenalty;
+            }
+        }
+
+        float separationX = CalculateSeparation();
+
+        // 최종적으로 목표하는 속도
+        float targetVelocityX = desiredMoveX + separationX;
+
+        // 부드러운 가속도 적용
+        float currentVelocityX = m_Rigidbody.linearVelocity.x;
+        float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, targetVelocityX, Acceleration * Time.deltaTime);
+
+        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+    }
+
+    private void ChasePlayer(int direction, float currentSpeed)
+    {
         if ((direction == 1 && !m_IsFacingRight) || (direction == -1 && m_IsFacingRight))
         {
             Flip();
         }
 
-        float separationX = CalculateSeparation();
-        float finalVelocityX = direction * MoveSpeed + separationX;
-
         if (!m_IsGrounded)
         {
-            m_Rigidbody.linearVelocity = new Vector2(finalVelocityX, m_Rigidbody.linearVelocity.y);
+            Move(direction * currentSpeed);
             return;
         }
 
         float frontX = m_IsFacingRight ? m_Collider.bounds.max.x : m_Collider.bounds.min.x;
-
         Vector2 cliffCheckPos = new Vector2(frontX, m_Collider.bounds.min.y);
         Vector2 wallCheckPos = new Vector2(frontX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
-
         Vector2 wallDir = m_IsFacingRight ? Vector2.right : Vector2.left;
 
         bool isGroundAhead = Physics2D.Raycast(cliffCheckPos, Vector2.down, GroundRayLength, GroundLayer);
@@ -231,7 +287,7 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
             return;
         }
 
-        m_Rigidbody.linearVelocity = new Vector2(finalVelocityX, m_Rigidbody.linearVelocity.y);
+        Move(direction * currentSpeed);
     }
 
     private void JumpIfNeeded()
@@ -242,7 +298,10 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
         }
         else
         {
-            StopMoving();
+            // 점프 대기 시에도 서서히 감속되도록 유도
+            float currentVelocityX = m_Rigidbody.linearVelocity.x;
+            float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, 0f, Acceleration * Time.deltaTime);
+            m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
         }
     }
 
@@ -254,15 +313,9 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
         m_Rigidbody.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
     }
 
-    private void StopMoving()
-    {
-        m_Rigidbody.linearVelocity = new Vector2(0f, m_Rigidbody.linearVelocity.y);
-    }
-
     private float CalculateSeparation()
     {
         float separationForceX = 0f;
-
         int count = Physics2D.OverlapCircleNonAlloc(transform.position, SeparationRadius, m_NearbyEnemies, EnemyLayer);
 
         for (int i = 0; i < count; i++)
@@ -270,25 +323,35 @@ public class BasicEnemyAI : EnemyBase, IPoolable, IDamageable
             Collider2D enemy = m_NearbyEnemies[i];
             if (enemy.gameObject == gameObject) continue;
 
-            float diffX = transform.position.x - enemy.transform.position.x;
-            if (Mathf.Abs(diffX) < SeparationThreshold)
+            Vector2 diff = transform.position - enemy.transform.position;
+            float distance = diff.magnitude;
+
+            if (distance < k_SeparationThreshold)
             {
-                diffX = Random.Range(-SeparationThreshold, SeparationThreshold);
+                diff = new Vector2(
+                    Random.Range(-k_SeparationThreshold, k_SeparationThreshold),
+                    Random.Range(-k_SeparationThreshold, k_SeparationThreshold)
+                );
+                distance = diff.magnitude;
             }
 
-            float force = Mathf.Sign(diffX) * (SeparationRadius - Mathf.Abs(diffX)) * SeparationForce;
-            separationForceX += force;
+            float ratio = 1f - (distance / SeparationRadius);
+            ratio = Mathf.Clamp01(ratio);
+
+            float pushForce = SeparationForce * (ratio * ratio);
+
+            Vector2 pushVector = (diff / distance) * pushForce;
+            separationForceX += pushVector.x;
         }
 
-        return Mathf.Clamp(separationForceX, -MoveSpeed, MoveSpeed);
+        return Mathf.Clamp(separationForceX, -MoveSpeed * 1.5f, MoveSpeed * 1.5f);
     }
 
     private IEnumerator AttackRoutine()
     {
         m_IsAttacking = true;
-        StopMoving();
 
-        yield return new WaitForSeconds(AttackWindupDelay);
+        yield return new WaitForSeconds(k_AttackWindupDelay);
 
         if (Player == null || m_IsDead)
         {
