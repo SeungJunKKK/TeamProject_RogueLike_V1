@@ -83,6 +83,37 @@ public class AddressableManager : Singleton<AddressableManager>
     }
     #endregion
 
+    #region Load Sprite Sheet (스프라이트 시트 전용 로드)
+    public void LoadSpriteSheetAsync(string key, Action<IList<Sprite>> onComplete) // Addressable Key를 받아 슬라이스된 모든 Sprite 목록을 로드
+    {
+        Addressables.LoadAssetAsync<IList<Sprite>>(key).Completed += (op) =>
+        {
+            if (op.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+            {
+                onComplete?.Invoke(op.Result);
+            }
+            else
+            {
+                Addressables.LoadResourceLocationsAsync(key, typeof(Sprite)).Completed += (locHandle) =>
+                {
+                    if (locHandle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded && locHandle.Result.Count > 0)
+                    {
+                        Addressables.LoadAssetsAsync<Sprite>(locHandle.Result, null).Completed += (assetsHandle) =>
+                        {
+                            onComplete?.Invoke(assetsHandle.Result);
+                        };
+                    }
+                    else
+                    {
+                        Debug.LogError($"[AddressableManager] 스프라이트 시트 로드 실패: {key}");
+                        onComplete?.Invoke(null);
+                    }
+                };
+            }
+        };
+    }
+    #endregion
+
     #region Release / Unload (에셋 메모리 해제)
     public void UnloadAsset(string key)
     {

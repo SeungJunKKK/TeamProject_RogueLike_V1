@@ -20,8 +20,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 16488d901008c8d48b5dbb4adef3961b
-    m_Address: Assets/Sprites/ROR_Player/Commando/Sprite_Charcter 1.controller
+  - m_GUID: 0d617ce978e1d734494ee65e15927b28
+    m_Address: MonsterLog
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -30,8 +30,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3866dd9ce624ae249b74fdb0c3702538
+    m_Address: ItemLog_Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3e6436df55d487241851be30faaaa4bc
     m_Address: Commando_SPB_Projectile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47b65e3e5efc1cc43ad49191bd141299
+    m_Address: ItemLog_Uncommon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62d33f03ac0a91340b0b9465751373a3
+    m_Address: ItemLog_Rare
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -47,6 +62,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a48c6f0c5253b2341b685031e3004441
     m_Address: Commando_DoubleTap_Projectile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a5a6ef1f27950ac4d9acda47a0e7c514
+    m_Address: ItemLog_Use
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
