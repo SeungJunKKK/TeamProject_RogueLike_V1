@@ -10,19 +10,25 @@ public abstract class PlayerAttackState : IState
     protected readonly string m_AnimName;
     protected float m_AttackTimer;
 
-    public PlayerAttackState(PlayerController player, string animName, float duration)
+    protected readonly SkillType m_SkillType;
+
+
+    public PlayerAttackState(PlayerController player, string animName, float duration, SkillType skillType)
     {
         m_Player = player;
         m_AnimName = animName;
         m_AttackTimer = duration;
+        m_SkillType = skillType;
     }
 
     public virtual void Enter()
     {
+        m_Player.Anim.speed = m_Player.Stats.AttackSpeed.Value;
         m_Player.Rb.linearVelocity = Vector2.zero;
         m_Player.Anim.Play(m_AnimName);
+        m_Player.CooldownManager.UseSkill(m_SkillType);
 
-        ExecuteShoot();
+        //ExecuteShoot();
     }
 
     public virtual void Update()
@@ -34,10 +40,13 @@ public abstract class PlayerAttackState : IState
             m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
     }
-
     public virtual void Exit()
     {
-        // 상태를 나갈 때의 초기화 
+        m_Player.Anim.speed = 1.0f;
+    }
+    public virtual void OnActionTriggered()
+    {
+        ExecuteShoot();
     }
 
     protected abstract void ExecuteShoot();

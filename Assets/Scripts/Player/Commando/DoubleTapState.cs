@@ -1,53 +1,66 @@
 ﻿using UnityEngine;
 
-
 namespace Player.Commando
 {
-public class DoubleTapState : PlayerAttackState
-{
-    private readonly float m_TotalDuration;
-    private bool m_HasFiredSecondShot;
-
-    public DoubleTapState(PlayerController player, float duration)
-        : base(player, "Z_DoubleTap", duration) 
+    public class DoubleTapState : PlayerAttackState
     {
-        m_TotalDuration = duration;
-        m_HasFiredSecondShot = false;
-    }
+        private readonly float m_TotalDuration;
+        private bool m_HasFiredSecondShot;
 
-    public override void Update()
-    {
-        base.Update();
-
-        if (!m_HasFiredSecondShot && m_AttackTimer <= m_TotalDuration / 2f)
+        public DoubleTapState(PlayerController player, float duration)
+            : base(player, "Z_DoubleTap", duration, SkillType.Primary_Z)
         {
-            ExecuteShoot();
-            m_HasFiredSecondShot = true;
+            m_TotalDuration = duration;
+            m_HasFiredSecondShot = false;
         }
-    }
 
-    protected override void ExecuteShoot()
-    {
-        float facingDir = m_Player.IsFacingRight ? 1f : -1f;
-        Vector2 shootDirection = new Vector2(facingDir, 0f);
-        Vector2 shootOrigin = new Vector2(m_Player.transform.position.x, m_Player.transform.position.y + 0.2f);
 
-        Debug.DrawRay(shootOrigin, shootDirection * 10f, Color.red, 1f);
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, 10f);
-
-        foreach (RaycastHit2D hit in hits)
+        protected override void ExecuteShoot()
         {
-            TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-            if (dummy != null)
+            m_Player.PlayAddressableSFX(m_Player.Z_SFXAddress);
+
+            Vector2 shootDirection = m_Player.transform.right;
+            Vector2 shootOrigin = m_Player.MuzzlePos != null
+                                  ? (Vector2)m_Player.MuzzlePos.position
+                                  : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
+
+            float attackRange = 15f;
+            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange);
+
+            bool hitSomething = false;
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 1.0f;
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
+            if (hit.collider != null)
             {
-                dummy.TakeDamage(10f,shootDirection,1f);
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 15f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
+                    hitSomething = true;
+                }
+            }
+
+            if (hitSomething)
+            {
                 m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
-                break;
+            }
+            else 
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.1f, 0f);
             }
         }
     }
-}
-
-
 }

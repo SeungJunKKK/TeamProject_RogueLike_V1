@@ -1,35 +1,63 @@
 ﻿using UnityEngine;
 
-
 namespace Player.Commando
 {
-public class FullMetalJacketState : PlayerAttackState
-{
-    public FullMetalJacketState(PlayerController player, float duration)
-        : base(player, "X_FullMetalJacket", duration)
+    public class FullMetalJacketState : PlayerAttackState
     {
-    }
+        public FullMetalJacketState(PlayerController player, float duration)
+            : base(player, "X_FullMetalJacket", duration, SkillType.Secondary_X) { }
 
-    protected override void ExecuteShoot()
-    {
-        float facingDir = m_Player.IsFacingRight ? 1f : -1f;
-        Vector2 shootDirection = new Vector2(facingDir, 0f);
-        Vector2 shootOrigin = new Vector2(m_Player.transform.position.x, m_Player.transform.position.y + 0.2f);
-
-        Debug.DrawRay(shootOrigin, shootDirection * 10f, Color.red, 1f);
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, 10f);
-
-        foreach (RaycastHit2D hit in hits)
+        protected override void ExecuteShoot()
         {
-            TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-            if (dummy != null)
+
+            Vector2 shootDirection = m_Player.transform.right;
+            bool isShootingRight = shootDirection.x > 0;
+            m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
+
+            Vector2 shootOrigin = m_Player.MuzzlePos != null
+                                  ? (Vector2)m_Player.MuzzlePos.position
+                                  : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
+
+            float attackRange = 15f;
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
+
+            bool hitSomething = false;
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 2.5f; // 데미지 배수[cite: 13]
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
+            foreach (RaycastHit2D hit in hits)
             {
-                dummy.TakeDamage(25f, shootDirection, 2f);
-                m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 25f, // 넉백 수치[cite: 13]
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
+                    hitSomething = true;
+                }
+            }
+            m_Player.PlayAddressableSFX(m_Player.X_SFXAddress);
+
+
+            if (hitSomething)
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.6f, 0.1f);
+            }
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
             }
         }
     }
-}
-
 }

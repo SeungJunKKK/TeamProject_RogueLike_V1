@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneLoader : Singleton<SceneLoader> 
+public class SceneLoader : Singleton<SceneLoader>
 {
     [SerializeField]
     private GameObject m_LoadingScreen;
@@ -15,7 +15,9 @@ public class SceneLoader : Singleton<SceneLoader>
     public void LoadScene(string scene)
     {
         if (m_IsLoading)
+        {
             return;
+        }
 
         StartCoroutine(LoadRoutine(scene));
     }
@@ -47,9 +49,11 @@ public class SceneLoader : Singleton<SceneLoader>
             m_Slider.value = Mathf.Clamp01(op.progress / 0.9f);
 
             if (op.progress >= 0.9f)
+            {
                 op.allowSceneActivation = true;
+            }
 
-            yield return null; 
+            yield return null;
         }
 
         EventBus.Publish(new SceneLoadCompletedEvent { SceneName = scene });
