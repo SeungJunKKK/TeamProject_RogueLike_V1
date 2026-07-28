@@ -22,10 +22,12 @@ public class EnemySpawner : MonoBehaviour
     public float SpawnClearanceRadius = 1f;
     public LayerMask EnemyLayer;
 
-    // 스캔 완료 후 배열로 관리하여 메모리/접근 속도 최적화
     private Vector2[] m_ValidSpawnPoints;
     private HashSet<GameObject> m_ActiveEnemies = new HashSet<GameObject>();
     private Collider2D[] m_OverlapBuffer = new Collider2D[1];
+
+    // 외부 조회용 프로퍼티 추가 
+    public int ActiveEnemyCount => m_ActiveEnemies.Count;
 
     private void Awake()
     {
@@ -42,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
-        } 
+        }
     }
 
     private void Start()
@@ -91,9 +93,7 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        // List를 Vector2[] 배열로 변환하여 캐싱
         m_ValidSpawnPoints = tempPoints.ToArray();
-        Debug.Log($"<color=green>[EnemySpawner]</color> 스캔 완료! {m_ValidSpawnPoints.Length}개의 위치 확보.");
     }
 
     public void UnregisterEnemy(GameObject enemy)
@@ -116,10 +116,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        if (Player == null)
-        {
-            return;
-        }
+        if (Player == null) return;
 
         for (int i = 0; i < MaxSpawnAttempts; i++)
         {
@@ -155,19 +152,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (m_ValidSpawnPoints == null)
-        {
-            return; 
-        }
+        if (m_ValidSpawnPoints == null) return;
 
         Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
         int drawCount = 0;
         foreach (Vector2 point in m_ValidSpawnPoints)
         {
-            if (drawCount++ >= 100)
-            {
-                break;
-            }
+            if (drawCount++ >= 100) break;
             Gizmos.DrawCube(point, new Vector3(0.5f, 0.5f, 0.5f));
         }
     }
