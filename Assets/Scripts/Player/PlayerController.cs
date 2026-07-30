@@ -43,13 +43,14 @@ public class PlayerController : MonoBehaviour
     public string X_SFXAddress = "";
     public string V_SFXAddress = "";
     public string VStrengthened_SFXAddress = "";
-
     [Header("Ladder Settings")]
     public LayerMask LadderLayer; 
     public float LadderCheckDistance = 0.5f; 
-
     [Header("Muzzle Position")]
     public Transform MuzzlePos;
+    [Header("Melee Hitbox")]
+    public Collider2D MeleeCollider;
+
 
 
     public Vector2 MovementInput { get; private set; }
@@ -281,5 +282,40 @@ public class PlayerController : MonoBehaviour
             attackState.OnActionTriggered();
         }
     }
+
+    /// <summary>
+    /// 애니메이션 이벤트에서 호출하여, 공격 후딜레이 캔슬(대시 등)을 허용합니다.
+    /// </summary>
+    public void EnableActionCancel()
+    {
+        if (m_CurrentState is PlayerAttackState attackState)
+        {
+            attackState.SetCanCancel(true);
+        }
+    }
+    public void EnableHitbox()
+    {
+        Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
+
+        if (MeleeCollider != null)
+        {
+            MeleeCollider.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] MeleeCollider가 인스펙터에 할당되지 않았습니다");
+        }
+    }
+
+    public void DisableHitbox()
+    {
+        Debug.Log("<color=cyan>[PlayerController] DisableHitbox 호출 - 공격 판정 OFF</color>");
+
+        if (MeleeCollider != null)
+        {
+            MeleeCollider.enabled = false;
+        }
+    }
+
 
 }

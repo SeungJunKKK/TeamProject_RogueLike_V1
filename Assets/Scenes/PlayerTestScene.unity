@@ -246,7 +246,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 5
+  m_LinearDamping: 3
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -597,6 +597,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &652150000 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5366159880951107536, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+  m_PrefabInstance: {fileID: 4327730993145699583}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &674552889
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +694,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 5
+  m_LinearDamping: 3
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -795,6 +800,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e513cd82482cf04895e1487192c96e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationRelay
+--- !u!114 &889898554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 889898546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 426103502d2c38c419bc911d7428e8d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationReceiver
 --- !u!1 &918217052 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 414238164356475229, guid: 5b8f9a5b93372324a8b7e6a0403fcf35, type: 3}
@@ -906,7 +923,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 5
+  m_LinearDamping: 3
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -995,48 +1012,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1129297228 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
-  m_PrefabInstance: {fileID: 1452490406}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1129297234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129297228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e00f6c20c0e23424891353e9848dbb8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProjectileSpawner
---- !u!114 &1129297241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129297228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34a9cf94368fef4418e04a3f10af9954, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AddressableManager
---- !u!114 &1129297242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1129297228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccc264e952738204c86a8bb3253aeb64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FloatingTextManager
-  DamageTextAddress: DamageText
 --- !u!1 &1228121692
 GameObject:
   m_ObjectHideFlags: 3
@@ -1110,9 +1085,9 @@ MonoBehaviour:
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.7
-  m_SoftZoneHeight: 0.7
+  m_SoftZoneHeight: 0.5
   m_BiasX: 0
-  m_BiasY: 0
+  m_BiasY: -0.2
   m_CenterOnActivate: 1
   m_GroupFramingMode: 2
   m_AdjustmentMode: 0
@@ -1210,16 +1185,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1129297234}
-    - targetCorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1129297241}
-    - targetCorrespondingSourceObject: {fileID: 3785546532067763248, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1129297242}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
 --- !u!1 &1478256187
 GameObject:
@@ -1329,7 +1295,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 5
+  m_LinearDamping: 3
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -1775,6 +1741,10 @@ PrefabInstance:
       value: SFX_Commando_Shoot1
       objectReference: {fileID: 0}
     - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: MeleeCollider
+      value: 
+      objectReference: {fileID: 652150000}
+    - target: {fileID: 3231689884246160202, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: CooldownManager
       value: 
       objectReference: {fileID: 1424128602}
@@ -1841,6 +1811,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6293781722361756835, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 889898550}
+    - targetCorrespondingSourceObject: {fileID: 6293781722361756835, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 889898554}
   m_SourcePrefab: {fileID: 100100000, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
 --- !u!1001 &7768540002648999498
 PrefabInstance:
