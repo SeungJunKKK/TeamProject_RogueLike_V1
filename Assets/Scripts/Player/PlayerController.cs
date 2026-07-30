@@ -12,6 +12,7 @@ public enum EDustType
 public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
+    private bool m_IsHitStopping = false;
 
     public PlayerStats Stats { get; private set; }
     public Rigidbody2D Rb { get; private set; }
@@ -244,14 +245,33 @@ public class PlayerController : MonoBehaviour
         {
             ImpulseSource.GenerateImpulse(new Vector3(direction.x * shakeForce, 0f, 0f));
         }
-        StartCoroutine(HitStopRoutine(hitStopDuration));
+
+        if (!m_IsHitStopping && hitStopDuration > 0f)
+        {
+            StartCoroutine(HitStopRoutine(hitStopDuration));
+        }
+    }
+
+    /// <summary>
+    /// 싱글 플레이 기반으로 플레이어가 공격을 맞았을 때 잠시 시간을 멈추는 효과를 발생시킵니다. (Hit Stop)
+    /// 멀티 플레이에서는 사용하지 않을 계획입니다. 
+    /// </summary>
+    /// <param name="duration">멈춤 지속 시간</param>
+    public void TriggerHitStop(float duration = 0.05f)
+    {
+        if (!m_IsHitStopping && duration > 0f)
+        {
+            StartCoroutine(HitStopRoutine(duration));
+        }
     }
 
     private IEnumerator HitStopRoutine(float duration)
     {
-        Time.timeScale = 0.1f;
+        m_IsHitStopping = true;
+        Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
+        m_IsHitStopping = false;
     }
 
     public void OnSkillActionTrigger()

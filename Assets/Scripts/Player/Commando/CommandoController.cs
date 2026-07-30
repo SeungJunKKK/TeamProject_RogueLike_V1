@@ -29,4 +29,5 @@ public class CommandoController : PlayerController
             return new SuppressiveFireState(this, duration);
         }
     }
+
 }

@@ -25,7 +25,8 @@ namespace Player.Commando
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
             float attackRange = 15f;
-            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange);
+            int enemyLayer = LayerMask.GetMask("Enemy");
+            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
@@ -56,6 +57,7 @@ namespace Player.Commando
             if (hitSomething)
             {
                 m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
+                m_Player.TriggerHitStop(0.05f);
             }
             else 
             {
