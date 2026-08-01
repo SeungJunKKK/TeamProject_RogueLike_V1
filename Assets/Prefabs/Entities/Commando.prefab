@@ -146,6 +146,99 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &6638626711768443454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6334638261001187944}
+  - component: {fileID: 5366159880951107536}
+  - component: {fileID: 1604274745611265651}
+  m_Layer: 0
+  m_Name: MeleeHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6334638261001187944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6638626711768443454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.07, y: 0.08, z: 0}
+  m_LocalScale: {x: 0.09, y: 0.05, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3144383756409554526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &5366159880951107536
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6638626711768443454}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &1604274745611265651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6638626711768443454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bc9ce562c6e1ec4a8973ef8b9818c1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHitbox
+  Player: {fileID: 3231689884246160202}
+  DamageMultiplier: 1
 --- !u!1 &7251663817874883413
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +370,7 @@ Transform:
   - {fileID: 8819557065366225776}
   - {fileID: 213504185392303094}
   - {fileID: 2341271734446087110}
+  - {fileID: 6334638261001187944}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1464858525559069734
@@ -371,23 +465,23 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.24673432
-        value: 0.06943157
-        inSlope: 0.00043046635
-        outSlope: 0.00043046635
+        time: 0.24676633
+        value: 0.093409576
+        inSlope: 0.20781168
+        outSlope: 0.20781168
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.24924785
+        outWeight: 0.11350875
       - serializedVersion: 3
-        time: 0.69614065
-        value: -0.027286027
-        inSlope: -0.099623084
-        outSlope: -0.099623084
+        time: 0.6988872
+        value: -0.050754044
+        inSlope: 0.0072270352
+        outSlope: 0.0072270352
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.5026153
       - serializedVersion: 3
         time: 1
         value: 0.000705719
@@ -476,11 +570,16 @@ MonoBehaviour:
   DashDuration: 0.2
   ImpulseSource: {fileID: 2157723758274326119}
   CooldownManager: {fileID: 0}
-  DoubleTapProjectilePrefab: {fileID: 3489686623871416965, guid: a48c6f0c5253b2341b685031e3004441, type: 3}
-  FullMetalJacketPrefab: {fileID: 7992673069117770076, guid: fdc55c7d997756740b42ebbbd16518f2, type: 3}
-  SuppressiveFireVFXPrefab: {fileID: 7992673069117770076, guid: d5549b54848018547880f7709e207af5, type: 3}
-  SuppressiveBarrageVFXPrefab: {fileID: 7992673069117770076, guid: 3e6436df55d487241851be30faaaa4bc, type: 3}
+  Z_SFXAddress: 
+  X_SFXAddress: 
+  V_SFXAddress: 
+  VStrengthened_SFXAddress: 
+  LadderLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  LadderCheckDistance: 0.5
   MuzzlePos: {fileID: 2341271734446087110}
+  MeleeCollider: {fileID: 0}
   IsBarrageMode: 0
 --- !u!114 &4741739346734497859
 MonoBehaviour:
