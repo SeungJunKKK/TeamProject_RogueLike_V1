@@ -105,3 +105,11 @@ public struct BossDiedEvent
     public GameObject Boss;
     public Vector2 Position;
 }
+
+// 상호작용 대상 감지
+public struct InteractableInRangeEvent
+{
+    public Vector2 WorldPosition;   // 프롬프트를 띄울 위치 (대상 머리 위 등)
+}
+
+public struct InteractableOutOfRangeEvent { }
