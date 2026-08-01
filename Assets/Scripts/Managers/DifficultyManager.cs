@@ -68,11 +68,14 @@ public class DifficultyManager : Singleton<DifficultyManager>
     /// <summary>
     /// 시간별 게이지 상승하는 프로그레스바용 값을 반환하는 헬퍼 함수
     /// </summary>
-    /// <returns></returns>
+    /// <returns>0~1, 다음 단계까지의 진행도</returns>
     public float GetLevelProgress()
     {
         int index = (int)Level;
-        if (index >= m_LevelThresholds.Length) return 1f;   // 최고 단계
+        if (index >= m_LevelThresholds.Length)
+        {
+            return 1f;// 최고 단계
+        }
         float prev = index == 0 ? k_BaseCoeff : m_LevelThresholds[index - 1];
         float next = m_LevelThresholds[index];
         return Mathf.Clamp01((Coefficient - prev) / (next - prev));
