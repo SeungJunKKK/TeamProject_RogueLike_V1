@@ -40,6 +40,61 @@ public class CheatConsole : MonoBehaviour
             Debug.Log($"[Cheat] F3 pressed: Gold +1000");
             GameManager.Instance.AddGold(1000);
         }
+
+        if (Keyboard.current.f4Key.wasPressedThisFrame)
+        {
+            Debug.Log($"[Cheat] F4 pressed: StartGame (Ready -> Playing)");
+            GameManager.Instance.StartGame();
+        }
+
+        if (Keyboard.current.f5Key.wasPressedThisFrame)
+        {
+            bool nextPaused = !GameManager.Instance.IsPaused;
+            Debug.Log($"[Cheat] F5 pressed: SetPause({nextPaused})");
+            GameManager.Instance.SetPause(nextPaused);
+        }
+
+        if (Keyboard.current.f6Key.wasPressedThisFrame)
+        {
+            Teleporter teleporter = FindAnyObjectByType<Teleporter>();
+            if (teleporter == null)
+            {
+                Debug.LogWarning($"[Cheat] F6: 씬에 Teleporter가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"[Cheat] F6 pressed: Teleporter.Interact (활성화 / 클리어 시 다음 스테이지)");
+                teleporter.Interact(gameObject);
+            }
+        }
+
+        if (Keyboard.current.f7Key.wasPressedThisFrame)
+        {
+            Teleporter teleporter = FindAnyObjectByType<Teleporter>();
+            if (teleporter == null)
+            {
+                Debug.LogWarning($"[Cheat] F7: 씬에 Teleporter가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"[Cheat] F7 pressed: Teleporter 충전 즉시 완료");
+                teleporter.DebugForceChargeComplete();
+            }
+        }
+
+        if (Keyboard.current.f8Key.wasPressedThisFrame)
+        {
+            Teleporter teleporter = FindAnyObjectByType<Teleporter>();
+            if (teleporter == null)
+            {
+                Debug.LogWarning($"[Cheat] F8: 씬에 Teleporter가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"[Cheat] F8 pressed: 가짜 보스 처치");
+                teleporter.DebugKillBoss();
+            }
+        }
     }
 }
 #endif
