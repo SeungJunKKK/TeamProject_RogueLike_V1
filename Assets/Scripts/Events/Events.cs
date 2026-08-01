@@ -93,3 +93,15 @@ public struct DifficultyChangedEvent
     public EDifficultyLevel Level;
     public float Coefficient;
 }
+
+public struct TeleporterStateChangedEvent
+{
+    public ETeleporterState State;
+}
+
+// 보스 사망 이벤트
+public struct BossDiedEvent
+{
+    public GameObject Boss;
+    public Vector2 Position;
+}

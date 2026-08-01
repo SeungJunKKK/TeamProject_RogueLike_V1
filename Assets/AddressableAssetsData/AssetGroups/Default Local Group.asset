@@ -20,11 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 16488d901008c8d48b5dbb4adef3961b
-    m_Address: Assets/Sprites/ROR_Player/Commando/Sprite_Charcter 1.controller
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26e7f0581f02a1647af4eddaa7b43bbf
     m_Address: DamageText
     m_ReadOnly: 0
