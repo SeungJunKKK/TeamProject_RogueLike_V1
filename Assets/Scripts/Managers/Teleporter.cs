@@ -71,8 +71,8 @@ public class Teleporter : MonoBehaviour, IInteractable
 
     private void UpdateWaitingForClear()
     {
-        // 현재는 임시값
-        int activeEnemies = EnemySpawner.Instance.ActiveEnemyCount;
+        // 스포너가 없는 씬(단독 테스트 등)에서는 적 0으로 간주
+        int activeEnemies = EnemySpawner.Instance != null ? EnemySpawner.Instance.ActiveEnemyCount : 0;
         bool bossDead = IsBossDead();
 
         if (activeEnemies == 0 && bossDead)     // AND 두 조건 (RoR1: 전멸 + 보스처치)
