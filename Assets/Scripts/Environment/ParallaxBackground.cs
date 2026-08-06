@@ -1,27 +1,37 @@
 using UnityEngine;
 
+// 카메라 이동에 따라 배경을 시차(parallax) 이동시킨다.
+// 카메라 이동량(delta) 기반이라 시작 위치가 어디든 첫 프레임에 튀지 않으며, X/Y 모두 처리한다.
 public class ParallaxBackground : MonoBehaviour
 {
-    private float length, startpos;
     public GameObject cam;
 
-    [Header("시차 효과 설정 (0 = 카메라와 동일하게 이동, 1 = 고정)")]
+    [Header("시차 효과 (0 = 고정/먼 배경, 1 = 카메라와 함께 이동/가까운 배경)")]
     public float ParallaxEffect;
 
-    void Start()
+    private Vector3 m_LastCamPosition;
+
+    private void Start()
     {
-        startpos = transform.position.x;
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        if (cam == null)
+        {
+            Debug.LogWarning($"[ParallaxBackground] {name}: cam이 연결되지 않았습니다.");
+            return;
+        }
+
+        m_LastCamPosition = cam.transform.position;
     }
 
-    void Update()
+    // 카메라(Cinemachine 포함)가 이동을 마친 뒤 배경을 옮기기 위해 LateUpdate 사용
+    private void LateUpdate()
     {
-        float temp = (cam.transform.position.x * (1 - ParallaxEffect));
-        float dist = (cam.transform.position.x * ParallaxEffect);
+        if (cam == null)
+        {
+            return;
+        }
 
-        transform.position = new Vector3(startpos + dist, transform.position.y, transform.position.z);
-
-        if (temp > startpos + length) startpos += length;
-        else if (temp < startpos - length) startpos -= length;
+        Vector3 delta = cam.transform.position - m_LastCamPosition;
+        transform.position += new Vector3(delta.x * ParallaxEffect, delta.y * ParallaxEffect, 0f);
+        m_LastCamPosition = cam.transform.position;
     }
 }
