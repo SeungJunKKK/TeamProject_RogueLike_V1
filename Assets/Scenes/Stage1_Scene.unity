@@ -207,25 +207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachinePipeline
---- !u!1 &163918500 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6602345470432063689, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-  m_PrefabInstance: {fileID: 432726118}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &163918503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 163918500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a56f3f43cadea0248975fcf9fddc785f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
-  cam: {fileID: 1821562446}
-  ParallaxEffect: 0.2
 --- !u!1001 &432726118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -234,30 +215,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1149624373972616029, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149624373972616029, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3682163970131072653, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3682163970131072653, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5156257370855236916, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5156257370855236916, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 1494773547157278692, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1821562446}
+    - target: {fileID: 5059426744271925820, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1821562446}
     - target: {fileID: 5283889551480158942, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -298,31 +263,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6846904693262201831, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1821562446}
     - target: {fileID: 8225549450485406807, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
       propertyPath: m_Name
       value: Stage1
       objectReference: {fileID: 0}
-    - target: {fileID: 8441026481242913685, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8441026481242913685, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6602345470432063689, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 163918503}
-    - targetCorrespondingSourceObject: {fileID: 644701561379441866, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1358613853}
-    - targetCorrespondingSourceObject: {fileID: 1098437900350360546, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 948071393}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
 --- !u!1001 &537697220
 PrefabInstance:
@@ -381,44 +333,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
---- !u!1 &948071390 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1098437900350360546, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-  m_PrefabInstance: {fileID: 432726118}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &948071393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948071390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a56f3f43cadea0248975fcf9fddc785f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
-  cam: {fileID: 1821562446}
-  ParallaxEffect: 0.8
---- !u!1 &1358613850 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 644701561379441866, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
-  m_PrefabInstance: {fileID: 432726118}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1358613853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1358613850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a56f3f43cadea0248975fcf9fddc785f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
-  cam: {fileID: 1821562446}
-  ParallaxEffect: 0.5
 --- !u!1 &1657999846
 GameObject:
   m_ObjectHideFlags: 0
