@@ -38,12 +38,32 @@ public class EnemySpawner : MonoBehaviour
         }
         Instance = this;
 
-        GameObject findPlayer = GameObject.FindWithTag("Player");
-        if (findPlayer != null)
+        if (Player == null)
         {
-            Player = findPlayer.transform;
+            GameObject findPlayer = GameObject.FindWithTag("Player");
+            if (findPlayer != null)
+            {
+                Player = findPlayer.transform;
+            }
         }
 
+        if (GroundTilemap == null)
+        {
+            GameObject groundObj = GameObject.FindWithTag("Ground");
+            if (groundObj != null)
+            {
+                GroundTilemap = groundObj.GetComponent<Tilemap>();
+            }
+
+            if (GroundTilemap == null)
+            {
+                GameObject namedObj = GameObject.Find("GroundTilemap"); 
+                if (namedObj != null)
+                {
+                    GroundTilemap = namedObj.GetComponent<Tilemap>();
+                }
+            }
+        }
     }
 
     private void OnDestroy()
