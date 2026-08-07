@@ -276,7 +276,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 867518171696054119, guid: fd56cfd3d7f282a45b7edf5ef549571e, type: 3}
       propertyPath: m_NextStageName
-      value: 
+      value: Boss_Scene
       objectReference: {fileID: 0}
     - target: {fileID: 1193246774167106122, guid: fd56cfd3d7f282a45b7edf5ef549571e, type: 3}
       propertyPath: m_Size.x

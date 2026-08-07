@@ -95,6 +95,20 @@ public class CheatConsole : MonoBehaviour
                 teleporter.DebugKillBoss();
             }
         }
+
+        if (Keyboard.current.f9Key.wasPressedThisFrame)
+        {
+            Chest chest = FindAnyObjectByType<Chest>();
+            if (chest == null)
+            {
+                Debug.LogWarning($"[Cheat] F9: 씬에 Chest가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"[Cheat] F9 pressed: Chest.Interact (골드 충분 시 열림)");
+                chest.Interact(gameObject);
+            }
+        }
     }
 }
 #endif
