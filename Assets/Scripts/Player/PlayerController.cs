@@ -119,7 +119,11 @@ public class PlayerController : MonoBehaviour
             Stats.AddExp(50f);
         }
         //===============================아이템 테스트===============================
-
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        {
+            Collider2D hit = CheckLadderUp();
+            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        }
 
 
     }
@@ -203,14 +207,26 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 플레이어의 몸이 현재 사다리 영역(LadderLayer)과 겹쳐있는지 검사합니다.
+    /// </summary>
+    public bool IsTouchingLadder()
+    {
+        // 플레이어 몸통 중심점
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(0f, 0.2f);
+        Collider2D col = Physics2D.OverlapCircle(centerPos, 0.2f, LadderLayer);
+        return col != null;
+    }
+
+
+    /// <summary>
     /// 플레이어 몸 중심에서 위로 레이저를 쏴서 사다리를 감지합니다. (사다리 앞에서 위 방향키 누를 때 사용)
     /// </summary>
     public Collider2D CheckLadderUp()
     {
-        // 플레이어 몸의 중심점 (transform.position에서 Y축으로 살짝 올림)
-        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+       
+        Debug.DrawRay(transform.position, Vector2.up * LadderCheckDistance, Color.red, 2f);
 
-        RaycastHit2D hit = Physics2D.Raycast(centerPos, Vector2.up, LadderCheckDistance, LadderLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, LadderCheckDistance, LadderLayer);
         return hit.collider;
     }
 

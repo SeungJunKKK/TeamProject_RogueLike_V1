@@ -21,15 +21,15 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1274797671, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - time: 0.083333336
-      value: {fileID: -263463902, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - time: 0.16666667
       value: {fileID: 1546458960, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - time: 0.25
-      value: {fileID: -2020118237, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - time: 0.33333334
+    - time: 0.083333336
       value: {fileID: -1902680768, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
+    - time: 0.16666667
+      value: {fileID: 1274797671, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
+    - time: 0.25
+      value: {fileID: -263463902, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
+    - time: 0.33333334
+      value: {fileID: -2020118237, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -53,11 +53,11 @@ AnimationClip:
       isSerializeReferenceCurve: 0
       metaData: 0
     pptrCurveMapping:
+    - {fileID: 1546458960, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
+    - {fileID: -1902680768, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
     - {fileID: 1274797671, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
     - {fileID: -263463902, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - {fileID: 1546458960, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
     - {fileID: -2020118237, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
-    - {fileID: -1902680768, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -82,4 +82,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: OnSkillActionTrigger
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
