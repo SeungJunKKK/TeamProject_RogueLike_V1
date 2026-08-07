@@ -166,3 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chest
   m_Price: 25
+  m_PossibleItems:
+  - {fileID: 11400000, guid: 5316a770c34dee04289e09dbde8320ef, type: 2}
+  - {fileID: 11400000, guid: f083e6d766c87674681e6a15e9a1f64e, type: 2}
+  - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}

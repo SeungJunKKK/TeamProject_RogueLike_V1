@@ -109,6 +109,43 @@ public class CheatConsole : MonoBehaviour
                 chest.Interact(gameObject);
             }
         }
+
+        if (Keyboard.current.f12Key.wasPressedThisFrame)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null || player.Stats == null)
+            {
+                Debug.LogWarning($"[Cheat] F12: 씬에 PlayerController 또는 PlayerStats가 없습니다.");
+            }
+            else
+            {
+                PlayerStats stats = player.Stats;
+                float armorValue = stats.Armor != null ? stats.Armor.Value : 0f;
+
+                // 인벤토리에서 아이템 목록과 개수 가져오기
+                string itemListStr = "없음";
+                PlayerInventory inventory = player.GetComponent<PlayerInventory>();
+                if (inventory != null && inventory.passiveItems.Count > 0)
+                {
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    foreach (var pair in inventory.passiveItems)
+                    {
+                        sb.Append($"\n   - {pair.Key.itemName} (x{pair.Value})");
+                    }
+                    itemListStr = sb.ToString();
+                }
+
+                Debug.Log($"<color=cyan>[Cheat] ===== 🧑‍🚀 현재 플레이어 정보 =====</color>\n" +
+                          $" 체력: {stats.CurrentHealth:F1} / {stats.MaxHealth.Value:F1}\n" +
+                          $" 방어력: {armorValue:F1}\n" +
+                          $" 공격력: {stats.Damage.Value:F1} |  공속: {stats.AttackSpeed.Value:F2}\n" +
+                          $" 치명타 확률: {stats.CritChance.Value * 100:F1}% |  치명타 배율: {stats.CritDamage.Value * 100:F0}%\n" +
+                          $" 이동 속도: {stats.MoveSpeed.Value:F1}\n" +
+                          $" 레벨: {stats.CurrentLevel} (EXP: {stats.CurrentExp:F0} / {stats.GetRequiredExp(stats.CurrentLevel):F0})\n" +
+                          $" <color=yellow>보유 아이템:</color> {itemListStr}");
+            }
+        }
+
     }
 }
 #endif
