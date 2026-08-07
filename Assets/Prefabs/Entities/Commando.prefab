@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 5023713092067731245}
   - component: {fileID: 8281161932793189983}
   - component: {fileID: 6874900604638559105}
+  - component: {fileID: 7789350107087421497}
   m_Layer: 6
   m_Name: Sprite_Charcter
   m_TagString: Untagged
@@ -146,6 +147,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7789350107087421497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6293781722361756835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 426103502d2c38c419bc911d7428e8d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationReceiver
 --- !u!1 &6638626711768443454
 GameObject:
   m_ObjectHideFlags: 0
