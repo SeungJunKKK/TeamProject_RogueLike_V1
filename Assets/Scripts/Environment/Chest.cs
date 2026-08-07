@@ -38,7 +38,7 @@ public class Chest : MonoBehaviour, IInteractable
         {
             return;
         }
-        Open();
+        //Open();
     }
 #endif
 
@@ -48,6 +48,5 @@ public class Chest : MonoBehaviour, IInteractable
         m_Animator.SetTrigger("Open");
 
         Debug.Log($"[Chest] 열림! 아이템 지급 예정");
-        // TODO: 아이템 스폰 (P3 연결)
     }
 }
