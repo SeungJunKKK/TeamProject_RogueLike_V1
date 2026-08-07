@@ -86,7 +86,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 20f,
+                        KnockbackForce = 3f,
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true

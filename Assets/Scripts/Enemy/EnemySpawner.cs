@@ -37,6 +37,13 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
         Instance = this;
+
+        GameObject findPlayer = GameObject.FindWithTag("Player");
+        if (findPlayer != null)
+        {
+            Player = findPlayer.transform;
+        }
+
     }
 
     private void OnDestroy()

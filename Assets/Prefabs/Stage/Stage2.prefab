@@ -292,7 +292,7 @@ PrefabInstance:
       objectReference: {fileID: 4483619679623627069, guid: d05fcdbed82f220448e92a26cd305530, type: 3}
     - target: {fileID: 1193246774167106122, guid: fd56cfd3d7f282a45b7edf5ef549571e, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4516112851572194324, guid: fd56cfd3d7f282a45b7edf5ef549571e, type: 3}
       propertyPath: m_Name
@@ -360,6 +360,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stage2_Tilemap
       objectReference: {fileID: 0}
+    - target: {fileID: 1219319328769942679, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1219319328769942679, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_CompositePaths.m_Paths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5109537537534457649, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -400,7 +408,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6033114538618788833, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_CompositeOperation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141294772314777098, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_GeometryType
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1219319328769942679, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+    - {fileID: 6640004989402178572, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

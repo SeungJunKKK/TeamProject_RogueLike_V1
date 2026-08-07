@@ -19,25 +19,6 @@ public class PlayerClimbState : IState
         m_Player.Rb.bodyType = RigidbodyType2D.Kinematic;
         m_Player.Rb.linearVelocity = Vector2.zero;
 
-        if (m_LadderCollider != null)
-        {
-            Vector3 playerPos = m_Player.transform.position;
-            UnityEngine.Tilemaps.Tilemap tilemap = m_LadderCollider.GetComponent<UnityEngine.Tilemaps.Tilemap>();
-
-            if (tilemap != null)
-            {
-                Vector3Int cellPos = tilemap.WorldToCell(m_Player.transform.position);
-                Vector3 tileCenter = tilemap.GetCellCenterWorld(cellPos);
-                playerPos.x = tileCenter.x;
-            }
-            else
-            {
-                playerPos.x = m_LadderCollider.bounds.center.x;
-            }
-
-            m_Player.transform.position = playerPos;
-        }
-
         m_Player.Anim.Play("Climb"); 
     }
 
@@ -50,13 +31,13 @@ public class PlayerClimbState : IState
         }
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
-        if (Mathf.Abs(horizontalInput) > 0.1f)
+        if (Mathf.Abs(horizontalInput) > 0.5f)
         {
             m_Player.ChangeState(new PlayerFallState(m_Player));
             return;
         }
 
-        if (m_Player.CheckLadderUp() == null && m_Player.CheckLadderDown() == null)
+        if (!m_Player.IsTouchingLadder())
         {
             m_Player.ChangeState(new PlayerFallState(m_Player));
             return;

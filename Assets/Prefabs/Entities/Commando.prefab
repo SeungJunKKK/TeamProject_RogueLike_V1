@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2341271734446087110}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MuzzlePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5023713092067731245}
   - component: {fileID: 8281161932793189983}
   - component: {fileID: 6874900604638559105}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sprite_Charcter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4783738, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 6334638261001187944}
   - component: {fileID: 5366159880951107536}
   - component: {fileID: 1604274745611265651}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MeleeHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8819557065366225776}
   - component: {fileID: 2199652376381101282}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sprite_Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,7 +346,8 @@ GameObject:
   - component: {fileID: 1396024979322899933}
   - component: {fileID: 3231689884246160202}
   - component: {fileID: 4741739346734497859}
-  m_Layer: 0
+  - component: {fileID: -2880686990652575446}
+  m_Layer: 6
   m_Name: Commando
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -398,7 +399,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &3693393217399646514
 CapsuleCollider2D:
@@ -569,17 +570,17 @@ MonoBehaviour:
   DashSpeed: 5
   DashDuration: 0.2
   ImpulseSource: {fileID: 2157723758274326119}
-  CooldownManager: {fileID: 0}
-  Z_SFXAddress: 
-  X_SFXAddress: 
-  V_SFXAddress: 
-  VStrengthened_SFXAddress: 
+  CooldownManager: {fileID: 1396024979322899933}
+  Z_SFXAddress: SFX_Commando_Shoot1
+  X_SFXAddress: SFX_Commando_Shoot2
+  V_SFXAddress: SFX_Commando_Shoot3
+  VStrengthened_SFXAddress: SFX_Commando_Shoot3
   LadderLayer:
     serializedVersion: 2
-    m_Bits: 0
-  LadderCheckDistance: 0.5
+    m_Bits: 8192
+  LadderCheckDistance: 1
   MuzzlePos: {fileID: 2341271734446087110}
-  MeleeCollider: {fileID: 0}
+  MeleeCollider: {fileID: 5366159880951107536}
   IsBarrageMode: 0
 --- !u!114 &4741739346734497859
 MonoBehaviour:
@@ -608,6 +609,22 @@ MonoBehaviour:
   CurrentLevel: 1
   MaxLevel: 99
   CurrentExp: 0
+--- !u!114 &-2880686990652575446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435904605620967543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66ac32486d190994386eecfcacebeee9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
+  m_Range: 2
+  m_InteractableLayer:
+    serializedVersion: 2
+    m_Bits: 32768
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +634,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 213504185392303094}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FeetPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

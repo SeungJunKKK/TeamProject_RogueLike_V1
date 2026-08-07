@@ -37,7 +37,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 25f, // 넉백 수치[cite: 13]
+                        KnockbackForce = 2f, 
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
