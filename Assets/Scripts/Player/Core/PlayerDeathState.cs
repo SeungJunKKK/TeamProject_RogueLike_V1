@@ -31,6 +31,7 @@ public class PlayerDeathState : IState
         }
 
         Debug.Log("<color=red>[Player] 사망 상태 </color>");
+        EventBus.Publish(new PlayerDiedEvent());
     }
 
     public void Update()
@@ -52,8 +53,6 @@ public class PlayerDeathState : IState
 
     private void ReturnToCharacterSelect()
     {
-       
-
         string targetSceneName = "PlayerSelectScene";
         Debug.Log($"[Player] 씬 전환: {targetSceneName}으로 이동합니다.");
         SceneManager.LoadScene(targetSceneName);

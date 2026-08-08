@@ -613,6 +613,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4741739346734497859, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: CharacterData
+      value: 
+      objectReference: {fileID: 11400000, guid: cf1ac0c8a84b29f4585eea3f3da6331b, type: 2}
+    - target: {fileID: 4741739346734497859, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: MoveSpeed.BaseValue
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4741739346734497859, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: AttackSpeed.BaseValue
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7435904605620967543, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: m_Name
       value: Commando
@@ -792,7 +804,7 @@ Transform:
   m_GameObject: {fileID: 1821562446}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -102280, y: 249521.95, z: -10}
+  m_LocalPosition: {x: -105520, y: 257429.58, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

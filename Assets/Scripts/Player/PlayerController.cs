@@ -97,38 +97,38 @@ public class PlayerController : MonoBehaviour
         if (m_CurrentState != null) m_CurrentState.Update();
 
         //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "군인의 주사기",
-                TargetStat = EStatType.AttackSpeed,
-                Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
-            });
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "군인의 주사기",
+        //        TargetStat = EStatType.AttackSpeed,
+        //        Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
+        //    });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "안경 메이커의 안경",
-                TargetStat = EStatType.CritChance,
-                Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
-            });
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "안경 메이커의 안경",
+        //        TargetStat = EStatType.CritChance,
+        //        Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
+        //    });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Stats.AddExp(50f);
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Stats.AddExp(50f);
+        //}
 
 
-        //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
-        {
-            Collider2D hit = CheckLadderUp();
-            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
-        }
+        ////===============================아이템 테스트===============================
+        //if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        //{
+        //    Collider2D hit = CheckLadderUp();
+        //    Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        //}
 
 
     }

@@ -2,15 +2,19 @@
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("Character Data")]
+    public SurvivorData CharacterData;
+
     [Header("Core Stats")]
-    public float CurrentHealth { get; set; } 
-    public CharacterStat MaxHealth;
-    public CharacterStat MoveSpeed;
-    public CharacterStat Damage;
-    public CharacterStat AttackSpeed;
-    public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
-    public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
-    public CharacterStat Armor;       // 방어력 (피해 감소율 계산에 사용)
+    [HideInInspector]public float CurrentHealth { get; set; } 
+    [HideInInspector]public CharacterStat MaxHealth;
+    [HideInInspector]public CharacterStat HealthRegen;
+    [HideInInspector]public CharacterStat MoveSpeed;
+    [HideInInspector]public CharacterStat Damage;
+    [HideInInspector]public CharacterStat AttackSpeed;
+    [HideInInspector]public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
+    [HideInInspector]public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
+    [HideInInspector] public CharacterStat Armor;       // 방어력 (피해 감소율 계산에 사용)
 
 
     [Header("Level & EXP")]
@@ -20,15 +24,35 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
-        MaxHealth = new CharacterStat(100f);
+        // 데이터가 안 들어와 있으면 에러 방지용으로 기본값 세팅 (또는 에러 로그)
+        if (CharacterData == null)
+        {
+            Debug.LogError("[PlayerStats] CharacterData가 할당되지 않았습니다!");
+            return;
+        }
+
+        MaxHealth = new CharacterStat(CharacterData.BaseMaxHealth);
+        HealthRegen = new CharacterStat(CharacterData.BaseHealthRegen);
+        MoveSpeed = new CharacterStat(CharacterData.BaseMoveSpeed);
+        Damage = new CharacterStat(CharacterData.BaseDamage);
+        Armor = new CharacterStat(CharacterData.BaseArmor);
+        AttackSpeed = new CharacterStat(CharacterData.BaseAttackSpeed);
+        CritChance = new CharacterStat(CharacterData.BaseCritChance);
+        CritDamage = new CharacterStat(CharacterData.BaseCritDamage);
+
         CurrentHealth = MaxHealth.Value;
-        MoveSpeed = new CharacterStat(5f);
-        Damage = new CharacterStat(10f); 
-        AttackSpeed = new CharacterStat(1f); 
-        CritChance = new CharacterStat(0.01f); 
-        CritDamage = new CharacterStat(2.0f);
-        Armor = new CharacterStat(1.0f);
     }
+
+    private void Update()
+    {
+        if (CurrentHealth > 0 && CurrentHealth < MaxHealth.Value)
+        {
+            CurrentHealth += HealthRegen.Value * Time.deltaTime;
+            CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth.Value);
+        }
+    }
+
+
     private void OnEnable()
     {
         EventBus.Subscribe<ItemPickedUpEvent>(OnItemPickedUp);
@@ -96,19 +120,24 @@ public class PlayerStats : MonoBehaviour
     }
 
 
-
     private void LevelUp()
     {
         CurrentLevel++;
-        MaxHealth.BaseValue += 20f;
-        Damage.BaseValue += 2f;
 
-        // 체력 스탯이 변했으니 UI 업데이트 발행
+        MaxHealth.BaseValue += CharacterData.HealthPerLevel;
+        HealthRegen.BaseValue += CharacterData.HealthRegenPerLevel;
+        Damage.BaseValue += CharacterData.DamagePerLevel;
+        Armor.BaseValue += CharacterData.ArmorPerLevel;
+
+        CurrentHealth += CharacterData.HealthPerLevel;
+
         EventBus.Publish(new PlayerDamagedEvent
         {
             Amount = 0,
             CurrentHp = CurrentHealth,
             MaxHp = MaxHealth.Value
         });
+
+        Debug.Log($"[PlayerStats] 레벨업! 현재 레벨: {CurrentLevel}");
     }
 }
