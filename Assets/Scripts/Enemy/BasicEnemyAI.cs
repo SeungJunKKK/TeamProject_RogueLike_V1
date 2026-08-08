@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// 1. 행동(Behavior)을 나타내는 순수 상태만 남김 (Recover 삭제)
 public enum EnemyState
 {
     Chase,
@@ -28,7 +27,7 @@ public class BasicEnemyAI : EnemyBase
     public float AttackRange = 1.5f;
     public float AttackWindup = 0.5f;  // 공격 선딜레이 (State 진행 시간)
     public float AttackCooldown = 2f;  // 공격 쿨타임 (Combat 시간)
-    [Range(0f, 1f)] public float AttackMoveRatio = 0.3f; // 공격 중 덜덜거리며 다가오는 비율
+    [Range(0f, 1f)] public float AttackMoveRatio = 0.3f;
 
     [Header("Raycast Sensors (자동 계산)")]
     public float GroundRayLength = 1.5f;
@@ -138,7 +137,7 @@ public class BasicEnemyAI : EnemyBase
     {
         if (Player == null || m_CurrentHp <= 0f) return;
 
-        // 1. 매 프레임 속도 초기화 (더티 스테이트 버그 방지)
+        // 매 프레임 속도 초기화
         m_DesiredVelocityX = 0f;
 
         // 2. 통합 정보 갱신 및 논리 블록 실행
@@ -151,9 +150,6 @@ public class BasicEnemyAI : EnemyBase
         ApplyMovement();   // 물리 적용 모듈
     }
 
-    // ==========================================
-    // [Module: Target Info & Sensors]
-    // ==========================================
     private void UpdateTargetInfo()
     {
         m_DistanceToPlayer = Vector2.Distance(transform.position, Player.position);
@@ -181,11 +177,10 @@ public class BasicEnemyAI : EnemyBase
             m_Animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.linearVelocity.x));
             m_Animator.SetBool("IsGrounded", m_IsGrounded);
         }
+
+        Debug.Log($"바닥에 닿았는가? : {m_IsGrounded}");
     }
 
-    // ==========================================
-    // [Module: Combat (Time Management)]
-    // ==========================================
     private void UpdateCombat()
     {
         // 상태와 무관하게 쿨타임은 세상의 시간처럼 흐름
@@ -240,7 +235,7 @@ public class BasicEnemyAI : EnemyBase
         if (m_IsWallAhead || !m_IsGroundAhead)
         {
             JumpIfNeeded();
-        }
+        }     
         else
         {
             m_DesiredVelocityX = m_Direction * MoveSpeed;
@@ -250,9 +245,6 @@ public class BasicEnemyAI : EnemyBase
     private void UpdateAttack()
     {
         m_StateTimer += Time.deltaTime;
-
-        // 🔍 디버깅용 로그 추가 (Attack 상태일 때 매 프레임 출력됨)
-        Debug.Log($"Attack Timer: {m_StateTimer}, Distance: {m_DistanceToPlayer}");
 
         // 공격 중 플레이어가 사거리 밖으로 벗어나면 즉시 추적 복귀
         if (m_DistanceToPlayer > AttackRange)
@@ -268,8 +260,20 @@ public class BasicEnemyAI : EnemyBase
         {
             if (Player != null && m_DistanceToPlayer <= AttackRange)
             {
-                // Debug.Log($"플레이어를 {m_Damage} 의 데미지로 공격."); (잠시 주석 처리하거나 삭제)
-                // TODO: 실제 플레이어 데미지 함수 호출
+                if (Player.TryGetComponent(out IDamageable targetDamageable))
+                {
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = m_Damage,                           // 내 공격력
+                        HitPoint = Player.position,                  // 타격 지점
+                        HitDirection = new Vector2(m_Direction, 0f), // 내가 바라보는 방향
+                        KnockbackForce = 0f,                        
+                        Attacker = gameObject,                      
+                        IsCrit = false,                             
+                        CanProc = false                             
+                    };
+                    targetDamageable.TakeDamage(info);
+                }
             }
 
             m_AttackCooldownTimer = AttackCooldown;
@@ -277,9 +281,6 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
-    // ==========================================
-    // [Module: Movement & Physics]
-    // ==========================================
     private void JumpIfNeeded()
     {
         if (Time.time - m_LastJumpTime >= JumpCooldown)
@@ -351,7 +352,6 @@ public class BasicEnemyAI : EnemyBase
         if (m_Collider == null) m_Collider = GetComponent<BoxCollider2D>();
         if (m_Collider == null) return;
 
-        // 에디터에서 플레이어가 없을 때를 대비한 기즈모 전용 논리 방향
         int gizmoDir = Application.isPlaying ? m_Direction : (m_IsFacingRight ? 1 : -1);
         if (gizmoDir == 0) gizmoDir = 1;
 
