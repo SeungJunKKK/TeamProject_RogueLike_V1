@@ -12,6 +12,7 @@ public enum EDustType
 public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
+    private bool m_IsHitStopping = false;
 
     public PlayerStats Stats { get; private set; }
     public Rigidbody2D Rb { get; private set; }
@@ -42,13 +43,14 @@ public class PlayerController : MonoBehaviour
     public string X_SFXAddress = "";
     public string V_SFXAddress = "";
     public string VStrengthened_SFXAddress = "";
-
     [Header("Ladder Settings")]
     public LayerMask LadderLayer; 
     public float LadderCheckDistance = 0.5f; 
-
     [Header("Muzzle Position")]
     public Transform MuzzlePos;
+    [Header("Melee Hitbox")]
+    public Collider2D MeleeCollider;
+
 
 
     public Vector2 MovementInput { get; private set; }
@@ -117,7 +119,11 @@ public class PlayerController : MonoBehaviour
             Stats.AddExp(50f);
         }
         //===============================아이템 테스트===============================
-
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        {
+            Collider2D hit = CheckLadderUp();
+            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        }
 
 
     }
@@ -201,14 +207,26 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// 플레이어의 몸이 현재 사다리 영역(LadderLayer)과 겹쳐있는지 검사합니다.
+    /// </summary>
+    public bool IsTouchingLadder()
+    {
+        // 플레이어 몸통 중심점
+        Vector2 centerPos = (Vector2)transform.position + new Vector2(0f, 0.2f);
+        Collider2D col = Physics2D.OverlapCircle(centerPos, 0.2f, LadderLayer);
+        return col != null;
+    }
+
+
+    /// <summary>
     /// 플레이어 몸 중심에서 위로 레이저를 쏴서 사다리를 감지합니다. (사다리 앞에서 위 방향키 누를 때 사용)
     /// </summary>
     public Collider2D CheckLadderUp()
     {
-        // 플레이어 몸의 중심점 (transform.position에서 Y축으로 살짝 올림)
-        Vector2 centerPos = (Vector2)transform.position + new Vector2(-0.04f, 0.2f);
+       
+        Debug.DrawRay(transform.position, Vector2.up * LadderCheckDistance, Color.red, 2f);
 
-        RaycastHit2D hit = Physics2D.Raycast(centerPos, Vector2.up, LadderCheckDistance, LadderLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, LadderCheckDistance, LadderLayer);
         return hit.collider;
     }
 
@@ -244,14 +262,33 @@ public class PlayerController : MonoBehaviour
         {
             ImpulseSource.GenerateImpulse(new Vector3(direction.x * shakeForce, 0f, 0f));
         }
-        StartCoroutine(HitStopRoutine(hitStopDuration));
+
+        if (!m_IsHitStopping && hitStopDuration > 0f)
+        {
+            StartCoroutine(HitStopRoutine(hitStopDuration));
+        }
+    }
+
+    /// <summary>
+    /// 싱글 플레이 기반으로 플레이어가 공격을 맞았을 때 잠시 시간을 멈추는 효과를 발생시킵니다. (Hit Stop)
+    /// 멀티 플레이에서는 사용하지 않을 계획입니다. 
+    /// </summary>
+    /// <param name="duration">멈춤 지속 시간</param>
+    public void TriggerHitStop(float duration = 0.05f)
+    {
+        if (!m_IsHitStopping && duration > 0f)
+        {
+            StartCoroutine(HitStopRoutine(duration));
+        }
     }
 
     private IEnumerator HitStopRoutine(float duration)
     {
-        Time.timeScale = 0.1f;
+        m_IsHitStopping = true;
+        Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
+        m_IsHitStopping = false;
     }
 
     public void OnSkillActionTrigger()
@@ -261,5 +298,40 @@ public class PlayerController : MonoBehaviour
             attackState.OnActionTriggered();
         }
     }
+
+    /// <summary>
+    /// 애니메이션 이벤트에서 호출하여, 공격 후딜레이 캔슬(대시 등)을 허용합니다.
+    /// </summary>
+    public void EnableActionCancel()
+    {
+        if (m_CurrentState is PlayerAttackState attackState)
+        {
+            attackState.SetCanCancel(true);
+        }
+    }
+    public void EnableHitbox()
+    {
+        Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
+
+        if (MeleeCollider != null)
+        {
+            MeleeCollider.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerController] MeleeCollider가 인스펙터에 할당되지 않았습니다");
+        }
+    }
+
+    public void DisableHitbox()
+    {
+        Debug.Log("<color=cyan>[PlayerController] DisableHitbox 호출 - 공격 판정 OFF</color>");
+
+        if (MeleeCollider != null)
+        {
+            MeleeCollider.enabled = false;
+        }
+    }
+
 
 }

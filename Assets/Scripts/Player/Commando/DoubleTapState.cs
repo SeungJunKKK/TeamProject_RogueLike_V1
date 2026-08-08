@@ -5,13 +5,11 @@ namespace Player.Commando
     public class DoubleTapState : PlayerAttackState
     {
         private readonly float m_TotalDuration;
-        private bool m_HasFiredSecondShot;
 
         public DoubleTapState(PlayerController player, float duration)
             : base(player, "Z_DoubleTap", duration, SkillType.Primary_Z)
         {
             m_TotalDuration = duration;
-            m_HasFiredSecondShot = false;
         }
 
 
@@ -25,7 +23,8 @@ namespace Player.Commando
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
             float attackRange = 15f;
-            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange);
+            int enemyLayer = LayerMask.GetMask("Enemy");
+            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
@@ -42,7 +41,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 15f,
+                        KnockbackForce = 1f,
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -56,8 +55,9 @@ namespace Player.Commando
             if (hitSomething)
             {
                 m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
+                m_Player.TriggerHitStop(0.05f);
             }
-            else 
+            else
             {
                 m_Player.TriggerHitFeedback(shootDirection, 0.1f, 0f);
             }
