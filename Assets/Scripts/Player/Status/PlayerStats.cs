@@ -10,6 +10,8 @@ public class PlayerStats : MonoBehaviour
     public CharacterStat AttackSpeed;
     public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
     public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
+    public CharacterStat Armor;       // 방어력 (피해 감소율 계산에 사용)
+
 
     [Header("Level & EXP")]
     public int CurrentLevel = 1;
@@ -23,7 +25,8 @@ public class PlayerStats : MonoBehaviour
         Damage = new CharacterStat(10f); 
         AttackSpeed = new CharacterStat(1f); 
         CritChance = new CharacterStat(0.01f); 
-        CritDamage = new CharacterStat(2.0f); 
+        CritDamage = new CharacterStat(2.0f);
+        Armor = new CharacterStat(1.0f);
     }
     private void OnEnable()
     {
@@ -73,10 +76,25 @@ public class PlayerStats : MonoBehaviour
             case EStatType.MaxHealth: MaxHealth.AddModifier(e.Modifier); break;
             case EStatType.CritChance: CritChance.AddModifier(e.Modifier); break;
             case EStatType.CritDamage: CritDamage.AddModifier(e.Modifier); break;
-
             default: Debug.LogWarning($"알 수 없는 스탯 타입: {e.TargetStat}"); break;
         }
+
     }
+    public void IncreaseMaxHealth(float amount)
+    {
+        MaxHealth.BaseValue += amount;
+
+        EventBus.Publish(new PlayerDamagedEvent
+        {
+            Amount = 0,
+            CurrentHp = CurrentHealth,
+            MaxHp = MaxHealth.Value
+        });
+
+        Debug.Log($"[PlayerStats] 최대 체력이 {amount}만큼 영구 증가했습니다!");
+    }
+
+
 
     private void LevelUp()
     {

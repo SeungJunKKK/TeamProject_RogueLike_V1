@@ -12,8 +12,8 @@ public class PlayerInteractor : MonoBehaviour
         {
             return;
         }
-
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        // 위 화살표 키를 눌렀을 때 상호작용 시도
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
             TryInteract();
         }

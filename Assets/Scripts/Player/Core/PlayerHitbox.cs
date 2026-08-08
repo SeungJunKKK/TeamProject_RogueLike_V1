@@ -2,36 +2,44 @@
 
 public class PlayerHitbox : MonoBehaviour
 {
-    public PlayerController Player;
+    public PlayerController Player; 
     public float DamageMultiplier = 1.0f; 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) 
         {
-            IDamageable damageable = collision.GetComponent<IDamageable>();
-            if (damageable != null)
+            IDamageable damageable = collision.GetComponent<IDamageable>(); 
+            if (damageable != null) 
             {
-              
-                bool isCrit = Player.Stats.RollCriticalHit();
-                float baseDamage = Player.Stats.Damage.Value * DamageMultiplier;
-                float finalDamage = isCrit ? baseDamage * Player.Stats.CritDamage.Value : baseDamage;
-               
-                Vector2 hitDirection = Player.IsFacingRight ? Vector2.right : Vector2.left;
+                bool isCrit = Player.Stats.RollCriticalHit(); 
+                float baseDamage = Player.Stats.Damage.Value * DamageMultiplier; 
+                float finalDamage = isCrit ? baseDamage * Player.Stats.CritDamage.Value : baseDamage; 
+
+                Vector2 hitDirection = Player.IsFacingRight ? Vector2.right : Vector2.left; 
+
+                // 2. DamageInfo 세팅
                 DamageInfo info = new DamageInfo
                 {
-                    Amount = 2f,
+                    Amount = finalDamage,          
                     HitPoint = collision.ClosestPoint(transform.position),
-                    HitDirection = hitDirection,
-                    KnockbackForce = 10f,
-                    Attacker = Player.gameObject,
-                    IsCrit = isCrit,
-                    CanProc = true
+                    HitDirection = hitDirection,   
+                    KnockbackForce = 1f,         
+                    Attacker = Player.gameObject,  
+                    IsCrit = isCrit,             
+                    CanProc = true                  
                 };
 
                 damageable.TakeDamage(info);
-                Player.TriggerHitFeedback(hitDirection, 0.3f, 0.05f);
+                Player.TriggerHitFeedback(hitDirection, 0.3f, 0.05f); 
+
+                // ==========================================
+                // [아이템 연동] 데미지 적용 후 아이템
+                // ==========================================
+                if (info.CanProc) 
+                {
+                    Player.OnEnemyHit(collision.gameObject, finalDamage);
+                }
             }
         }
     }

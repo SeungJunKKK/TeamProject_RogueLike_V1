@@ -94,6 +94,11 @@ namespace Player.Commando
 
                     damageable.TakeDamage(info);
                     hitSomething = true;
+
+                    if (info.CanProc)
+                    {
+                        m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
+                    }
                 }
             }
 
