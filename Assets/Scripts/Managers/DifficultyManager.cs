@@ -88,6 +88,43 @@ public class DifficultyManager : Singleton<DifficultyManager>
     public void AddDebugTime(float seconds)
     {
         m_ElapsedSeconds += seconds;
+
+        // 시간을 더한 직후 Coefficient 및 Level 즉시 계산 - 치트 직후 난이도 UI 갱신을 위해 추가했음
+        Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 60f) * k_TimeFactor * k_DifficultyValue;
+        Level = CalculateLevel(Coefficient);
+    }
+#endif
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    /// <summary>
+    /// [치트] 난이도 레벨을 강제로 1단계 올리고, 플레이어에게도 1레벨 업 상당의 경험치를 지급.
+    /// </summary>
+    public void AddDebugLevel()
+    {
+        // 난이도 레벨 강제 상승
+        int nextLevelIndex = (int)Level + 1;
+        int maxLevelIndex = System.Enum.GetValues(typeof(EDifficultyLevel)).Length - 1;
+
+        if (nextLevelIndex > maxLevelIndex)
+        {
+            nextLevelIndex = maxLevelIndex;
+        }
+
+        Level = (EDifficultyLevel)nextLevelIndex;
+
+        // 계수 및 레벨업 이벤트 발행 (우측 상단 난이도 UI)
+        Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 60f) * k_TimeFactor * k_DifficultyValue;
+        EventBus.Publish(new DifficultyChangedEvent { Level = Level, Coefficient = Coefficient });
+
+        // 플레이어 경험치/레벨 반영 (하단 HUD_Bottom UI)
+        var player = FindAnyObjectByType<PlayerController>();
+        if (player != null && player.Stats != null)
+        {
+            float requiredExp = player.Stats.GetRequiredExp(player.Stats.CurrentLevel);
+            player.Stats.AddExp(requiredExp);
+        }
+
+        Debug.Log($"[Cheat] 난이도 강제 상승: {Level} & 플레이어 경험치 지급 완료");
     }
 #endif
 

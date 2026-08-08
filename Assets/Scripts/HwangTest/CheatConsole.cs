@@ -110,6 +110,20 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
+        // 난이도 레벨업 치트 추가 (F10)
+        if (Keyboard.current.f10Key.wasPressedThisFrame)
+        {
+            if (DifficultyManager.Instance != null)
+            {
+                Debug.Log($"[Cheat] F10 pressed: Difficulty Level +1");
+                DifficultyManager.Instance.AddDebugLevel();
+            }
+            else
+            {
+                Debug.LogWarning($"[Cheat] F10: 씬에 DifficultyManager가 없습니다.");
+            }
+        }
+
         if (Keyboard.current.f12Key.wasPressedThisFrame)
         {
             PlayerController player = FindAnyObjectByType<PlayerController>();
