@@ -66,9 +66,7 @@ public class CharacterSelectManager : MonoBehaviour
     {
         if (m_SelectedSurvivor != null)
         {
-            // TODO: 선택된 프리팹 정보를 GameManager에 넘겨주어야 함
-            // GameManager.Instance.SetPlayerPrefab(m_SelectedSurvivor.PlayerPrefab);
-
+            GameManager.Instance.SetSelectedPlayer(m_SelectedSurvivor.PlayerPrefab);
             SceneManager.LoadScene("Stage1_Scene"); // 실제 게임 씬 이름으로 변경
         }
     }

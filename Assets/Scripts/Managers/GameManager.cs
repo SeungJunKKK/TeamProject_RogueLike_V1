@@ -1,8 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
+    [Header("Teleporter Audio")]
+    [SerializeField] private AudioClip m_TeleportInSound;
+
+    [Header("Selected Player Settings")]
+    public GameObject SelectedPlayerPrefab;
+
     private Coroutine m_HitStopCoroutine;
 
     public EGameState State { get; private set; }
@@ -20,12 +27,14 @@ public class GameManager : Singleton<GameManager>
 
         EventBus.Subscribe<PlayerDiedEvent>(OnPlayerDied);
         EventBus.Subscribe<MonsterDiedEvent>(OnMonsterDied);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<PlayerDiedEvent>(OnPlayerDied);
         EventBus.Unsubscribe<MonsterDiedEvent>(OnMonsterDied);
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     public void RequestHitStop(float duration)
     {
@@ -38,6 +47,48 @@ public class GameManager : Singleton<GameManager>
 
         m_HitStopCoroutine = StartCoroutine(HitStopRoutine(duration));
     }
+
+    /// <summary>
+    /// 선택창에서 플레이어를 선택하면 호출되는 메서드. SelectedPlayerPrefab을 설정하고 로그를 출력
+    /// </summary>
+    /// <param name="playerPrefab"></param>
+    public void SetSelectedPlayer(GameObject playerPrefab)
+    {
+        SelectedPlayerPrefab = playerPrefab;
+        Debug.Log($"<color=green>[GameManager] 플레이어 선택 완료: {playerPrefab.name}</color>");
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "TitleScene" && scene.name != "PlayerSelectScene")
+        {
+            SpawnPlayer();
+
+            State = EGameState.Ready; 
+            StartGame(); 
+
+            if (m_TeleportInSound != null && SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlaySFX(m_TeleportInSound);
+            }
+        }
+    }
+    private void SpawnPlayer()
+    {
+        if (SelectedPlayerPrefab == null)
+        {
+            Debug.LogError("[GameManager] 선택된 플레이어 프리팹이 없습니다! SelectScene에서 제대로 전달되었는지 확인하세요.");
+            return;
+        }
+
+        // 씬에서 "PlayerSpawnPoint"라는 태그를 가진 빈 오브젝트를 찾아 그 위치에 스폰
+        GameObject spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
+        Vector3 spawnPosition = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
+
+        Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
+        Debug.Log($"<color=cyan>[GameManager] 플레이어 스폰 완료 위치: {spawnPosition}</color>");
+    }
+
 
     public void StartGame()
     {

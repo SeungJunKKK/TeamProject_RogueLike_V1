@@ -48,6 +48,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Teleporter
   m_ChargeDuration: 90
   m_NextStageName: 
+  m_TeleportOutSound: {fileID: 8300000, guid: 94c9bd113ba4029458e4f5db3f39611a, type: 3}
+  m_SpriteRenderer: {fileID: 1193246774167106122}
+  m_ClearedSprite: {fileID: 21300000, guid: d05fcdbed82f220448e92a26cd305530, type: 3}
 --- !u!58 &-7381383045886590864
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -133,14 +136,14 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 709ff3425c6ae554894cfc70774c45a3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.65625, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
