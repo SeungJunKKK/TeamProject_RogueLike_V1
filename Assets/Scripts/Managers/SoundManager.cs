@@ -6,11 +6,22 @@ public class SoundManager : Singleton<SoundManager>
     private const string k_SFXVolumeKey = "SFXVolume";
     private const string k_BGMVolumeKey = "BGMVolume";
     private const float k_FadeDuration = 1.0f;
+    private Coroutine m_PlaylistCoroutine;
 
     private AudioSource m_SFXSource;
     private AudioSource m_BGMSource;
 
     private Coroutine m_FadeOutCoroutine;
+
+    [Header("Difficulty SFX")]
+    public AudioClip DifficultyUpSound;
+
+    [Header("Playlists")]
+    public AudioClip LobbyBgm;
+    public AudioClip[] MainStagePlaylist;
+    public AudioClip[] BossStagePlaylist;
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -31,11 +42,17 @@ public class SoundManager : Singleton<SoundManager>
         m_BGMSource.volume = PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f);
 
         EventBus.Subscribe<SceneLoadStartedEvent>(OnSceneLoadStarted);
+        EventBus.Subscribe<GameStateChangedEvent>(OnGameStateChanged);
+        EventBus.Subscribe<TeleporterStateChangedEvent>(OnTeleporterStateChanged);
+        EventBus.Subscribe<DifficultyChangedEvent>(OnDifficultyChanged);
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<SceneLoadStartedEvent>(OnSceneLoadStarted);
+        EventBus.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
+        EventBus.Unsubscribe<TeleporterStateChangedEvent>(OnTeleporterStateChanged);
+        EventBus.Unsubscribe<DifficultyChangedEvent>(OnDifficultyChanged);
     }
 
     /// <summary>
@@ -72,8 +89,67 @@ public class SoundManager : Singleton<SoundManager>
             return; // Already playing this BGM
         }
 
+        m_BGMSource.loop = true;
         m_BGMSource.clip = clip;
         m_BGMSource.Play();
+    }
+
+    /// <summary>
+    ///  여러 곡을 순서대로 바로 컷(Cut)하여 무한 반복 재생하는 함수
+    /// </summary>
+    public void PlayBGMList(AudioClip[] playlist)
+    {
+        if (playlist == null || playlist.Length == 0) return;
+
+        CancelFade();
+
+        if (m_PlaylistCoroutine != null)
+        {
+            StopCoroutine(m_PlaylistCoroutine);
+        }
+
+        m_PlaylistCoroutine = StartCoroutine(PlaylistRoutine(playlist));
+    }
+
+    private IEnumerator PlaylistRoutine(AudioClip[] playlist)
+    {
+        // 리스트를 재생할 땐 한 곡이 끝나고 다음 곡으로 넘어가야 하니 loop를 끈다.
+        m_BGMSource.loop = false;
+        int currentIndex = 0;
+
+        while (true)
+        {
+            m_BGMSource.clip = playlist[currentIndex];
+            m_BGMSource.Play();
+            yield return new WaitForSecondsRealtime(m_BGMSource.clip.length);
+            currentIndex = (currentIndex + 1) % playlist.Length;
+        }
+    }
+    private void OnGameStateChanged(GameStateChangedEvent e)
+    {
+        if (e.Current == EGameState.Playing && e.Previous == EGameState.Ready)
+        {
+            PlayBGMList(MainStagePlaylist);
+        }
+    }
+    private void OnTeleporterStateChanged(TeleporterStateChangedEvent e)
+    {
+        if (e.State == ETeleporterState.Charging)
+        {
+            PlayBGMList(BossStagePlaylist);
+        }
+        else if (e.State == ETeleporterState.Cleared)
+        {
+            PlayBGMList(MainStagePlaylist);
+        }
+    }
+
+    private void OnDifficultyChanged(DifficultyChangedEvent e)
+    {
+        if (DifficultyUpSound != null)
+        {
+            PlaySFX(DifficultyUpSound);
+        }
     }
 
     public void SetSFXVolume(float volume)

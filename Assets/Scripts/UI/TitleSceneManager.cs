@@ -5,6 +5,14 @@ public class TitleSceneManager : MonoBehaviour
 {
     [SerializeField] private TitleMenu titleMenu;
 
+    private void Start()
+    {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM(SoundManager.Instance.LobbyBgm);
+        }
+    }
+
     private void OnEnable() // 이벤트
     {
         if (titleMenu != null)

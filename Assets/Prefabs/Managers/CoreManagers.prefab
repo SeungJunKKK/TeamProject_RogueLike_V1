@@ -417,6 +417,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bdfc279114ebff4e943544f40925ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  DifficultyUpSound: {fileID: 8300000, guid: 2ac4f1c5aa954df44a954292cbf2a48f, type: 3}
+  LobbyBgm: {fileID: 8300000, guid: bb72186dca79e154f9f53634cb481e89, type: 3}
+  MainStagePlaylist:
+  - {fileID: 8300000, guid: 4c9f0a83d299af042ae4d519017dd895, type: 3}
+  - {fileID: 8300000, guid: 06c1e16a89ea5d044a965ce60b6dfdf9, type: 3}
+  - {fileID: 8300000, guid: 502fa17e6b29416478287f1d29595efc, type: 3}
+  - {fileID: 8300000, guid: 48700bf8b01b4ea469bfc6ed587e43c0, type: 3}
+  - {fileID: 8300000, guid: 8460a9d01facae84b8223a6d6fc772fd, type: 3}
+  - {fileID: 8300000, guid: 66dbb061191a38c45a84dcec5365b590, type: 3}
+  - {fileID: 8300000, guid: d3f4a206c6e35374fa573b1c586779a8, type: 3}
+  - {fileID: 8300000, guid: 5b4a647701125f349b0d6f081973ecbb, type: 3}
+  - {fileID: 8300000, guid: a7e07543ee09df749bc8a711633cd6e5, type: 3}
+  - {fileID: 8300000, guid: f1ec6b71bcc6aba419628fb570a8d2e9, type: 3}
+  BossStagePlaylist:
+  - {fileID: 8300000, guid: e799503bc37883747b5acaffb61031bb, type: 3}
+  - {fileID: 8300000, guid: 2c420c9fc280d0148ad2c6dedc6f5eb7, type: 3}
+  - {fileID: 8300000, guid: c306e1182141dfa45a21e526def49c3d, type: 3}
+  - {fileID: 8300000, guid: ed79e6dbf2bcf9d41bf6c539acde12e2, type: 3}
+  - {fileID: 8300000, guid: d66f75e9ad45d8848ae14900adcb7c5c, type: 3}
+  - {fileID: 8300000, guid: bb073b24e63c6c44c813aff6006d0e77, type: 3}
+  - {fileID: 8300000, guid: fd8f51998b484ad49a316cdb493415fa, type: 3}
 --- !u!114 &2063174200544968173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,6 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a47afda67cb0d6548bb0f1ed1a5bfa34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  m_TeleportInSound: {fileID: 8300000, guid: 94c9bd113ba4029458e4f5db3f39611a, type: 3}
 --- !u!114 &1271193421356028855
 MonoBehaviour:
   m_ObjectHideFlags: 0

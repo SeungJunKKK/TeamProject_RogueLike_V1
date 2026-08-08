@@ -608,7 +608,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6d0a117562fa445aa26df55a720005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  CharacterData: {fileID: 0}
+  CharacterData: {fileID: 11400000, guid: cf1ac0c8a84b29f4585eea3f3da6331b, type: 2}
   MaxHealth:
     BaseValue: 110
   HealthRegen:
