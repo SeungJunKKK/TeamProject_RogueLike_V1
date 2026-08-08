@@ -12,6 +12,7 @@ namespace Player.Commando
 
         public override void Enter()
         {
+            base.Enter();
             m_Player.Rb.linearVelocity = Vector2.zero;
             m_Player.CooldownManager.UseSkill(m_SkillType);
 
@@ -32,6 +33,7 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
+
             m_CurrentShotCount++;
             Vector2 shootDirection;
             Vector2 shootOrigin;
@@ -39,6 +41,8 @@ namespace Player.Commando
             if (m_IsSingleMode)
             {
                 shootDirection = m_Player.transform.right;
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
                 shootOrigin = m_Player.MuzzlePos != null
                               ? (Vector2)m_Player.MuzzlePos.position
@@ -48,6 +52,8 @@ namespace Player.Commando
             {
                 float dir = (m_CurrentShotCount % 2 == 1) ? 1f : -1f;
                 shootDirection = new Vector2(dir, 0f);
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
                 if (m_Player.MuzzlePos != null)
                 {
@@ -61,35 +67,46 @@ namespace Player.Commando
                 }
             }
 
-            float attackRange = 15f;
+            float attackRange = 15f; // 사거리
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 4.0f; // 데미지 배수
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(10f, shootDirection, 10f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 3f, // 넉백 수치
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }
 
-            Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
-            Quaternion vfxRotation = Quaternion.Euler(0, shootDirection.x > 0 ? 0 : 180, 0);
-
-            if (m_Player.SuppressiveFireVFXPrefab != null)
+            if (hitSomething)
             {
-                EventBus.Publish(new SpawnVFXEvent
-                {
-                    VFXPrefab = m_Player.SuppressiveFireVFXPrefab,
-                    Position = vfxPosition,
-                    Rotation = vfxRotation
-                });
+                m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0.02f);
             }
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
+            }
+            m_Player.PlayAddressableSFX(m_Player.V_SFXAddress);
 
-            if (hitSomething) m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0.02f);
-            else m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
         }
     }
 }

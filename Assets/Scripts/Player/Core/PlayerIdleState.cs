@@ -19,7 +19,19 @@ public class PlayerIdleState : IState
 
     public void Update()
     {
-        if(m_Player.MovementInput.sqrMagnitude > 0.01f)
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        if (verticalInput > 0.1f && m_Player.CheckLadderUp() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderUp()));
+            return;
+        }
+        else if (verticalInput < -0.1f && m_Player.CheckLadderDown() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderDown()));
+            return;
+        }
+
+        if (m_Player.MovementInput.sqrMagnitude > 0.01f)
         {
             m_Player.ChangeState(new PlayerWalkState(m_Player));
         }

@@ -18,10 +18,10 @@ TagManager:
   - Enemy
   - EnemyBullet
   - Wall
-  - 
-  - 
-  - 
-  - 
+  - Ground
+  - Ladder
+  - OneWayGround
+  - Interactable
   - 
   - 
   - 

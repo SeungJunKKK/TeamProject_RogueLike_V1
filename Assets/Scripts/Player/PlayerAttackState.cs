@@ -11,7 +11,7 @@ public abstract class PlayerAttackState : IState
     protected float m_AttackTimer;
 
     protected readonly SkillType m_SkillType;
-
+    protected bool m_CanCancel = false;
 
     public PlayerAttackState(PlayerController player, string animName, float duration, SkillType skillType)
     {
@@ -23,15 +23,22 @@ public abstract class PlayerAttackState : IState
 
     public virtual void Enter()
     {
+        m_Player.Anim.speed = m_Player.Stats.AttackSpeed.Value;
         m_Player.Rb.linearVelocity = Vector2.zero;
         m_Player.Anim.Play(m_AnimName);
         m_Player.CooldownManager.UseSkill(m_SkillType);
-
+        m_CanCancel = false;
         //ExecuteShoot();
     }
 
     public virtual void Update()
     {
+        if (Input.GetKeyDown(KeyCode.C) && m_CanCancel)
+        {
+            m_Player.ChangeState(new PlayerDashState(m_Player));
+            return;
+        }
+
         m_AttackTimer -= Time.deltaTime;
 
         if (m_AttackTimer <= 0f)
@@ -41,12 +48,17 @@ public abstract class PlayerAttackState : IState
     }
     public virtual void Exit()
     {
-        // 상태를 나갈 때의 초기화 
+        m_Player.Anim.speed = 1.0f;
     }
     public virtual void OnActionTriggered()
     {
         ExecuteShoot();
     }
+    public void SetCanCancel(bool canCancel)
+    {
+        m_CanCancel = canCancel;
+    }
+
 
     protected abstract void ExecuteShoot();
 }

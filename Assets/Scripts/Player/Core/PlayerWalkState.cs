@@ -16,7 +16,19 @@ public class PlayerWalkState : IState
 
     public void Update()
     {
-        m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.MoveSpeed, m_Player.Rb.linearVelocity.y);
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        if (verticalInput > 0.1f && m_Player.CheckLadderUp() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderUp()));
+            return;
+        }
+        else if (verticalInput < -0.1f && m_Player.CheckLadderDown() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderDown()));
+            return;
+        }
+
+        m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.Stats.MoveSpeed.Value, m_Player.Rb.linearVelocity.y);
 
         if (m_Player.MovementInput.x == 0)
         {

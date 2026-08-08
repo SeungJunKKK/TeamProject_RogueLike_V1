@@ -9,45 +9,55 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
+
             Vector2 shootDirection = m_Player.transform.right;
+            bool isShootingRight = shootDirection.x > 0;
+            m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
             Vector2 shootOrigin = m_Player.MuzzlePos != null
                                   ? (Vector2)m_Player.MuzzlePos.position
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
             float attackRange = 15f;
+
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
 
             bool hitSomething = false;
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 2.5f; // 데미지 배수[cite: 13]
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(25f, shootDirection, 25f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 2f, 
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }
+            m_Player.PlayAddressableSFX(m_Player.X_SFXAddress);
 
-            // 💡 3. 레이저의 중심점 보정 (총구 위치에서 7.5만큼 앞으로!)
-            Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
-
-            if (m_Player.FullMetalJacketPrefab != null)
-            {
-                EventBus.Publish(new SpawnVFXEvent
-                {
-                    VFXPrefab = m_Player.FullMetalJacketPrefab,
-                    Position = vfxPosition,
-                    // 💡 4. 플레이어의 각도를 그대로 복사해서 레이저에 적용하면 끝!
-                    Rotation = m_Player.transform.rotation
-                });
-            }
 
             if (hitSomething)
+            {
                 m_Player.TriggerHitFeedback(shootDirection, 0.6f, 0.1f);
+            }
             else
+            {
                 m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
+            }
         }
     }
 }

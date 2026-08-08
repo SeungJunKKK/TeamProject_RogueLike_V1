@@ -1,52 +1,66 @@
 ﻿using UnityEngine;
 
-
 namespace Player.Commando
 {
-public class DoubleTapState : PlayerAttackState
-{
-    private readonly float m_TotalDuration;
-    private bool m_HasFiredSecondShot;
-
-    public DoubleTapState(PlayerController player, float duration)
-        : base(player, "Z_DoubleTap", duration,SkillType.Primary_Z) 
+    public class DoubleTapState : PlayerAttackState
     {
-        m_TotalDuration = duration;
-        m_HasFiredSecondShot = false;
-    }
+        private readonly float m_TotalDuration;
 
-    public override void Update()
-    {
-        base.Update();
-
-        if (!m_HasFiredSecondShot && m_AttackTimer <= m_TotalDuration / 2f)
+        public DoubleTapState(PlayerController player, float duration)
+            : base(player, "Z_DoubleTap", duration, SkillType.Primary_Z)
         {
-            ExecuteShoot();
-            m_HasFiredSecondShot = true;
+            m_TotalDuration = duration;
         }
-    }
+
+
         protected override void ExecuteShoot()
         {
-            Vector2 shootDirection = m_Player.transform.right;
+            m_Player.PlayAddressableSFX(m_Player.Z_SFXAddress);
 
+            Vector2 shootDirection = m_Player.transform.right;
             Vector2 shootOrigin = m_Player.MuzzlePos != null
                                   ? (Vector2)m_Player.MuzzlePos.position
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
-            if (m_Player.DoubleTapProjectilePrefab != null)
+            float attackRange = 15f;
+            int enemyLayer = LayerMask.GetMask("Enemy");
+            RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
+
+            bool hitSomething = false;
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 1.0f;
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
+            if (hit.collider != null)
             {
-                EventBus.Publish(new SpawnProjectileEvent
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    ProjectilePrefab = m_Player.DoubleTapProjectilePrefab,
-                    Position = shootOrigin,
-                    Rotation = m_Player.transform.rotation,
-                    Direction = shootDirection,
-                    Damage = 10f,
-                    Speed = 20f,
-                    IsPiercing = false 
-                });
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 1f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
+                    hitSomething = true;
+                }
             }
-            m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
+
+            if (hitSomething)
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.3f, 0.05f);
+                m_Player.TriggerHitStop(0.05f);
+            }
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.1f, 0f);
+            }
         }
     }
 }

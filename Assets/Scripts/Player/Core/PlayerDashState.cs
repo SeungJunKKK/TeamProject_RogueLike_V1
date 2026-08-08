@@ -13,7 +13,7 @@ public class PlayerDashState : IState
 
     public void Enter()
     {
-        m_Player.SpawnDustEffect(m_Player.IsFacingRight);
+        m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Dash);
         m_Player.Anim.Play("Dash");
 
         m_DashTimer = m_Player.DashDuration;
@@ -22,7 +22,7 @@ public class PlayerDashState : IState
 
         m_Player.IsInvincible = true;
         Debug.Log("시스템: 플레이어 대시 상태 진입. 무적 상태 시작.");
-        m_Player.gameObject.layer = LayerMask.NameToLayer("PlayerDash");
+        m_Player.gameObject.layer = LayerMask.NameToLayer("PlayerDodge");
         m_Player.CooldownManager.UseSkill(SkillType.Utility_C);
 
         m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;
@@ -31,6 +31,18 @@ public class PlayerDashState : IState
 
     public void Update()
     {
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        if (verticalInput > 0.1f && m_Player.CheckLadderUp() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderUp()));
+            return;
+        }
+        else if (verticalInput < -0.1f && m_Player.CheckLadderDown() != null)
+        {
+            m_Player.ChangeState(new PlayerClimbState(m_Player, m_Player.CheckLadderDown()));
+            return;
+        }
+
         m_DashTimer -= Time.deltaTime;
 
         m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;

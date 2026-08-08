@@ -12,6 +12,7 @@ namespace Player.Commando
 
         public override void Enter()
         {
+            base.Enter();
             m_Player.Rb.linearVelocity = Vector2.zero;
             m_Player.CooldownManager.UseSkill(m_SkillType);
 
@@ -21,7 +22,6 @@ namespace Player.Commando
             {
                 float dir = Mathf.Sign(m_Player.MovementInput.x);
                 m_Player.transform.rotation = Quaternion.Euler(0, dir > 0 ? 0 : 180, 0);
-
                 m_Player.Anim.Play("SuppressiveBarrage_Single");
             }
             else
@@ -32,6 +32,8 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
+            
+
             m_CurrentShotCount++;
             Vector2 shootDirection;
             Vector2 shootOrigin;
@@ -39,6 +41,9 @@ namespace Player.Commando
             if (m_IsSingleMode)
             {
                 shootDirection = m_Player.transform.right;
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
+
                 shootOrigin = m_Player.MuzzlePos != null
                               ? (Vector2)m_Player.MuzzlePos.position
                               : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
@@ -47,6 +52,8 @@ namespace Player.Commando
             {
                 float dir = (m_CurrentShotCount % 2 == 1) ? 1f : -1f;
                 shootDirection = new Vector2(dir, 0f);
+                bool isShootingRight = shootDirection.x > 0;
+                m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
                 if (m_Player.MuzzlePos != null)
                 {
@@ -60,35 +67,47 @@ namespace Player.Commando
                 }
             }
 
-            float attackRange = 20f; 
+            float attackRange = 20f; // 더 긴 사거리[cite: 14]
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
+            bool isCrit = m_Player.Stats.RollCriticalHit();
+            float baseDamage = m_Player.Stats.Damage.Value * 5.0f; // 강력한 데미지[cite: 14]
+            float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
+
             foreach (RaycastHit2D hit in hits)
             {
-                TestDummyHealth dummy = hit.collider.GetComponent<TestDummyHealth>();
-                if (dummy != null)
+
+                IDamageable damageable = hit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
                 {
-                    dummy.TakeDamage(18f, shootDirection, 20f);
+                    DamageInfo info = new DamageInfo
+                    {
+                        Amount = finalDamage,
+                        HitPoint = hit.point,
+                        HitDirection = shootDirection,
+                        KnockbackForce = 3f,
+                        Attacker = m_Player.gameObject,
+                        IsCrit = isCrit,
+                        CanProc = true
+                    };
+
+                    damageable.TakeDamage(info);
                     hitSomething = true;
                 }
             }
 
-            Vector2 vfxPosition = shootOrigin + (shootDirection * (attackRange / 2f));
-            Quaternion vfxRotation = Quaternion.Euler(0, shootDirection.x > 0 ? 0 : 180, 0);
-
-            if (m_Player.SuppressiveBarrageVFXPrefab != null)
+            if (hitSomething)
             {
-                EventBus.Publish(new SpawnVFXEvent
-                {
-                    VFXPrefab = m_Player.SuppressiveBarrageVFXPrefab,
-                    Position = vfxPosition,
-                    Rotation = vfxRotation
-                });
+                m_Player.TriggerHitFeedback(shootDirection, 0.7f, 0.05f);
+            }
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0f);
             }
 
-            if (hitSomething) m_Player.TriggerHitFeedback(shootDirection, 0.7f, 0.05f);
-            else m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0f);
+            m_Player.PlayAddressableSFX(m_Player.VStrengthened_SFXAddress);
+
         }
     }
 }
