@@ -15,6 +15,16 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 26d2b5cf672bcc3458d514c5cd797ed5
   m_SerializeEntries:
+  - m_GUID: 752543bed0c509542ae94ba2b8a74dc3
+    m_Address: Enemy_Lemurian
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aef44ecf652cdb04b906755f2fae5d61
+    m_Address: Assets/Sprites/ROR_Enemy/Lemurian/sLizardIdle_0.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcd62aaa222268e4ea885aa3aef719b7
     m_Address: Assets/Sprites/UI/MainMenu/MainMenu.jpg
     m_ReadOnly: 0
