@@ -110,6 +110,21 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
+        if (Keyboard.current.f11Key.wasPressedThisFrame)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null || player.Stats == null)
+            {
+                Debug.LogWarning($"[Cheat] F11: 씬에 PlayerController 또는 PlayerStats가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"<color=red>[Cheat] F11 pressed: 플레이어 체력 강제 0으로 설정 (사망 테스트)</color>");
+
+                player.TakeDamage(player.Stats.CurrentHealth + 9999f);
+            }
+        }
+
         if (Keyboard.current.f12Key.wasPressedThisFrame)
         {
             PlayerController player = FindAnyObjectByType<PlayerController>();

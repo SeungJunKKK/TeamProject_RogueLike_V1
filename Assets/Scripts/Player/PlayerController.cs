@@ -365,14 +365,40 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void TakeDamage(float incomingDamage)
     {
-        // TODO: 방어력(Stats.Armor) 계산 적용 및 체력(CurrentHealth) 감소 로직 구현
-        float finalDamage = incomingDamage; // 임시 계산식
+        if (m_CurrentState is PlayerDeathState)
+        {
+            return;
+        }
+
+        float finalDamage = incomingDamage;
+
         if (m_inventory != null)
         {
             m_inventory.OnTakeDamageTrigger(finalDamage);
         }
+
+        if (Stats != null)
+        {
+            Stats.CurrentHealth -= finalDamage;
+            Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth); 
+
+            Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
+
+            if (Stats.CurrentHealth <= 0f)
+            {
+                Die();
+            }
+        }
     }
 
-
-
+    /// <summary>
+    /// 플레이어 사망 처리 함수
+    /// </summary>
+    public void Die()
+    {
+        if (m_CurrentState is not PlayerDeathState)
+        {
+            ChangeState(new PlayerDeathState(this));
+        }
+    }
 }

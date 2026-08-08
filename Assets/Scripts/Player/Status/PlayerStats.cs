@@ -3,7 +3,7 @@
 public class PlayerStats : MonoBehaviour
 {
     [Header("Core Stats")]
-    public float CurrentHealth => MaxHealth.Value; // 현재 체력은 최대 체력과 동일하게 설정 (추후 체력 감소 로직 추가 가능)
+    public float CurrentHealth { get; set; } 
     public CharacterStat MaxHealth;
     public CharacterStat MoveSpeed;
     public CharacterStat Damage;
@@ -21,6 +21,7 @@ public class PlayerStats : MonoBehaviour
     private void Awake()
     {
         MaxHealth = new CharacterStat(100f);
+        CurrentHealth = MaxHealth.Value;
         MoveSpeed = new CharacterStat(5f);
         Damage = new CharacterStat(10f); 
         AttackSpeed = new CharacterStat(1f); 
