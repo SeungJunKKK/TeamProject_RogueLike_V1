@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bfcee70b914d744ba50cae6161a717, type: 3}
+  m_Name: Commando
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorData
+  SurvivorName: Commando
+  Description: Boasts well-rounded stats, high attack speed, and long range, making
+    him highly efficient even with minimal items. However, his health scaling per
+    level is tied with Huntress for the lowest among all survivors. Bolster your
+    survivability with items and time your dodges and Full Metal Jacket properly
+    to greatly increase your chances of survival.
+  PlayerPrefab: {fileID: 7435904605620967543, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+  SelectSprite: {fileID: 21300000, guid: 55e2b7ca49683924cbb262dd54281947, type: 3}
+  SelectAnimController: {fileID: 9100000, guid: c9d77136bfd2edf4586f49b5358e7bcf, type: 2}
+  PrimarySkill:
+    SkillName: 'Z-Double Tap '
+    SkillDescription: Shoot twice, dealing 2x60% damage.
+    SkillIcon: {fileID: 21300000, guid: 55e9103bcb0d7c44da50a5b0f0d08751, type: 3}
+  SecondarySkill:
+    SkillName: 'X - Full Metal Jacket '
+    SkillDescription: 'Shoot through enemies for 230% damage, knocking them back.
+      (Cooldown: 3s)'
+    SkillIcon: {fileID: 21300000, guid: 14a83af3b6e912645878ad80e398d96f, type: 3}
+  UtilitySkill:
+    SkillName: C - Tactical Dive
+    SkillDescription: 'Roll a short distance. You cannot be hit while rolling.
+
+      (Cooldown:
+      4s)'
+    SkillIcon: {fileID: 21300000, guid: 32471a0c41f20b14abe715b7bd6065ea, type: 3}
+  UltimateSkill:
+    SkillName: 'V - Suppressive Fire '
+    SkillDescription: 'Fire rapidly at nearby enemies, stunning them for 6x60% damage.
+      (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: e786c19b7a49cdc49969eeea72450c32, type: 3}
+  StrengthenedUltimateSkill:
+    SkillName: 'V - Suppressive Barrage '
+    SkillDescription: 'Fire rapidly at nearby enemies, stunning them for 10x60% damage.
+      (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: 3bc20965ad354444c917cc8f30267e51, type: 3}
+  BaseMaxHealth: 110
+  BaseHealthRegen: 0.6
+  BaseDamage: 12
+  BaseArmor: 0
+  BaseMoveSpeed: 3
+  BaseAttackSpeed: 1.5
+  BaseCritChance: 0.1
+  BaseCritDamage: 2
+  HealthPerLevel: 32
+  HealthRegenPerLevel: 0.12
+  DamagePerLevel: 3
+  ArmorPerLevel: 2

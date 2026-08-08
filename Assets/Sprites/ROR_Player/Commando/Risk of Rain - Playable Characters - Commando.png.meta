@@ -4728,9 +4728,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 52
-        y: 43
+        y: 44
         width: 12
-        height: 5
+        height: 4
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -4904,9 +4904,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 70
-        y: 43
+        y: 44
         width: 16
-        height: 6
+        height: 5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -4926,9 +4926,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 91
-        y: 43
+        y: 44
         width: 16
-        height: 5
+        height: 4
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

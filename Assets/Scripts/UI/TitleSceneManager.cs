@@ -27,9 +27,9 @@ public class TitleSceneManager : MonoBehaviour
         }
     }
 
-    private void HandleStartSinglePlayer() // 게임 시작 - GameScene 로드
+    private void HandleStartSinglePlayer() // 게임 시작 -> 플레이어 선택 씬으로 이동
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("PlayerSelectScene");
     }
 
     private void HandleQuit() // 게임 종료

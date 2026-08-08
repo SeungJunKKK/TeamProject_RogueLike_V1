@@ -67,12 +67,12 @@ namespace Player.Commando
                 }
             }
 
-            float attackRange = 15f; // 사거리
+            float attackRange = 30f; 
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
             bool hitSomething = false;
 
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 4.0f; // 데미지 배수
+            float baseDamage = m_Player.Stats.Damage.Value * 0.6f; // 데미지 배수
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             foreach (RaycastHit2D hit in hits)
