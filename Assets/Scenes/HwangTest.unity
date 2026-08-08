@@ -157,7 +157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &400621233
 SpriteRenderer:
   serializedVersion: 3
@@ -492,6 +492,11 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1839735485 &601327060 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 4461731990095301931, guid: f0a993d1284805648a478f6da354865a, type: 3}
+  m_PrefabInstance: {fileID: 7768540002648999498}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,7 +626,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &674552890
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -850,7 +855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &975629619
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1195,6 +1200,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863c7332926aa554a9b9fd76a63dcd10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillCooldownManager
+--- !u!4 &1424128609 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3144383756409554526, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+  m_PrefabInstance: {fileID: 4327730993145699583}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1452490406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1271,7 +1281,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1478256188
 SpriteRenderer:
   serializedVersion: 3
@@ -1561,6 +1571,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   cam: {fileID: 519420028}
   ParallaxEffect: 0.4
+--- !u!1 &1772302542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1772302544}
+  - component: {fileID: 1772302543}
+  m_Layer: 0
+  m_Name: PoolManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1772302543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772302542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72cea346ca7f10e49bdd8edaf1dd1caf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+--- !u!4 &1772302544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772302542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.37667, y: -3.37251, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1787247987 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7370285661680761709, guid: 5b8f9a5b93372324a8b7e6a0403fcf35, type: 3}
@@ -1580,6 +1634,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
   cam: {fileID: 519420028}
   ParallaxEffect: 0.9
+--- !u!1 &1882855831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1882855833}
+  - component: {fileID: 1882855832}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1882855832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882855831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e1ad6b1a71adc4bb112307140cde44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  GroundTilemap: {fileID: 601327060}
+  Player: {fileID: 1424128609}
+  EnemyPrefabs:
+  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
+  SpawnInterval: 3
+  MinDistanceFromPlayer: 3
+  MaxSpawnAttempts: 10
+  MaxEnemyCount: 20
+  SpawnClearanceRadius: 1
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!4 &1882855833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882855831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.61736, y: -5.54671, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2076085224276717760
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2021,3 +2131,5 @@ SceneRoots:
   - {fileID: 1452490406}
   - {fileID: 3053021794429806182}
   - {fileID: 7922210844940810610}
+  - {fileID: 1882855833}
+  - {fileID: 1772302544}

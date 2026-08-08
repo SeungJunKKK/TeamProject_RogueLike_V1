@@ -45,6 +45,11 @@ namespace Player.Commando
 
                     damageable.TakeDamage(info);
                     hitSomething = true;
+
+                    if (info.CanProc)
+                    {
+                        m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
+                    }
                 }
             }
             m_Player.PlayAddressableSFX(m_Player.X_SFXAddress);

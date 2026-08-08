@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
     private bool m_IsHitStopping = false;
+    private PlayerInventory m_inventory;
 
     public PlayerStats Stats { get; private set; }
     public Rigidbody2D Rb { get; private set; }
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
         CooldownManager = GetComponent<SkillCooldownManager>();
         OriginalLayer = gameObject.layer;
         Stats = GetComponent<PlayerStats>();
+        m_inventory = GetComponent<PlayerInventory>();
     }
 
     private void Start()
@@ -114,10 +116,13 @@ public class PlayerController : MonoBehaviour
                 Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
             });
         }
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             Stats.AddExp(50f);
         }
+
+
         //===============================아이템 테스트===============================
         if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
         {
@@ -332,6 +337,42 @@ public class PlayerController : MonoBehaviour
             MeleeCollider.enabled = false;
         }
     }
+
+    /// <summary>
+    /// 적을 타격했을 때 호출합니다.
+    /// </summary>
+    public void OnEnemyHit(GameObject target, float damage)
+    {
+        if (m_inventory != null)
+        {
+            m_inventory.OnHitEnemyTrigger(target, damage);
+        }
+    }
+
+    /// <summary>
+    /// 적을 처치했을 때 호출합니다. 
+    /// </summary>
+    public void OnEnemyKilled(GameObject target)
+    {
+        if (m_inventory != null)
+        {
+            m_inventory.OnKillEnemyTrigger(target);
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 피해를 입었을 때 호출합니다.
+    /// </summary>
+    public void TakeDamage(float incomingDamage)
+    {
+        // TODO: 방어력(Stats.Armor) 계산 적용 및 체력(CurrentHealth) 감소 로직 구현
+        float finalDamage = incomingDamage; // 임시 계산식
+        if (m_inventory != null)
+        {
+            m_inventory.OnTakeDamageTrigger(finalDamage);
+        }
+    }
+
 
 
 }
