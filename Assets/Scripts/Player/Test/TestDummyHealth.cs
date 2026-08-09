@@ -44,6 +44,7 @@ public class TestDummyHealth : MonoBehaviour, IDamageable
         if (m_CurrentHealth <= 0)
         {
             Debug.Log($"{gameObject.name} 파괴됨!");
+            GameManager.Instance.AddGold(50);
             Destroy(gameObject);
         }
     }
