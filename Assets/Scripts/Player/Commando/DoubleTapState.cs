@@ -26,6 +26,7 @@ namespace Player.Commando
             int enemyLayer = LayerMask.GetMask("Enemy");
             RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
+            Debug.DrawRay(shootOrigin, shootDirection * attackRange, Color.red, 2f);
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
             float baseDamage = m_Player.Stats.Damage.Value * 1.0f;

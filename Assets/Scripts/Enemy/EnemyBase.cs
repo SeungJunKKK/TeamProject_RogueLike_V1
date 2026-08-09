@@ -36,6 +36,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
     public void TakeDamage(DamageInfo info)
     {
+        Debug.Log($"[EnemyBase] {gameObject.name}가 {info.Amount}의 데미지를 받음! (현재 체력: {m_CurrentHp})");
         // 이미 죽은 몬스터 재타격 방어
         if (m_CurrentHp <= 0f)
         {

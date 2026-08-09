@@ -29,6 +29,7 @@ public class Projectile : MonoBehaviour, IPoolable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log($"총알 충돌 감지됨! 부딪힌 대상: {other.gameObject.name} / 태그: {other.tag}");
         if (other.CompareTag("Enemy"))
         {
             IDamageable damageable = other.GetComponent<IDamageable>();

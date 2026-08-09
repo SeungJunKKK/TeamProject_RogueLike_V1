@@ -262,6 +262,7 @@ public class BasicEnemyAI : EnemyBase
             {
                 if (Player.TryGetComponent(out IDamageable targetDamageable))
                 {
+                    Debug.Log($"플레이어를 {m_Damage} 의 데미지로 공격.");
                     DamageInfo info = new DamageInfo
                     {
                         Amount = m_Damage,                           // 내 공격력
