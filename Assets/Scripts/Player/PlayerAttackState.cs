@@ -28,7 +28,7 @@ public abstract class PlayerAttackState : IState
         m_Player.Anim.Play(m_AnimName);
         m_Player.CooldownManager.UseSkill(m_SkillType);
         m_CanCancel = false;
-        ExecuteShoot();
+        //ExecuteShoot();
     }
 
     public virtual void Update()

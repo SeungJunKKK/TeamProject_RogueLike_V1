@@ -31,7 +31,7 @@ namespace Player.Commando
             bool isCrit = m_Player.Stats.RollCriticalHit();
             float baseDamage = m_Player.Stats.Damage.Value * 0.6f;
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
-
+            Debug.Log($"공격 Raycast 결과: {(hit.collider != null ? hit.collider.name : "MISS")}");
             if (hit.collider != null)
             {
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();

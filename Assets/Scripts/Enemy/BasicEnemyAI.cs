@@ -89,6 +89,7 @@ public class BasicEnemyAI : EnemyBase
         ResetPhysics();
     }
 
+
     private void ResetState()
     {
         m_IsFacingRight = true;
@@ -140,7 +141,7 @@ public class BasicEnemyAI : EnemyBase
         // 매 프레임 속도 초기화
         m_DesiredVelocityX = 0f;
 
-        // 2. 통합 정보 갱신 및 논리 블록 실행
+        // 통합 정보 갱신 및 논리 블록 실행
         UpdateTargetInfo();
         UpdateSensors();
         UpdateCombat();    // 시간에 종속된 모듈
@@ -195,9 +196,6 @@ public class BasicEnemyAI : EnemyBase
         return m_DistanceToPlayer <= AttackRange && m_AttackCooldownTimer <= 0f && m_IsGrounded;
     }
 
-    // ==========================================
-    // [Module: FSM (Behavior Management)]
-    // ==========================================
     private void StateMachine()
     {
         // 타겟 방향으로 시선 변경 (매 프레임 추적)
@@ -246,18 +244,12 @@ public class BasicEnemyAI : EnemyBase
     {
         m_StateTimer += Time.deltaTime;
 
-        // 공격 중 플레이어가 사거리 밖으로 벗어나면 즉시 추적 복귀
-        if (m_DistanceToPlayer > AttackRange)
-        {
-            ChangeState(EnemyState.Chase);
-            return;
-        }
-
         // 공격 중에는 천천히 플레이어 방향으로 이동
         m_DesiredVelocityX = m_Direction * MoveSpeed * AttackMoveRatio;
 
         if (m_StateTimer >= AttackWindup)
         {
+            // 선딜레이가 끝나는 시점에 플레이어가 사거리 안에 있으면 데미지 판정
             if (Player != null && m_DistanceToPlayer <= AttackRange)
             {
                 if (Player.TryGetComponent(out IDamageable targetDamageable))
@@ -268,12 +260,16 @@ public class BasicEnemyAI : EnemyBase
                         Amount = m_Damage,                           // 내 공격력
                         HitPoint = Player.position,                  // 타격 지점
                         HitDirection = new Vector2(m_Direction, 0f), // 내가 바라보는 방향
-                        KnockbackForce = 0f,                        
-                        Attacker = gameObject,                      
-                        IsCrit = false,                             
-                        CanProc = false                             
+                        KnockbackForce = 0f,
+                        Attacker = gameObject,
+                        IsCrit = false,
+                        CanProc = false
                     };
                     targetDamageable.TakeDamage(info);
+                }
+                else if (Player.TryGetComponent(out PlayerController playerTarget))
+                {
+                    playerTarget.TakeDamage(m_Damage);
                 }
             }
 

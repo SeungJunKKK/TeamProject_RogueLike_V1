@@ -362,7 +362,7 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// 플레이어가 피해를 입었을 때 호출합니다.
-    /// </summary>
+    /// </summary>Z
     public void TakeDamage(float incomingDamage)
     {
         if (m_CurrentState is PlayerDeathState)
