@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: ed5d6a4e96fec1d4f9432bfff63d32a5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3368951619822338423
+    second: sTutorial_kr_1_0
+  - first:
+      213: 2116651865968246092
+    second: sTutorial_kr_1_1
+  - first:
+      213: -6108391705455559754
+    second: sTutorial_kr_1_2
+  - first:
+      213: 262501401321967667
+    second: sTutorial_kr_1_3
+  - first:
+      213: -1993039044096646159
+    second: sTutorial_kr_1_4
+  - first:
+      213: 7740360904893106741
+    second: sTutorial_kr_1_5
+  - first:
+      213: -2824206497911581362
+    second: sTutorial_kr_1_6
+  - first:
+      213: 5442847245072473336
+    second: sTutorial_kr_1_7
+  - first:
+      213: -7730796667043797567
+    second: sTutorial_kr_1_8
+  - first:
+      213: 412083795562912356
+    second: sTutorial_kr_1_9
+  - first:
+      213: 9162520000545438845
+    second: sTutorial_kr_1_10
+  - first:
+      213: 3342281014358353893
+    second: sTutorial_kr_1_11
+  - first:
+      213: 5375257930280972772
+    second: sTutorial_kr_1_12
+  - first:
+      213: 2790720585542978329
+    second: sTutorial_kr_1_13
+  - first:
+      213: 2984303129595316603
+    second: sTutorial_kr_1_14
+  - first:
+      213: -1971851805273200638
+    second: sTutorial_kr_1_15
+  - first:
+      213: -8274000571153324646
+    second: sTutorial_kr_1_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: sTutorial_kr_1_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 26
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e330be9541f31d0800000000000000
+      internalID: -3368951619822338423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_1
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 30
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4d743858abdf5d10800000000000000
+      internalID: 2116651865968246092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_2
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 26
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bbf0678b12aa3ba0800000000000000
+      internalID: -6108391705455559754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_3
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 26
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33096da32a794a300800000000000000
+      internalID: 262501401321967667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_4
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 28
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f3a2298c8d4754e0800000000000000
+      internalID: -1993039044096646159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_5
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 24
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53a89799b394b6b60800000000000000
+      internalID: 7740360904893106741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_6
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 26
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4551a747276ec8d0800000000000000
+      internalID: -2824206497911581362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_7
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 26
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fc12416bb0e88b40800000000000000
+      internalID: 5442847245072473336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_8
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 8
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c5a41e0461b6b490800000000000000
+      internalID: -7730796667043797567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_9
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 8
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46ad83c570408b500800000000000000
+      internalID: 412083795562912356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_10
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 8
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7c3ce7356fc72f70800000000000000
+      internalID: 9162520000545438845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_11
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 8
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e7ac58dfda226e20800000000000000
+      internalID: 3342281014358353893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_12
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 2
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e1bf76bb90c89a40800000000000000
+      internalID: 5375257930280972772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_13
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 13
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91bc8a03691aab620800000000000000
+      internalID: 2790720585542978329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_14
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 2
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b798d9582ef5a6920800000000000000
+      internalID: 2984303129595316603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_15
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 2
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2086afcfa3392a4e0800000000000000
+      internalID: -1971851805273200638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sTutorial_kr_1_16
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 0
+        width: 44
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a95e60d6158dc2d80800000000000000
+      internalID: -8274000571153324646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      sTutorial_kr_1_0: -3368951619822338423
+      sTutorial_kr_1_1: 2116651865968246092
+      sTutorial_kr_1_10: 9162520000545438845
+      sTutorial_kr_1_11: 3342281014358353893
+      sTutorial_kr_1_12: 5375257930280972772
+      sTutorial_kr_1_13: 2790720585542978329
+      sTutorial_kr_1_14: 2984303129595316603
+      sTutorial_kr_1_15: -1971851805273200638
+      sTutorial_kr_1_16: -8274000571153324646
+      sTutorial_kr_1_2: -6108391705455559754
+      sTutorial_kr_1_3: 262501401321967667
+      sTutorial_kr_1_4: -1993039044096646159
+      sTutorial_kr_1_5: 7740360904893106741
+      sTutorial_kr_1_6: -2824206497911581362
+      sTutorial_kr_1_7: 5442847245072473336
+      sTutorial_kr_1_8: -7730796667043797567
+      sTutorial_kr_1_9: 412083795562912356
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
