@@ -97,38 +97,38 @@ public class PlayerController : MonoBehaviour
         if (m_CurrentState != null) m_CurrentState.Update();
 
         //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "군인의 주사기",
-                TargetStat = EStatType.AttackSpeed,
-                Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
-            });
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "군인의 주사기",
+        //        TargetStat = EStatType.AttackSpeed,
+        //        Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
+        //    });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "안경 메이커의 안경",
-                TargetStat = EStatType.CritChance,
-                Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
-            });
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "안경 메이커의 안경",
+        //        TargetStat = EStatType.CritChance,
+        //        Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
+        //    });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Stats.AddExp(50f);
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Stats.AddExp(50f);
+        //}
 
 
-        //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
-        {
-            Collider2D hit = CheckLadderUp();
-            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
-        }
+        ////===============================아이템 테스트===============================
+        //if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        //{
+        //    Collider2D hit = CheckLadderUp();
+        //    Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        //}
 
 
     }
@@ -365,14 +365,40 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void TakeDamage(float incomingDamage)
     {
-        // TODO: 방어력(Stats.Armor) 계산 적용 및 체력(CurrentHealth) 감소 로직 구현
-        float finalDamage = incomingDamage; // 임시 계산식
+        if (m_CurrentState is PlayerDeathState)
+        {
+            return;
+        }
+
+        float finalDamage = incomingDamage;
+
         if (m_inventory != null)
         {
             m_inventory.OnTakeDamageTrigger(finalDamage);
         }
+
+        if (Stats != null)
+        {
+            Stats.CurrentHealth -= finalDamage;
+            Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth); 
+
+            Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
+
+            if (Stats.CurrentHealth <= 0f)
+            {
+                Die();
+            }
+        }
     }
 
-
-
+    /// <summary>
+    /// 플레이어 사망 처리 함수
+    /// </summary>
+    public void Die()
+    {
+        if (m_CurrentState is not PlayerDeathState)
+        {
+            ChangeState(new PlayerDeathState(this));
+        }
+    }
 }

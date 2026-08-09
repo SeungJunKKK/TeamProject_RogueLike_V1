@@ -17,6 +17,11 @@ public class TitleSceneManager : MonoBehaviour
                 titleMenu.SetBackgroundImage(sprite);
             }
         });
+        
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayBGM(SoundManager.Instance.LobbyBgm);
+        }
     }
 
     private void OnEnable() // 이벤트
@@ -41,12 +46,12 @@ public class TitleSceneManager : MonoBehaviour
         }
     }
 
-    private void HandleStartSinglePlayer() // 게임 시작 - GameScene 로드
+    private void HandleStartSinglePlayer() // 게임 시작 -> 플레이어 선택 씬으로 이동
     {
         // 게임 씬으로 넘어가기 전에 사용 완료한 배경 이미지 메모리 해제
         AddressableManager.Instance.UnloadAsset(m_BackgroundAddress);
-        
-        SceneManager.LoadScene("GameScene");
+       
+        SceneManager.LoadScene("PlayerSelectScene");
     }
 
     private void HandleQuit() // 게임 종료

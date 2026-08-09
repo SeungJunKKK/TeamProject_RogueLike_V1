@@ -79,6 +79,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf1ac0c8a84b29f4585eea3f3da6331b
+    m_Address: Player_Commando
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d5549b54848018547880f7709e207af5
     m_Address: Commando_SPF_Projectile
     m_ReadOnly: 0
@@ -86,6 +91,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcd62aaa222268e4ea885aa3aef719b7
     m_Address: MainMenuBackground
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7103ecd3101b554ea19b681ab453b64
+    m_Address: Level_Up
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

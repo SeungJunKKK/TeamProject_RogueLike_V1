@@ -110,17 +110,18 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
-        // 난이도 레벨업 치트 추가 (F10)
-        if (Keyboard.current.f10Key.wasPressedThisFrame)
+        if (Keyboard.current.f11Key.wasPressedThisFrame)
         {
-            if (DifficultyManager.Instance != null)
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null || player.Stats == null)
             {
-                Debug.Log($"[Cheat] F10 pressed: Difficulty Level +1");
-                DifficultyManager.Instance.AddDebugLevel();
+                Debug.LogWarning($"[Cheat] F11: 씬에 PlayerController 또는 PlayerStats가 없습니다.");
             }
             else
             {
-                Debug.LogWarning($"[Cheat] F10: 씬에 DifficultyManager가 없습니다.");
+                Debug.Log($"<color=red>[Cheat] F11 pressed: 플레이어 체력 강제 0으로 설정 (사망 테스트)</color>");
+
+                player.TakeDamage(player.Stats.CurrentHealth + 9999f);
             }
         }
 

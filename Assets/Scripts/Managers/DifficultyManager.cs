@@ -8,7 +8,8 @@ public class DifficultyManager : Singleton<DifficultyManager>
     private const float k_LevelDivisor = 0.33f;
 
     [SerializeField]
-    private float[] m_LevelThresholds = { 2f, 3f, 4f, 5f, 6f, 8f, 10f, 13f, 16f }; // 임시 경계값. 추후 밸런싱 예정
+    //3분 단위로 난이도 계수 1.0 증가. 1분 단위로는 0.33 증가.
+    private float[] m_LevelThresholds = { 1.3f, 1.6f, 1.9f, 2.2f, 2.5f, 2.8f, 3.1f, 3.4f, 3.7f }; // 임시 경계값. 추후 밸런싱 예정
 
     private float m_ElapsedSeconds;
 
@@ -135,7 +136,8 @@ public class DifficultyManager : Singleton<DifficultyManager>
             return;
         }
         m_ElapsedSeconds += Time.deltaTime;
-        Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 60f) * k_TimeFactor * k_DifficultyValue;
+        // Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 60f) * k_TimeFactor * k_DifficultyValue;
+        Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 180f);
 
         EDifficultyLevel newLevel = CalculateLevel(Coefficient);
 
