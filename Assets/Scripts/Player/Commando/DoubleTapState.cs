@@ -26,6 +26,17 @@ namespace Player.Commando
             int enemyLayer = LayerMask.GetMask("Enemy");
             RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
+            if (hit.collider != null)
+            {
+                // 적에게 맞았을 경우: 발사 위치부터 적중한 지점까지 빨간색 선 표시
+                Debug.DrawLine(shootOrigin, hit.point, Color.red, 1.0f);
+            }
+            else
+            {
+                // 허공에 쐈을 경우: 발사 위치부터 최대 사거리까지 초록색 선 표시
+                Debug.DrawRay(shootOrigin, shootDirection * attackRange, Color.green, 1.0f);
+            }
+
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
             float baseDamage = m_Player.Stats.Damage.Value * 0.6f;
