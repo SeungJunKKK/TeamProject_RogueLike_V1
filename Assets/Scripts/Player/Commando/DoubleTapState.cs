@@ -22,14 +22,14 @@ namespace Player.Commando
                                   ? (Vector2)m_Player.MuzzlePos.position
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
-            float attackRange = 15f;
+            float attackRange = 30f;
             int enemyLayer = LayerMask.GetMask("Enemy");
             RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
             Debug.DrawRay(shootOrigin, shootDirection * attackRange, Color.red, 2f);
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 1.0f;
+            float baseDamage = m_Player.Stats.Damage.Value * 0.6f;
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             if (hit.collider != null)
@@ -50,6 +50,11 @@ namespace Player.Commando
 
                     damageable.TakeDamage(info);
                     hitSomething = true;
+
+                    if (info.CanProc)
+                    {
+                        m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
+                    }
                 }
             }
 

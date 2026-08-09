@@ -33,17 +33,27 @@ public class Projectile : MonoBehaviour, IPoolable
         if (other.CompareTag("Enemy"))
         {
             IDamageable damageable = other.GetComponent<IDamageable>();
-            if (damageable != null)
+            if (damageable != null) 
             {
-                DamageInfo finalInfo = m_Data.AttackData;
-                finalInfo.HitPoint = transform.position;
+                DamageInfo finalInfo = m_Data.AttackData; 
+                finalInfo.HitPoint = transform.position; 
+
                 damageable.TakeDamage(finalInfo);
+
+                if (finalInfo.Attacker != null)
+                {
+                    PlayerController player = finalInfo.Attacker.GetComponent<PlayerController>();
+                    if (player != null)
+                    {
+                        player.OnEnemyHit(other.gameObject, finalInfo.Amount);
+                    }
+                }
             }
 
-            if (!m_Data.IsPiercing)
+            if (!m_Data.IsPiercing) //[cite: 6]
             {
-                m_Pooled ??= GetComponent<PooledObject>();
-                m_Pooled.Return();
+                m_Pooled ??= GetComponent<PooledObject>(); //[cite: 6]
+                m_Pooled.Return(); //[cite: 6]
             }
         }
     }

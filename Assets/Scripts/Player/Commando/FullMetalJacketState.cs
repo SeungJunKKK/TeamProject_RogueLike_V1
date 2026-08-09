@@ -18,13 +18,13 @@ namespace Player.Commando
                                   ? (Vector2)m_Player.MuzzlePos.position
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
-            float attackRange = 15f;
+            float attackRange = 30f;
 
             RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
 
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 2.5f; // 데미지 배수[cite: 13]
+            float baseDamage = m_Player.Stats.Damage.Value * 2.3f; 
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             foreach (RaycastHit2D hit in hits)
@@ -45,6 +45,11 @@ namespace Player.Commando
 
                     damageable.TakeDamage(info);
                     hitSomething = true;
+
+                    if (info.CanProc)
+                    {
+                        m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
+                    }
                 }
             }
             m_Player.PlayAddressableSFX(m_Player.X_SFXAddress);

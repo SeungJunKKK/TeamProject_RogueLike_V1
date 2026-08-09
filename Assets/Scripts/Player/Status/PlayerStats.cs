@@ -2,14 +2,20 @@
 
 public class PlayerStats : MonoBehaviour
 {
+    [Header("Character Data")]
+    public SurvivorData CharacterData;
+
     [Header("Core Stats")]
-    public float CurrentHealth => MaxHealth.Value; // 현재 체력은 최대 체력과 동일하게 설정 (추후 체력 감소 로직 추가 가능)
-    public CharacterStat MaxHealth;
-    public CharacterStat MoveSpeed;
-    public CharacterStat Damage;
-    public CharacterStat AttackSpeed;
-    public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
-    public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
+    [HideInInspector]public float CurrentHealth { get; set; } 
+    [HideInInspector]public CharacterStat MaxHealth;
+    [HideInInspector]public CharacterStat HealthRegen;
+    [HideInInspector]public CharacterStat MoveSpeed;
+    [HideInInspector]public CharacterStat Damage;
+    [HideInInspector]public CharacterStat AttackSpeed;
+    [HideInInspector]public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
+    [HideInInspector]public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
+    [HideInInspector] public CharacterStat Armor;       // 방어력 (피해 감소율 계산에 사용)
+
 
     [Header("Level & EXP")]
     public int CurrentLevel = 1;
@@ -18,13 +24,35 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
-        MaxHealth = new CharacterStat(100f);
-        MoveSpeed = new CharacterStat(5f);
-        Damage = new CharacterStat(10f); 
-        AttackSpeed = new CharacterStat(1f); 
-        CritChance = new CharacterStat(0.01f); 
-        CritDamage = new CharacterStat(2.0f); 
+        // 데이터가 안 들어와 있으면 에러 방지용으로 기본값 세팅 (또는 에러 로그)
+        if (CharacterData == null)
+        {
+            Debug.LogError("[PlayerStats] CharacterData가 할당되지 않았습니다!");
+            return;
+        }
+
+        MaxHealth = new CharacterStat(CharacterData.BaseMaxHealth);
+        HealthRegen = new CharacterStat(CharacterData.BaseHealthRegen);
+        MoveSpeed = new CharacterStat(CharacterData.BaseMoveSpeed);
+        Damage = new CharacterStat(CharacterData.BaseDamage);
+        Armor = new CharacterStat(CharacterData.BaseArmor);
+        AttackSpeed = new CharacterStat(CharacterData.BaseAttackSpeed);
+        CritChance = new CharacterStat(CharacterData.BaseCritChance);
+        CritDamage = new CharacterStat(CharacterData.BaseCritDamage);
+
+        CurrentHealth = MaxHealth.Value;
     }
+
+    private void Update()
+    {
+        if (CurrentHealth > 0 && CurrentHealth < MaxHealth.Value)
+        {
+            CurrentHealth += HealthRegen.Value * Time.deltaTime;
+            CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth.Value);
+        }
+    }
+
+
     private void OnEnable()
     {
         EventBus.Subscribe<ItemPickedUpEvent>(OnItemPickedUp);
@@ -73,23 +101,43 @@ public class PlayerStats : MonoBehaviour
             case EStatType.MaxHealth: MaxHealth.AddModifier(e.Modifier); break;
             case EStatType.CritChance: CritChance.AddModifier(e.Modifier); break;
             case EStatType.CritDamage: CritDamage.AddModifier(e.Modifier); break;
-
             default: Debug.LogWarning($"알 수 없는 스탯 타입: {e.TargetStat}"); break;
         }
+
     }
-
-    private void LevelUp()
+    public void IncreaseMaxHealth(float amount)
     {
-        CurrentLevel++;
-        MaxHealth.BaseValue += 20f;
-        Damage.BaseValue += 2f;
+        MaxHealth.BaseValue += amount;
 
-        // 체력 스탯이 변했으니 UI 업데이트 발행
         EventBus.Publish(new PlayerDamagedEvent
         {
             Amount = 0,
             CurrentHp = CurrentHealth,
             MaxHp = MaxHealth.Value
         });
+
+        Debug.Log($"[PlayerStats] 최대 체력이 {amount}만큼 영구 증가했습니다!");
+    }
+
+
+    private void LevelUp()
+    {
+        CurrentLevel++;
+
+        MaxHealth.BaseValue += CharacterData.HealthPerLevel;
+        HealthRegen.BaseValue += CharacterData.HealthRegenPerLevel;
+        Damage.BaseValue += CharacterData.DamagePerLevel;
+        Armor.BaseValue += CharacterData.ArmorPerLevel;
+
+        CurrentHealth += CharacterData.HealthPerLevel;
+
+        EventBus.Publish(new PlayerDamagedEvent
+        {
+            Amount = 0,
+            CurrentHp = CurrentHealth,
+            MaxHp = MaxHealth.Value
+        });
+
+        Debug.Log($"[PlayerStats] 레벨업! 현재 레벨: {CurrentLevel}");
     }
 }

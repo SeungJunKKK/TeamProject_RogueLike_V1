@@ -6,6 +6,12 @@ public class Teleporter : MonoBehaviour, IInteractable
     private float m_ChargeDuration = 90f;
     [SerializeField]
     private string m_NextStageName;
+    [SerializeField] private AudioClip m_TeleportOutSound;
+
+    [Header("Teleporter Visuals")]
+    [SerializeField] private SpriteRenderer m_SpriteRenderer;
+    [SerializeField] private Sprite m_ClearedSprite;
+
 
     private float m_ChargeTimer;
     private bool m_IsBossDead; // 실제 보스 사망 여부 (BossDiedEvent 구독으로 업데이트)
@@ -28,6 +34,10 @@ public class Teleporter : MonoBehaviour, IInteractable
         else if (State == ETeleporterState.Cleared)
         {
             Debug.Log($"<color=magenta>[Teleporter]  다음 스테이지({m_NextStageName})로 이동합니다!</color>");
+            if (m_TeleportOutSound != null)
+            {
+                SoundManager.Instance.PlaySFX(m_TeleportOutSound);
+            }
             SceneLoader.Instance.LoadScene(m_NextStageName);
         }
     }
@@ -119,6 +129,11 @@ public class Teleporter : MonoBehaviour, IInteractable
 
         State = next;
         Debug.Log($"<color=yellow>[Teleporter 상태 변경] -> {State}</color>");
+        if (State == ETeleporterState.Cleared && m_SpriteRenderer != null && m_ClearedSprite != null)
+        {
+            m_SpriteRenderer.sprite = m_ClearedSprite;
+        }
+
         EventBus.Publish(new TeleporterStateChangedEvent { State = State });
     }
 

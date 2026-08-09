@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     private IState m_CurrentState;
     private bool m_IsHitStopping = false;
+    private PlayerInventory m_inventory;
 
     public PlayerStats Stats { get; private set; }
     public Rigidbody2D Rb { get; private set; }
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
         CooldownManager = GetComponent<SkillCooldownManager>();
         OriginalLayer = gameObject.layer;
         Stats = GetComponent<PlayerStats>();
+        m_inventory = GetComponent<PlayerInventory>();
     }
 
     private void Start()
@@ -95,35 +97,38 @@ public class PlayerController : MonoBehaviour
         if (m_CurrentState != null) m_CurrentState.Update();
 
         //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "군인의 주사기",
-                TargetStat = EStatType.AttackSpeed,
-                Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
-            });
-        }
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "군인의 주사기",
+        //        TargetStat = EStatType.AttackSpeed,
+        //        Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
+        //    });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            EventBus.Publish(new ItemPickedUpEvent
-            {
-                ItemName = "안경 메이커의 안경",
-                TargetStat = EStatType.CritChance,
-                Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
-            });
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Stats.AddExp(50f);
-        }
-        //===============================아이템 테스트===============================
-        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
-        {
-            Collider2D hit = CheckLadderUp();
-            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
-        }
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    EventBus.Publish(new ItemPickedUpEvent
+        //    {
+        //        ItemName = "안경 메이커의 안경",
+        //        TargetStat = EStatType.CritChance,
+        //        Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
+        //    });
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    Stats.AddExp(50f);
+        //}
+
+
+        ////===============================아이템 테스트===============================
+        //if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        //{
+        //    Collider2D hit = CheckLadderUp();
+        //    Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        //}
 
 
     }
@@ -333,5 +338,67 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 적을 타격했을 때 호출합니다.
+    /// </summary>
+    public void OnEnemyHit(GameObject target, float damage)
+    {
+        if (m_inventory != null)
+        {
+            m_inventory.OnHitEnemyTrigger(target, damage);
+        }
+    }
 
+    /// <summary>
+    /// 적을 처치했을 때 호출합니다. 
+    /// </summary>
+    public void OnEnemyKilled(GameObject target)
+    {
+        if (m_inventory != null)
+        {
+            m_inventory.OnKillEnemyTrigger(target);
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 피해를 입었을 때 호출합니다.
+    /// </summary>
+    public void TakeDamage(float incomingDamage)
+    {
+        if (m_CurrentState is PlayerDeathState)
+        {
+            return;
+        }
+
+        float finalDamage = incomingDamage;
+
+        if (m_inventory != null)
+        {
+            m_inventory.OnTakeDamageTrigger(finalDamage);
+        }
+
+        if (Stats != null)
+        {
+            Stats.CurrentHealth -= finalDamage;
+            Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth); 
+
+            Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
+
+            if (Stats.CurrentHealth <= 0f)
+            {
+                Die();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어 사망 처리 함수
+    /// </summary>
+    public void Die()
+    {
+        if (m_CurrentState is not PlayerDeathState)
+        {
+            ChangeState(new PlayerDeathState(this));
+        }
+    }
 }
