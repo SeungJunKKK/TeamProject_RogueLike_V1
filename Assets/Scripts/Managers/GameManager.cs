@@ -11,7 +11,7 @@ public class GameManager : Singleton<GameManager>
     public GameObject SelectedPlayerPrefab;
 
     private Coroutine m_HitStopCoroutine;
-
+    public GameObject CurrentPlayer { get; private set; }
     public EGameState State { get; private set; }
     public int Gold { get; private set; }
     public bool IsPaused => State == EGameState.Paused;
@@ -85,7 +85,7 @@ public class GameManager : Singleton<GameManager>
         GameObject spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
         Vector3 spawnPosition = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
-        Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
+        CurrentPlayer = Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
         Debug.Log($"<color=cyan>[GameManager] 플레이어 스폰 완료 위치: {spawnPosition}</color>");
     }
 

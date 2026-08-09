@@ -8,7 +8,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     [SerializeField] protected int m_BaseGold = 2;
 
     protected float m_CurrentHp;
-    private Rigidbody2D m_Rigidbody;
+    protected Rigidbody2D m_Rigidbody;
+    
+
 
     // 자식 클래스
     public abstract void SetTarget(Transform target);

@@ -37,6 +37,7 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
         Instance = this;
+       
     }
 
     private void OnDestroy()
@@ -49,24 +50,24 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        if (GroundTilemap == null || Player == null || EnemyPrefabs == null || EnemyPrefabs.Length == 0)
+        if (GroundTilemap == null || EnemyPrefabs == null || EnemyPrefabs.Length == 0) 
         {
-            Debug.LogError("[EnemySpawner] 필수 요소가 연결되지 않았습니다.");
+            Debug.LogError("[EnemySpawner] 필수 요소가 연결되지 않았습니다."); 
+            return; 
+        }
+
+        ScanTilemapForSpawnPoints(); 
+
+        if (m_ValidSpawnPoints == null || m_ValidSpawnPoints.Length == 0) 
+        {
+            Debug.LogError("[EnemySpawner] 스폰 가능한 위치를 찾지 못했습니다."); 
             return;
         }
 
-        ScanTilemapForSpawnPoints();
-
-        if (m_ValidSpawnPoints == null || m_ValidSpawnPoints.Length == 0)
+        if (PoolManager.Instance == null) 
         {
-            Debug.LogError("[EnemySpawner] 스폰 가능한 위치를 찾지 못했습니다.");
-            return;
-        }
-
-        if (PoolManager.Instance == null)
-        {
-            Debug.LogError("[EnemySpawner] PoolManager를 찾을 수 없습니다.");
-            return;
+            Debug.LogError("[EnemySpawner] PoolManager를 찾을 수 없습니다."); 
+            return; 
         }
 
         StartCoroutine(SpawnRoutine());
@@ -103,13 +104,26 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
-        while (Player != null)
+        while (true) 
         {
-            yield return new WaitForSeconds(SpawnInterval);
-
-            if (m_ActiveEnemies.Count < MaxEnemyCount)
+            if (Player == null)
             {
-                SpawnEnemy();
+                if (GameManager.Instance != null && GameManager.Instance.CurrentPlayer != null)
+                {
+                    Player = GameManager.Instance.CurrentPlayer.transform;
+                    Debug.Log("<color=green>[EnemySpawner] 타겟 플레이어 확인 완료! 스폰 루틴 시작.</color>");
+                }
+                else
+                {
+                yield return null;
+                continue;
+                }
+            }
+            yield return new WaitForSeconds(SpawnInterval); 
+
+            if (m_ActiveEnemies.Count < MaxEnemyCount) 
+            {
+            SpawnEnemy(); 
             }
         }
     }
@@ -127,7 +141,11 @@ public class EnemySpawner : MonoBehaviour
                 continue;
             }
 
-            if (Physics2D.OverlapCircleNonAlloc(testPoint, SpawnClearanceRadius, m_OverlapBuffer, EnemyLayer) == 0)
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.layerMask = EnemyLayer;
+
+            if (Physics2D.OverlapCircle(testPoint, SpawnClearanceRadius, filter, m_OverlapBuffer) == 0)
             {
                 GameObject enemyObj = PoolManager.Instance.Get(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)], testPoint, Quaternion.identity);
 

@@ -20,7 +20,13 @@ public class PoolManager : Singleton<PoolManager>
         else
         {
             obj = Instantiate(prefab);
-            obj.AddComponent<PooledObject>().Init(prefab);
+
+            if (!obj.TryGetComponent(out PooledObject pooledObj))
+            {
+                pooledObj = obj.AddComponent<PooledObject>();
+            }
+
+            pooledObj.Init(prefab);
         }
 
 

@@ -41,7 +41,7 @@ public class BasicEnemyAI : EnemyBase
     private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
     private const float k_SeparationThreshold = 0.01f;
 
-    private Rigidbody2D m_Rigidbody;
+    //private Rigidbody2D m_Rigidbody;
     private BoxCollider2D m_Collider;
     private Animator m_Animator;
 
@@ -309,7 +309,10 @@ public class BasicEnemyAI : EnemyBase
     private float CalculateSeparation()
     {
         float separationForceX = 0f;
-        int count = Physics2D.OverlapCircleNonAlloc(transform.position, SeparationRadius, m_NearbyEnemies, EnemyLayer);
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useLayerMask = true;
+        filter.layerMask = EnemyLayer;
+        int count = Physics2D.OverlapCircle(transform.position, SeparationRadius, filter, m_NearbyEnemies);
 
         for (int i = 0; i < count; i++)
         {
