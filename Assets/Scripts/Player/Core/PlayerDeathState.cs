@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class PlayerDeathState : IState
 {
     private readonly PlayerController m_Player;
-    private readonly float m_DeathDuration = 2.0f; 
+    private readonly float m_DeathDuration = 5.0f; 
     private float m_Timer;
     private bool m_IsSceneTransitionTriggered;
 
