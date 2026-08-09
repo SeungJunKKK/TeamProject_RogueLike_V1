@@ -20,8 +20,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d617ce978e1d734494ee65e15927b28
+    m_Address: MonsterLog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26e7f0581f02a1647af4eddaa7b43bbf
     m_Address: DamageText
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3866dd9ce624ae249b74fdb0c3702538
+    m_Address: ItemLog_Common
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -30,6 +40,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47b65e3e5efc1cc43ad49191bd141299
+    m_Address: ItemLog_Uncommon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62d33f03ac0a91340b0b9465751373a3
+    m_Address: ItemLog_Rare
   - m_GUID: 5316a770c34dee04289e09dbde8320ef
     m_Address: Infusion
     m_ReadOnly: 0
@@ -50,6 +67,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a5a6ef1f27950ac4d9acda47a0e7c514
+    m_Address: ItemLog_Use
   - m_GUID: bd9220db6b9b64d449390a916b58d5e5
     m_Address: Ukulele
     m_ReadOnly: 0
@@ -71,7 +90,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcd62aaa222268e4ea885aa3aef719b7
-    m_Address: Assets/Sprites/UI/MainMenu/MainMenu.jpg
+    m_Address: MainMenuBackground
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

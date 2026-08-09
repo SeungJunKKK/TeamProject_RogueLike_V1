@@ -10,15 +10,22 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     protected float m_CurrentHp;
     private Rigidbody2D m_Rigidbody;
 
-    // 자식 클래스(BasicEnemyAI 등)에서 반드시 구현해야 하는 추상 메서드
+    // 자식 클래스
     public abstract void SetTarget(Transform target);
 
     public virtual void OnSpawn()
     {
-        // 스폰 시점의 난이도로 최대 HP 결정 (레벨 기반 스케일링)
-        m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+        if (DifficultyManager.Instance != null)
+        {
+            // 스폰 시점의 난이도로 최대 HP 결정
+            m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+        }
+        else
+        {
+            m_CurrentHp = m_BaseHp;
+        }
 
-        // m_Rigidbody가 null일 때만 GetComponent 실행 (성능 최적화)
+        // m_Rigidbody가 null일 때만 GetComponent 실행
         m_Rigidbody ??= GetComponent<Rigidbody2D>();
     }
 
@@ -29,7 +36,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
     public void TakeDamage(DamageInfo info)
     {
-        // 이미 죽은 몬스터 재타격 방어 (동시 피격 시 Die 중복 호출 → 골드 이중 지급 방지)
+        // 이미 죽은 몬스터 재타격 방어
         if (m_CurrentHp <= 0f)
         {
             return;
