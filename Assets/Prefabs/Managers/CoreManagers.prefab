@@ -382,6 +382,7 @@ GameObject:
   - component: {fileID: -550375569016202373}
   - component: {fileID: 1406153826975438522}
   - component: {fileID: -2497387529813484429}
+  - component: {fileID: 34610981746676620}
   m_Layer: 0
   m_Name: CoreManagers
   m_TagString: Untagged
@@ -451,6 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   m_TeleportInSound: {fileID: 8300000, guid: 94c9bd113ba4029458e4f5db3f39611a, type: 3}
+  SelectedPlayerPrefab: {fileID: 0}
 --- !u!114 &1271193421356028855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,6 +538,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloatingTextManager
   DamageTextAddress: DamageText
+--- !u!114 &34610981746676620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785546532067763248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e1ad6b1a71adc4bb112307140cde44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  GroundTilemap: {fileID: 0}
+  Player: {fileID: 0}
+  EnemyPrefabs: []
+  SpawnInterval: 3
+  MinDistanceFromPlayer: 10
+  MaxSpawnAttempts: 10
+  MaxEnemyCount: 20
+  SpawnClearanceRadius: 1
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &7584994299066660253
 GameObject:
   m_ObjectHideFlags: 0

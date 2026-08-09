@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8e7f78fa74dbc7b43b5988b69abf0ddf
+guid: 109d8962fe43c4b4eb4f4b087787b2f1
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -103,12 +103,12 @@ TextureImporter:
       name: PlayerSkills_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 402
-        width: 18
-        height: 18
+        x: 0
+        y: 0
+        width: 644
+        height: 916
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -121,121 +121,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: PlayerSkills_1
-      rect:
-        serializedVersion: 2
-        x: 26
-        y: 402
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b0a61ddde7260664e8974a7dc7f17a8e
-      internalID: 1670748651
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PlayerSkills_2
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 402
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 252a239c93758574296107f709a4546a
-      internalID: -2071359823
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PlayerSkills_3
-      rect:
-        serializedVersion: 2
-        x: 70
-        y: 402
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 95e4d38d61e48dd468f2b1756cd51501
-      internalID: -1633264517
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PlayerSkills_4
-      rect:
-        serializedVersion: 2
-        x: 92
-        y: 402
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f72d804e0ad21d64db5d00c83439543a
-      internalID: 158763713
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PlayerSkills_5
-      rect:
-        serializedVersion: 2
-        x: 114
-        y: 402
-        width: 18
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fbfe38e7881cff143a1e031146dc5f4f
-      internalID: -1232722488
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3ef6ed4f0058fa84d9b265e4732248e2
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -243,16 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
       PlayerSkills_0: -3458446854784112109
-      PlayerSkills_1: 1670748651
-      PlayerSkills_2: -2071359823
-      PlayerSkills_3: -1633264517
-      PlayerSkills_4: 158763713
-      PlayerSkills_5: -1232722488
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
