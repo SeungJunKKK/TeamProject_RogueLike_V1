@@ -45,15 +45,33 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 62d33f03ac0a91340b0b9465751373a3
-    m_Address: ItemLog_Rare
+  - m_GUID: 4fa94df425ae640468c583f7bbdea157
+    m_Address: Dash_Left_Dust
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5316a770c34dee04289e09dbde8320ef
     m_Address: Infusion
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 62d33f03ac0a91340b0b9465751373a3
+    m_Address: ItemLog_Rare
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ec33161be7b9a848a07b66646a5c304
     m_Address: PlayerDustEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7dd87da418af9a94493a580705e76d70
+    m_Address: Dash_Right_Dust
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c5b810d26c0b4f4c91e95f8f91bf3dc
+    m_Address: Jump_Right_Dust
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -69,6 +87,9 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a5a6ef1f27950ac4d9acda47a0e7c514
     m_Address: ItemLog_Use
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bd9220db6b9b64d449390a916b58d5e5
     m_Address: Ukulele
     m_ReadOnly: 0
@@ -101,6 +122,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f083e6d766c87674681e6a15e9a1f64e
     m_Address: ToughTimes
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f59e627079734f442aacd206bd3cdffc
+    m_Address: Jump_Left_Dust
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

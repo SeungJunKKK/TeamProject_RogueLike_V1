@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6763473462679097354}
   - component: {fileID: 837366154626097234}
   - component: {fileID: 8751138046091887115}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Jellyfish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5093403589806644815}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -192,7 +192,9 @@ MonoBehaviour:
   JumpForce: 6
   JumpCooldown: 0.5
   AttackRange: 1.5
+  AttackWindup: 0.5
   AttackCooldown: 2
+  AttackMoveRatio: 0.3
   GroundRayLength: 1.5
   WallRayLength: 0.2
   GroundLayer:
@@ -200,8 +202,6 @@ MonoBehaviour:
     m_Bits: 0
   SeparationRadius: 0.8
   SeparationForce: 2.5
-  AllyBlockPenalty: 0.3
-  ArrivalRadius: 1.2
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 0

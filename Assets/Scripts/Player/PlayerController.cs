@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Stats")]
     public float JumpForce = 5f;
+    public float MaxFallSpeed = 10f;
+
     [Header("Effects (Addressable)")]
     public string DustAddress = "PlayerDustEffect";
     public Transform FeetPos;
@@ -124,13 +126,11 @@ public class PlayerController : MonoBehaviour
 
 
         ////===============================아이템 테스트===============================
-        //if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
-        //{
-        //    Collider2D hit = CheckLadderUp();
-        //    Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
-        //}
-
-
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
+        { 
+            Collider2D hit = CheckLadderUp();
+            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        }
     }
 
     public void ChangeState(IState newState)
@@ -139,6 +139,15 @@ public class PlayerController : MonoBehaviour
         m_CurrentState = newState;
         m_CurrentState.Enter();
     }
+
+    private void FixedUpdate()
+    {
+        if (Rb.linearVelocity.y < -MaxFallSpeed)
+        {
+            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, -MaxFallSpeed);
+        }
+    }
+
 
     /// <summary>
     /// 어드레서블 주소로 오디오 클립을 비동기 로드하여 사운드 매니저를 통해 재생합니다.
@@ -219,6 +228,13 @@ public class PlayerController : MonoBehaviour
         // 플레이어 몸통 중심점
         Vector2 centerPos = (Vector2)transform.position + new Vector2(0f, 0.2f);
         Collider2D col = Physics2D.OverlapCircle(centerPos, 0.2f, LadderLayer);
+
+        if (col == null && FeetPos != null)
+        {
+            col = Physics2D.OverlapCircle(FeetPos.position, 0.2f, LadderLayer);
+        }
+
+
         return col != null;
     }
 

@@ -210,7 +210,6 @@ GameObject:
   - component: {fileID: 67578299353388222}
   - component: {fileID: 13455233871149457}
   - component: {fileID: 4864704695533114831}
-  - component: {fileID: 2967384558735246918}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -371,15 +370,3 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2967384558735246918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7592535248225884336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ef1db6e4006fc0469603a7208493c19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AutoFindPlayer
