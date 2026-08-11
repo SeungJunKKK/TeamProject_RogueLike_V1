@@ -476,6 +476,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9141294772314777098, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9141294772314777098, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
       propertyPath: m_GeometryType
       value: 1
       objectReference: {fileID: 0}

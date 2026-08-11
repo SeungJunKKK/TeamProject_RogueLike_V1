@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Stats")]
     public float JumpForce = 5f;
+    public float MaxFallSpeed = 10f;
+
     [Header("Effects (Addressable)")]
     public string DustAddress = "PlayerDustEffect";
     public Transform FeetPos;
@@ -137,6 +139,15 @@ public class PlayerController : MonoBehaviour
         m_CurrentState = newState;
         m_CurrentState.Enter();
     }
+
+    private void FixedUpdate()
+    {
+        if (Rb.linearVelocity.y < -MaxFallSpeed)
+        {
+            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, -MaxFallSpeed);
+        }
+    }
+
 
     /// <summary>
     /// 어드레서블 주소로 오디오 클립을 비동기 로드하여 사운드 매니저를 통해 재생합니다.
