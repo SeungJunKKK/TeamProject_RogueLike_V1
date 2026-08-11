@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Infusion", menuName = "RiskOfRain/Items/Infusion")]
+[CreateAssetMenu(fileName = "Infusion", menuName = "Items/UnCommon/Infusion")]
 public class Item_Infusion : ItemData
 {
     public override void OnKillEnemy(PlayerController player, GameObject target, int stackCount)

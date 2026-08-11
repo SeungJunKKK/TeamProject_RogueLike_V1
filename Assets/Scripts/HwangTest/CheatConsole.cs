@@ -152,6 +152,7 @@ public class CheatConsole : MonoBehaviour
 
                 Debug.Log($"<color=cyan>[Cheat] ===== 🧑‍🚀 현재 플레이어 정보 =====</color>\n" +
                           $" 체력: {stats.CurrentHealth:F1} / {stats.MaxHealth.Value:F1}\n" +
+                          $" 회복: {stats.HealthRegen.Value:F1} / 초\n" +
                           $" 방어력: {armorValue:F1}\n" +
                           $" 공격력: {stats.Damage.Value:F1} |  공속: {stats.AttackSpeed.Value:F2}\n" +
                           $" 치명타 확률: {stats.CritChance.Value * 100:F1}% |  치명타 배율: {stats.CritDamage.Value * 100:F0}%\n" +

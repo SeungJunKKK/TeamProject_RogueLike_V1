@@ -38,4 +38,7 @@ public abstract class ItemData : ScriptableObject
 
     /// <summary> 4. 플레이어가 피해를 입을 시점 (피격 시 발동용) </summary>
     public virtual void OnTakeDamage(PlayerController player, float damageTaken, int stackCount) { }
+
+    /// <summary> 5. 플레이어가 기본 공격을 실행할 시점 (천공 분쇄기 등) </summary>
+    public virtual void OnBasicAttack(PlayerController player, int stackCount) { }
 }

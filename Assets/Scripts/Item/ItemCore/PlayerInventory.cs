@@ -82,4 +82,14 @@ public class PlayerInventory : MonoBehaviour
             pair.Key.OnTakeDamage(player, damageTaken, pair.Value);
         }
     }
+
+    // 플레이어가 기본 공격을 했을 때 호출할 트리거
+    public void OnBasicAttackTrigger()
+    {
+        Debug.Log("<color=cyan>[디버그] 1. PlayerInventory의 OnBasicAttackTrigger가 정상 호출</color>");
+        foreach (var pair in passiveItems)
+        {
+            pair.Key.OnBasicAttack(player, pair.Value);
+        }
+    }
 }
