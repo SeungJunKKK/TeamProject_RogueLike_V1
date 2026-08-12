@@ -459,6 +459,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7489236829908626144, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
+      propertyPath: m_InfiniteChestPrefab
+      value: 
+      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
     - target: {fileID: 7826894772789651037, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.12

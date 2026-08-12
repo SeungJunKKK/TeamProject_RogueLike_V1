@@ -275,6 +275,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5283889551480158942}
     m_Modifications:
+    - target: {fileID: 2250515185594381678, guid: 4e8c869775ca28c44a25fcdec4aa8a4c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6626606477910936627, guid: 4e8c869775ca28c44a25fcdec4aa8a4c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -351,6 +355,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InteractableSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_InfiniteChestPrefab
+      value: 
+      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
     - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
       propertyPath: 'm_GroundTilemaps.Array.data[0]'
       value: 

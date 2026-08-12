@@ -29,8 +29,22 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
 
         OnOpened();
         Open(interactor);
+
+        EventBus.Publish(new InteractableInRangeEvent
+        {
+            WorldPosition = transform.position,
+            PromptText = GetPromptText()
+        });
     }
 
+    public string GetPromptText()
+    {
+        if (!CanOpen())
+        {
+            return "";
+        }
+        return $"Open Chest [Up] ({GetPrice()} Gold)";
+    }
     protected abstract bool CanOpen();
     protected abstract int GetPrice();
     protected abstract void OnOpened();

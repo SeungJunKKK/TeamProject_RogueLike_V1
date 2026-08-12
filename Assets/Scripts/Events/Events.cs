@@ -114,6 +114,7 @@ public struct BossDiedEvent
 public struct InteractableInRangeEvent
 {
     public Vector2 WorldPosition;   // 프롬프트를 띄울 위치 (대상 머리 위 등)
+    public string PromptText;        // 프롬프트에 표시할 텍스트
 }
 
 public struct InteractableOutOfRangeEvent { }
