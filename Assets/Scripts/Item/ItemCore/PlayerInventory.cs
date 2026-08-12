@@ -6,6 +6,10 @@ public class PlayerInventory : MonoBehaviour
     // 아이템 데이터를 키(Key)로, 획득한 개수를 값(Value)으로 저장 딕셔너리
     public Dictionary<ItemData, int> passiveItems = new Dictionary<ItemData, int>(); //[cite: 7]
 
+    [Header("Active Item Slot")]
+    public ItemData currentActiveItem;
+    private float m_ActiveCooldownTimer = 0f;
+
     private PlayerController player;
     private PlayerStats stats;
 
@@ -15,27 +19,70 @@ public class PlayerInventory : MonoBehaviour
         stats = GetComponent<PlayerStats>();
     }
 
+    private void Update()
+    {
+        if (m_ActiveCooldownTimer > 0f)
+        {
+            m_ActiveCooldownTimer -= Time.deltaTime;
+        }
+
+        // 키보드 'E'를 누르면 액티브 아이템을 사용하도록 설정 (추후 원하는 키로 변경 가능 => 매핑 시스템 )
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            UseActiveItem();
+        }
+    }
+
     // 아이템 획득 시 호출될 함수 (상자에서 아이템을 먹었을 때 실행됨)
     public void AddItem(ItemData newItem)
     {
-        // 1. 이미 가지고 있는 아이템이면 중첩 수 +1
-        if (passiveItems.ContainsKey(newItem)) 
+        if (newItem.tier == ItemTier.Use)
         {
-            if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack) 
+            currentActiveItem = newItem;
+            m_ActiveCooldownTimer = 0f; 
+            Debug.Log($"[Inventory] 액티브 아이템 장착: {newItem.itemName}");
+            return;
+        }
+
+        if (passiveItems.ContainsKey(newItem))
+        {
+            if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
             {
-                passiveItems[newItem]++; 
-                Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}"); 
+                passiveItems[newItem]++;
+                Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
             }
         }
-        // 2 처음 먹는 아이템이면 딕셔너리에 새로 등록 
         else
         {
             passiveItems.Add(newItem, 1);
-            Debug.Log($"[Inventory] {newItem.itemName} 획득!"); 
+            Debug.Log($"[Inventory] {newItem.itemName} 획득!");
         }
 
-        //아이템을 획득 ->  패시브 스탯 갱신
         UpdatePassiveStats();
+    }
+
+    /// <summary>
+    ///액티브 아이템 사용 실행 함수 
+    /// </summary>
+    public void UseActiveItem()
+    {
+        if (currentActiveItem == null)
+        {
+            return;
+        }
+
+        // 쿨타임 체크
+        if (m_ActiveCooldownTimer > 0f)
+        {
+            Debug.Log($"<color=orange>[시스템] 아직 {currentActiveItem.itemName} 쿨타임입니다! (남은 시간: {m_ActiveCooldownTimer:F1}초)</color>");
+            return;
+        }
+
+        // 아이템 사용
+        if (currentActiveItem.OnUse(player))
+        {
+            m_ActiveCooldownTimer = currentActiveItem.cooldown;
+        }
     }
 
     // =======================================================
@@ -92,4 +139,15 @@ public class PlayerInventory : MonoBehaviour
             pair.Key.OnBasicAttack(player, pair.Value);
         }
     }
+
+
+    // ==========================================
+    // 치트/시스템용: 액티브 쿨타임 초기화 함수
+    // ==========================================
+    public void ResetActiveCooldown()
+    {
+        m_ActiveCooldownTimer = 0f;
+        Debug.Log("<color=cyan>[시스템] 액티브 아이템 쿨타임이 초기화되었습니다!</color>");
+    }
+
 }

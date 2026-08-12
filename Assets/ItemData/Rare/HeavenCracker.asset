@@ -19,8 +19,10 @@ MonoBehaviour:
   tier: 2
   isStackable: 1
   maxStack: 4
+  cooldown: 0
   baseRequiredAttacks: 4
   damageMultiplier: 1
   drillRange: 11.1
   drillThickness: 1.3
   drillVfxAddress: VFX_HeavenCrackerDrill
+  drillSound: {fileID: 8300000, guid: f607478b36cde4e44a7b8f595c066f8e, type: 3}

@@ -8,7 +8,10 @@ public class Item_HeavenCracker : ItemData
     public float damageMultiplier = 1.0f; // 100% 피해
     public float drillRange = 10f; // 드릴 관통 사거리
     public float drillThickness = 1.5f; // 드릴 타격 범위 두께
-    public string drillVfxAddress = "VFX_HeavenCrackerDrill"; 
+    public string drillVfxAddress = "VFX_HeavenCrackerDrill";
+    [Header("Sound Settings")]
+    public AudioClip drillSound;
+
 
     private void Awake()
     {
@@ -35,6 +38,10 @@ public class Item_HeavenCracker : ItemData
         {
             tracker.ResetCount(); // 카운트 초기화
             Debug.Log("<color=red>[디버그] 4. 드릴 발사(FireDrill) 함수 호출!</color>");
+            if (drillSound != null)
+            {
+                SoundManager.Instance.PlaySFX(drillSound);
+            }
             FireDrill(player);   
         }
     }
@@ -87,12 +94,12 @@ public class Item_HeavenCracker : ItemData
             {
                 if (prefab != null)
                 {
-                    GameObject vfx = Instantiate(prefab, origin, Quaternion.identity);
+                    GameObject vfx = Instantiate(prefab, origin, player.transform.rotation);
 
-                    if (!player.IsFacingRight)
-                    {
-                        vfx.transform.localScale = new Vector3(-1, 1, 1);
-                    }
+                    //if (!player.IsFacingRight)
+                    //{
+                    //    vfx.transform.localScale = new Vector3(-1, 1, 1);
+                    //}
 
                     Destroy(vfx, 0.5f); 
                 }

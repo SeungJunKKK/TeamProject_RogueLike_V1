@@ -603,6 +603,8 @@ MonoBehaviour:
   X_SFXAddress: SFX_Commando_Shoot2
   V_SFXAddress: SFX_Commando_Shoot3
   VStrengthened_SFXAddress: SFX_Commando_Shoot3
+  Jump_SFXAddress: SFX_Moving
+  Dash_SFXAddress: SFX_Moving
   LadderLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -672,6 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bface54dc60304847a2260c7c7d840d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
+  currentActiveItem: {fileID: 0}
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0
