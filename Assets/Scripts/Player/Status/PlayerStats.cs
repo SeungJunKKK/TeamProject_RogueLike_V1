@@ -102,6 +102,7 @@ public class PlayerStats : MonoBehaviour
             case EStatType.MaxHealth: MaxHealth.AddModifier(e.Modifier); break;
             case EStatType.CritChance: CritChance.AddModifier(e.Modifier); break;
             case EStatType.CritDamage: CritDamage.AddModifier(e.Modifier); break;
+            
             default: Debug.LogWarning($"알 수 없는 스탯 타입: {e.TargetStat}"); break;
         }
 

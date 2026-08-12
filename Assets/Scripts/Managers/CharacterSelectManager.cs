@@ -51,6 +51,7 @@ public class CharacterSelectManager : MonoBehaviour
         UpdateSkillUI(1, data.SecondarySkill);
         UpdateSkillUI(2, data.UtilitySkill);
         UpdateSkillUI(3, data.UltimateSkill);
+        UpdateSkillUI(4, data.StrengthenedUltimateSkill);
 
         StartButton.interactable = true;
     }

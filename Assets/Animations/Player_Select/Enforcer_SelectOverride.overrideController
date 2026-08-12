@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Enforcer_SelectOverride
+  m_Controller: {fileID: 9100000, guid: c9d77136bfd2edf4586f49b5358e7bcf, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 5732611afe6aca44ba71b0ef0a08ba60, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b29e345b23f1d30449179bebb92705f1, type: 2}
