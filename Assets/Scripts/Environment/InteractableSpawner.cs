@@ -1,20 +1,31 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class InteractableSpawner : MonoBehaviour
 {
     [SerializeField]
     private Tilemap[] m_GroundTilemaps;
+
+    [Header("배치 설정")]
     [SerializeField]
     private int m_ChestCount = 12;
     [SerializeField]
     private int m_TeleportCount = 1;
+    [SerializeField]
+    private int m_InfiniteChestCount = 1;
 
+    [Header("프리팹 연결")]
     [SerializeField]
     private GameObject m_TeleporterPrefab;
     [SerializeField]
     private GameObject m_ChestPrefab;
+    [SerializeField]
+    private GameObject m_InfiniteChestPrefab;
+
+    [SerializeField]
+    private float m_MinDistance = 3f;
 
     private void Start()
     {
@@ -31,9 +42,17 @@ public class InteractableSpawner : MonoBehaviour
             PlaceRandom(m_TeleporterPrefab, valid);
         }
 
+        if (m_InfiniteChestCount > 0)
+        {
+            for (int i = 0; i < m_InfiniteChestCount && valid.Count > 0; ++i)
+            {
+                PlaceRandom(m_InfiniteChestPrefab, valid);
+            }
+        }
+
         if (m_ChestCount > 0)
         {
-            for (int i = 0; i < m_ChestCount && valid.Count > 0; i++)
+            for (int i = 0; i < m_ChestCount && valid.Count > 0; ++i)
             {
                 PlaceRandom(m_ChestPrefab, valid);
             }
@@ -44,8 +63,8 @@ public class InteractableSpawner : MonoBehaviour
     {
         int index = Random.Range(0, positions.Count);
         Vector2 pos = positions[index];
-        positions.RemoveAt(index);
         Instantiate(prefab, pos, Quaternion.identity);
+        positions.RemoveAll(p => Vector2.Distance(p, pos) < m_MinDistance);
     }
 
     private List<Vector2> ScanValidPositions()

@@ -411,6 +411,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_InfiniteChestCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_InfiniteChestPrefab
+      value: 
+      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
       propertyPath: 'm_GroundTilemaps.Array.data[0]'
       value: 
       objectReference: {fileID: 5225975376950657012}

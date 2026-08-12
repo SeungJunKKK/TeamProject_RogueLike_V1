@@ -175,6 +175,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4948586834883170040, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
+      propertyPath: m_ChestCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948586834883170040, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
+      propertyPath: m_TeleportCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948586834883170040, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
+      propertyPath: m_InfiniteChestCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4948586834883170040, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
+      propertyPath: m_InfiniteChestPrefab
+      value: 
+      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
     - target: {fileID: 7627903784562241275, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
       propertyPath: m_Name
       value: BossStage
