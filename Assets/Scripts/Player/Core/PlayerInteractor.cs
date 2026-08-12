@@ -3,33 +3,46 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    [SerializeField] private float m_Range = 2f;
+    [SerializeField] private float m_Range = .3f;
     [SerializeField] private LayerMask m_InteractableLayer;   // 인스펙터에서 Interactable(15) 지정
+
+    private IInteractable m_Current;
 
     private void Update()
     {
-        if (Keyboard.current == null)
+        DetectInteractable();
+
+        if (Keyboard.current != null && Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
-            return;
-        }
-        // 위 화살표 키를 눌렀을 때 상호작용 시도
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-        {
-            TryInteract();
+            m_Current?.Interact(gameObject);
         }
     }
 
-    private void TryInteract()
+    private void DetectInteractable()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, m_Range, m_InteractableLayer);
-        if (hit == null)
+
+        IInteractable found = null;
+
+        if (hit != null)
+        {
+            hit.TryGetComponent(out found);
+        }
+
+        if (found == m_Current)
         {
             return;
         }
 
-        if (hit.TryGetComponent(out IInteractable interactable))
+        m_Current = found;
+
+        if (found != null)
         {
-            interactable.Interact(gameObject);
+            EventBus.Publish(new InteractableInRangeEvent { WorldPosition = hit.transform.position, PromptText = found.GetPromptText() });
+        }
+        else
+        {
+            EventBus.Publish(new InteractableOutOfRangeEvent());
         }
     }
 

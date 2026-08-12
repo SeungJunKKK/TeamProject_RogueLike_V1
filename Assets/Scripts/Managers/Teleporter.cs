@@ -42,6 +42,11 @@ public class Teleporter : MonoBehaviour, IInteractable
         }
     }
 
+    public string GetPromptText()
+    {
+        return State switch { ETeleporterState.Idle => "Activate [Up]", ETeleporterState.Cleared => "Next Stage [Up]", _ => "" };
+    }
+
     private void Awake()
     {
         EventBus.Subscribe<BossDiedEvent>(OnBossDied);
