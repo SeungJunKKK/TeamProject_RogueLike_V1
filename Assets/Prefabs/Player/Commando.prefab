@@ -113,7 +113,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4783738, guid: d4448c54a1e93294899c273ac9f3761a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -138,7 +138,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 20292f6b99535ce40a01377444841001, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -344,7 +344,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4093480436322176185, guid: 43b705510e1199b49bc27b0b0563daac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -416,7 +416,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -601,6 +601,7 @@ MonoBehaviour:
   CooldownManager: {fileID: 1396024979322899933}
   Z_SFXAddress: SFX_Commando_Shoot1
   X_SFXAddress: SFX_Commando_Shoot2
+  C_SFXAddress: 
   V_SFXAddress: SFX_Commando_Shoot3
   VStrengthened_SFXAddress: SFX_Commando_Shoot3
   Jump_SFXAddress: SFX_Moving
@@ -658,7 +659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ac32486d190994386eecfcacebeee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
-  m_Range: 0.2
+  m_Range: 2
   m_InteractableLayer:
     serializedVersion: 2
     m_Bits: 32768
