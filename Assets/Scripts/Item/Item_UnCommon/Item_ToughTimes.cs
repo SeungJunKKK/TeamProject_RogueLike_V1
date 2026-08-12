@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "ToughTimes", menuName = "RiskOfRain/Items/Tough Times")]
+[CreateAssetMenu(fileName = "ToughTimes", menuName = "Items/UnCommon/Tough Times")]
 public class Item_ToughTimes : ItemData
 {
     public override void ApplyPassiveStat(PlayerStats stats, int stackCount)

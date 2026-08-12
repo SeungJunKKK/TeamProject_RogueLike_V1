@@ -86,7 +86,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 3f,
+                        KnockbackForce = 0.5f,
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -104,7 +104,7 @@ namespace Player.Commando
 
             if (hitSomething)
             {
-                m_Player.TriggerHitFeedback(shootDirection, 0.7f, 0.05f);
+                m_Player.TriggerHitFeedback(shootDirection, 0.7f, 0f);
             }
             else
             {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Survivor", menuName = "RoR/Survivor Data")]
+[CreateAssetMenu(fileName = "New Survivor", menuName = "Player/Survivor Data")]
 public class SurvivorData : ScriptableObject
 {
     [Header("Basic Info")]

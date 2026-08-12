@@ -86,7 +86,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 3f, // 넉백 수치
+                        KnockbackForce = 0.3f, // 넉백 수치
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -105,7 +105,7 @@ namespace Player.Commando
 
             if (hitSomething)
             {
-                m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0.02f);
+                m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0f);
             }
             else
             {

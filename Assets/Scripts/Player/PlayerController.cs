@@ -46,6 +46,10 @@ public class PlayerController : MonoBehaviour
     public string X_SFXAddress = "";
     public string V_SFXAddress = "";
     public string VStrengthened_SFXAddress = "";
+    [Header("Movement Sounds (Addressable)")]
+    public string Jump_SFXAddress = ""; 
+    public string Dash_SFXAddress = ""; 
+
     [Header("Ladder Settings")]
     public LayerMask LadderLayer; 
     public float LadderCheckDistance = 0.5f; 
