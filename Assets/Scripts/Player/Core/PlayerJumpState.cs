@@ -10,6 +10,7 @@ public class PlayerJumpState : IState
     {
         m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Jump); 
         m_Player.Anim.Play("Jump");
+        m_Player.PlayAddressableSFX(m_Player.Jump_SFXAddress);
         m_Player.Rb.linearVelocity = new Vector2(m_Player.Rb.linearVelocity.x, m_Player.JumpForce);
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundManager : Singleton<SoundManager>
 {
@@ -21,6 +22,9 @@ public class SoundManager : Singleton<SoundManager>
     public AudioClip[] MainStagePlaylist;
     public AudioClip[] BossStagePlaylist;
 
+    [Header("Audio Mixers")]
+    public AudioMixerGroup bgmMixerGroup;
+    public AudioMixerGroup sfxMixerGroup;
 
     protected override void Awake()
     {
@@ -33,10 +37,18 @@ public class SoundManager : Singleton<SoundManager>
 
         m_SFXSource = gameObject.AddComponent<AudioSource>();
         m_SFXSource.playOnAwake = false;
+        if (sfxMixerGroup != null)
+        {
+            m_SFXSource.outputAudioMixerGroup = sfxMixerGroup;
+        }
 
         m_BGMSource = gameObject.AddComponent<AudioSource>();
         m_BGMSource.loop = true;
         m_BGMSource.playOnAwake = false;
+        if (bgmMixerGroup != null)
+        {
+            m_BGMSource.outputAudioMixerGroup = bgmMixerGroup;
+        }
 
         m_SFXSource.volume = PlayerPrefs.GetFloat(k_SFXVolumeKey, 1f);
         m_BGMSource.volume = PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f);

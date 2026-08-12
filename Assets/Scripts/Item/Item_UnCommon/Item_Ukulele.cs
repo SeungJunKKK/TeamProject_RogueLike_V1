@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Ukulele", menuName = "RiskOfRain/Items/Ukulele")]
+[CreateAssetMenu(fileName = "Ukulele", menuName = "Items/UnCommon/Ukulele")]
 public class Item_Ukulele : ItemData
 {
     public override void OnHitEnemy(PlayerController player, GameObject target, float damage, int stackCount)

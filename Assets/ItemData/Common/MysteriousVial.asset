@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb406a43ee414804da971141edb7ceec, type: 3}
+  m_Name: MysteriousVial
+  m_EditorClassIdentifier: Assembly-CSharp::Item_MysteriousVial
+  itemName: MysteriousVial
+  description: Increases health regeneration by 1.2 hp/s (+1.2 hp/s per stack).
+  itemIcon: {fileID: 7808070853495292479, guid: 0e963e4e0eb1318498cfb6249f79637e, type: 3}
+  tier: 0
+  isStackable: 1
+  maxStack: 0
+  regenBoostPerStack: 1.2

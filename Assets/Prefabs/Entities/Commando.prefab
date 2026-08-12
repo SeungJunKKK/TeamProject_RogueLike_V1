@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 8281161932793189983}
   - component: {fileID: 6874900604638559105}
   - component: {fileID: 7789350107087421497}
+  - component: {fileID: 4529455998674698885}
   m_Layer: 6
   m_Name: Sprite_Charcter
   m_TagString: Untagged
@@ -159,6 +160,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426103502d2c38c419bc911d7428e8d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationReceiver
+--- !u!114 &4529455998674698885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6293781722361756835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e513cd82482cf04895e1487192c96e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationRelay
 --- !u!1 &6638626711768443454
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,6 +603,8 @@ MonoBehaviour:
   X_SFXAddress: SFX_Commando_Shoot2
   V_SFXAddress: SFX_Commando_Shoot3
   VStrengthened_SFXAddress: SFX_Commando_Shoot3
+  Jump_SFXAddress: SFX_Moving
+  Dash_SFXAddress: SFX_Moving
   LadderLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -626,6 +641,8 @@ MonoBehaviour:
     BaseValue: 120
   Armor:
     BaseValue: 0
+  CooldownReduction:
+    BaseValue: 0
   CurrentLevel: 1
   MaxLevel: 99
   CurrentExp: 0
@@ -657,6 +674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bface54dc60304847a2260c7c7d840d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
+  currentActiveItem: {fileID: 0}
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0
