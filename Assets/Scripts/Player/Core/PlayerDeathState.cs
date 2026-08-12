@@ -21,13 +21,12 @@ public class PlayerDeathState : IState
         if (m_Player.Rb != null)
         {
             m_Player.Rb.linearVelocity = Vector2.zero;
-            m_Player.Rb.simulated = false; 
+            m_Player.Rb.simulated = false;
         }
 
-      
         if (m_Player.Anim != null)
         {
-            m_Player.Anim.SetTrigger("Death");
+            m_Player.Anim.Play("Death");
         }
 
         Debug.Log("<color=red>[Player] 사망 상태 </color>");

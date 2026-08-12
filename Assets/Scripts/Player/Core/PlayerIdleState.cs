@@ -12,8 +12,15 @@ public class PlayerIdleState : IState
 
     public void Enter()
     {
-        //Debug.Log("시스템: 대기(Idle) 상태 진입 완료.");
-        m_Player.Anim.Play("Idle"); 
+        Debug.Log($"<color=orange>[PlayerIdleState 진입] 현재 방어 중?: {m_Player.IsDefending}</color>");
+        if (m_Player.IsDefending)
+        {
+            m_Player.Anim.Play("Shield_Idle"); 
+        }
+        else
+        {
+            m_Player.Anim.Play("Idle"); 
+        }
         m_Player.Rb.linearVelocity = Vector2.zero;
     }
 
@@ -59,7 +66,11 @@ public class PlayerIdleState : IState
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.C))
              && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            m_Player.ChangeState(new PlayerDashState(m_Player));
+            IState state = m_Player.GetUtilitySkillState();
+            if (state != null)
+            {
+                m_Player.ChangeState(state);
+            }
             return;
         }
 

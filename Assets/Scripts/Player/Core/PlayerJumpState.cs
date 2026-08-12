@@ -68,9 +68,14 @@ public class PlayerJumpState : IState
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.C))
              && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            m_Player.ChangeState(new PlayerDashState(m_Player));
+            IState state = m_Player.GetUtilitySkillState();
+            if (state != null)
+            {
+                m_Player.ChangeState(state);
+            }
             return;
         }
+
 
         // V 스킬 (궁극기)
         if (Input.GetKeyDown(KeyCode.V) && m_Player.CooldownManager.IsSkillReady(SkillType.Ultimate_V))

@@ -46,4 +46,16 @@ public class PlayerAnimationReceiver : MonoBehaviour
             Debug.LogWarning("<color=red>[경고] 부모 오브젝트에서 PlayerInventory를 찾을 수 없습니다!</color>");
         }
     }
+    public void TriggerAttackEvent()
+    {
+        if (m_Player is EnforcerController enforcer)
+        {
+            enforcer.TriggerAttackEvent();
+        }
+        else
+        {
+            Debug.LogWarning("<color=red>[경고] 현재 캐릭터가 EnforcerController가 아닙니다!</color>");
+        }
+    }
+
 }

@@ -11,7 +11,7 @@ public enum EDustType
 }
 public class PlayerController : MonoBehaviour
 {
-    private IState m_CurrentState;
+    protected IState m_CurrentState;
     private bool m_IsHitStopping = false;
     private PlayerInventory m_inventory;
 
@@ -27,13 +27,20 @@ public class PlayerController : MonoBehaviour
 
     public SpriteRenderer SpriteRendererComponent { get; private set; }
 
+    [Header("Defense System")]
+    public bool IsDefending { get; protected set; } = false;
+
     [Header("Player Stats")]
     public float JumpForce = 5f;
     public float MaxFallSpeed = 10f;
 
+    [Header("VFX Settings")]
+    [SerializeField] private GameObject m_ShieldSlamDustPrefab; 
+    public GameObject ShieldSlamDustPrefab => m_ShieldSlamDustPrefab;
     [Header("Effects (Addressable)")]
     public string DustAddress = "PlayerDustEffect";
     public Transform FeetPos;
+
     [Header("Dash Settings")]
     public float DashSpeed = 5f;
     public float DashDuration = 0.2f;
@@ -44,6 +51,10 @@ public class PlayerController : MonoBehaviour
     [Header("Skill Sounds (Addressable)")]
     public string Z_SFXAddress = "";
     public string X_SFXAddress = "";
+
+    [Tooltip("C 스킬 사운드 필요시 등록, 회피 별개  ")]
+    public string C_SFXAddress = "";
+
     public string V_SFXAddress = "";
     public string VStrengthened_SFXAddress = "";
     [Header("Movement Sounds (Addressable)")]
@@ -86,21 +97,26 @@ public class PlayerController : MonoBehaviour
         float verticalInput = Input.GetAxisRaw("Vertical");
 
         MovementInput = new Vector2(horizontalInput, verticalInput).normalized;
+        
+        UpdateFacingDirection();
 
-        if (MovementInput.x > 0)
+        //if (MovementInput.x > 0)
+        //{
+        //    IsFacingRight = true;
+        //    //SpriteRendererComponent.flipX = false;
+        //    transform.rotation = Quaternion.Euler(0, 0, 0);
+        //}
+        //else if (MovementInput.x < 0)
+        //{
+        //    IsFacingRight = false;
+        //    //SpriteRendererComponent.flipX = true;
+        //    transform.rotation = Quaternion.Euler(0, 180, 0);
+        //}
+        if (m_CurrentState != null)
         {
-            IsFacingRight = true;
-            //SpriteRendererComponent.flipX = false;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-        else if (MovementInput.x < 0)
-        {
-            IsFacingRight = false;
-            //SpriteRendererComponent.flipX = true;
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            m_CurrentState.Update();
         }
 
-        if (m_CurrentState != null) m_CurrentState.Update();
 
         //===============================아이템 테스트===============================
         //if (Input.GetKeyDown(KeyCode.I))
@@ -134,6 +150,23 @@ public class PlayerController : MonoBehaviour
         { 
             Collider2D hit = CheckLadderUp();
             Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+        }
+    }
+
+    /// <summary>
+    /// 캐릭터의 좌우 방향 전환을 처리합니다. 자식 클래스에서 오버라이드하여 방향을 고정할 수 있습니다.
+    /// </summary>
+    protected virtual void UpdateFacingDirection()
+    {
+        if (MovementInput.x > 0)
+        {
+            IsFacingRight = true;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (MovementInput.x < 0)
+        {
+            IsFacingRight = false;
+            transform.rotation = Quaternion.Euler(0, 180, 0);
         }
     }
 
