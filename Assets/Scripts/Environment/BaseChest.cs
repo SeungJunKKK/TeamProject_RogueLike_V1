@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class BaseChest : MonoBehaviour, IInteractable
 {
+    [SerializeField] protected AudioClip m_OpenSound;
+
     [Header("Item Drop Settings")]
     [Tooltip("이 상자에서 나올 수 있는 아이템 데이터들")]
     [SerializeField] protected ItemData[] m_PossibleItems;
@@ -49,9 +51,18 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
     protected abstract int GetPrice();
     protected abstract void OnOpened();
 
+    protected virtual void PlayOpenSound()
+    {
+        if (m_OpenSound != null)
+        {
+            SoundManager.Instance.PlaySFX(m_OpenSound);
+        }
+    }
+
     protected virtual void Open(GameObject interactor)
     {
         m_Animator.SetTrigger("Open");
+        PlayOpenSound();
         GiveRandomItem(interactor);
     }
 

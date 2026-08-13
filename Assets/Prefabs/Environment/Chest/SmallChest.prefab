@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edb7a9645292964c85dab868aa386c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chest
+  m_OpenSound: {fileID: 8300000, guid: fb31eb2282c50e140950a83e479a9a5e, type: 3}
   m_PossibleItems:
   - {fileID: 11400000, guid: e2e14ef4d1b3d4d429aae4aa38ea3e33, type: 2}
   - {fileID: 11400000, guid: 2bd3c5f9b29a3d543982bcc7b68d3750, type: 2}

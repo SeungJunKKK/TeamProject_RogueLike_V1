@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1331e1f427bd0064585aa547e7c5ea37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfiniteChest
+  m_OpenSound: {fileID: 0}
   m_PossibleItems:
   - {fileID: 11400000, guid: e2e14ef4d1b3d4d429aae4aa38ea3e33, type: 2}
   - {fileID: 11400000, guid: 2bd3c5f9b29a3d543982bcc7b68d3750, type: 2}
@@ -142,6 +143,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}
   m_BasePrice: 25
   m_PriceMultiplier: 1.5
+  m_OpenSounds:
+  - {fileID: 8300000, guid: beff04ea96b7a674497f5804c42d6c3a, type: 3}
+  - {fileID: 8300000, guid: 557748ffc68b4dc47b8ea069fc55e991, type: 3}
+  - {fileID: 8300000, guid: 5cc95428de5dddb4e991a6b5b2d4f128, type: 3}
 --- !u!58 &5477384870310752547
 CircleCollider2D:
   m_ObjectHideFlags: 0
