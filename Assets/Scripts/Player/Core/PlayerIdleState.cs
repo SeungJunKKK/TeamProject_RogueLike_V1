@@ -12,7 +12,7 @@ public class PlayerIdleState : IState
 
     public void Enter()
     {
-        Debug.Log($"<color=orange>[PlayerIdleState 진입] 현재 방어 중?: {m_Player.IsDefending}</color>");
+       // Debug.Log($"<color=orange>[PlayerIdleState 진입] 현재 방어 중?: {m_Player.IsDefending}</color>");
         if (m_Player.IsDefending)
         {
             m_Player.Anim.Play("Shield_Idle"); 

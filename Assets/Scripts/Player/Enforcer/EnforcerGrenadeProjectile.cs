@@ -154,10 +154,10 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
 
                 damageable.TakeDamage(info);
 
-                if (m_IsStrengthened)
-                    Debug.Log($"<color=purple>[최루탄 강화] {hit.name}에게 공포 효과 부여!</color>");
-                else
-                    Debug.Log($"<color=orange>[최루탄 일반] {hit.name} 마비!</color>");
+                //if (m_IsStrengthened)
+                //    Debug.Log($"<color=purple>[최루탄 강화] {hit.name}에게 공포 효과 부여!</color>");
+                //else
+                //    Debug.Log($"<color=orange>[최루탄 일반] {hit.name} 마비!</color>");
             }
         }
 
@@ -171,9 +171,9 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
 
     private void ApplyCrowdControl(GameObject enemy)
     {
-        if (m_IsStrengthened)
-            Debug.Log($"<color=purple>[최루탄 강화] {enemy.name}에게 공포 효과 부여!</color>");
-        else
-            Debug.Log($"<color=orange>[최루탄 일반] {enemy.name} 마비!</color>");
+        //if (m_IsStrengthened)
+        //    Debug.Log($"<color=purple>[최루탄 강화] {enemy.name}에게 공포 효과 부여!</color>");
+        //else
+        //    Debug.Log($"<color=orange>[최루탄 일반] {enemy.name} 마비!</color>");
     }
 }

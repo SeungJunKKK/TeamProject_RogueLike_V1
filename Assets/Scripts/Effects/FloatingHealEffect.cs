@@ -3,8 +3,8 @@
 
 public class FloatingHealEffect : MonoBehaviour, IPoolable
 {
-    public float minSpeed = 5.0f; 
-    public float maxSpeed = 8.0f; 
+    public float minSpeed = 0.5f; 
+    public float maxSpeed = 2.0f; 
 
     private float m_CurrentSpeed;
 

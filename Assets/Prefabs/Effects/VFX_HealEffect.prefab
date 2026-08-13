@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175dab17eefec834c85fcf93ace06651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoReturnPool
-  returnTime: 3
+  returnTime: 0.3
 --- !u!114 &-8615698478392490464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,5 +142,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71c6393677f0d541a0282e1a49bd436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloatingHealEffect
-  minSpeed: 5
-  maxSpeed: 8
+  minSpeed: 0.5
+  maxSpeed: 1.5

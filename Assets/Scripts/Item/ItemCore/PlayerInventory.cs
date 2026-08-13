@@ -49,7 +49,7 @@ public class PlayerInventory : MonoBehaviour
             if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
             {
                 passiveItems[newItem]++;
-                Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
+                //Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
             }
         }
         else
@@ -133,7 +133,7 @@ public class PlayerInventory : MonoBehaviour
     // 플레이어가 기본 공격을 했을 때 호출할 트리거
     public void OnBasicAttackTrigger()
     {
-        Debug.Log("<color=cyan>[디버그] 1. PlayerInventory의 OnBasicAttackTrigger가 정상 호출</color>");
+        //Debug.Log("<color=cyan>[디버그] 1. PlayerInventory의 OnBasicAttackTrigger가 정상 호출</color>");
         foreach (var pair in passiveItems)
         {
             pair.Key.OnBasicAttack(player, pair.Value);
