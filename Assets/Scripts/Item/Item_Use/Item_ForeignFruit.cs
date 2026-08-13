@@ -9,6 +9,9 @@ public class Item_ForeignFruit : ItemData
     [Header("Sound Settings")]
     public AudioClip healSound;
 
+    [Header("VFX Settings")]
+    public GameObject healVfxPrefab;
+
     private void Awake()
     {
         tier = ItemTier.Use; // 주황색(사용) 등급
@@ -41,7 +44,32 @@ public class Item_ForeignFruit : ItemData
 
             Debug.Log($"<color=green>[이계의 과일 사용!] {healAmount:F1}만큼 체력을 회복했습니다. (현재 체력: {stats.CurrentHealth:F1}/{stats.MaxHealth.Value})</color>");
 
-            //TO do : 회복 파티클 효과 재생
+            if (healVfxPrefab != null)
+            {
+                // 생성할 십자가 개수
+                int effectCount = Random.Range(5, 10);
+
+                for (int i = 0; i < effectCount; i++)
+                {
+                    //Vector3 centerPos = player.transform.position + new Vector3(0f, -0.5f, 0f);
+
+                    Vector3 centerPos= player.FeetPos.transform.position;
+
+
+                    float randomX = Random.Range(-0.6f, 0.6f);
+                    float randomY = Random.Range(-0.2f, 0.2f); 
+                    Vector3 randomOffset = new Vector3(randomX, randomY, 0f);
+
+                    Vector3 spawnPos = centerPos + randomOffset;
+
+                    GameObject vfx = PoolManager.Instance.Get(healVfxPrefab, spawnPos, Quaternion.identity);
+
+                    float randomScale = Random.Range(0.6f, 1.2f);
+                    vfx.transform.localScale = new Vector3(randomScale, randomScale, 1f);
+
+                    vfx.transform.SetParent(player.transform);
+                }
+            }
 
             if (healSound != null)
             {
