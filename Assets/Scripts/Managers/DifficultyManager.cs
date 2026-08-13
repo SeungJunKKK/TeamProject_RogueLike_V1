@@ -13,6 +13,10 @@ public class DifficultyManager : Singleton<DifficultyManager>
 
     private float m_ElapsedSeconds;
 
+    public EGameDifficulty SelectedDifficulty { get; private set; } = EGameDifficulty.Rainstorm;
+    private float m_DifficultyTimeMultiplier = 1.0f;
+
+
     public float Coefficient { get; private set; }
     public EDifficultyLevel Level { get; private set; }
 
@@ -46,7 +50,24 @@ public class DifficultyManager : Singleton<DifficultyManager>
     {
         EventBus.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
     }
-
+    public void SetGameDifficulty(EGameDifficulty difficulty)
+    {
+        SelectedDifficulty = difficulty;
+        switch (difficulty)
+        {
+            case EGameDifficulty.Drizzle:
+                m_DifficultyTimeMultiplier = 0.5f; // 난이도 상승 50% 속도
+                break;
+            case EGameDifficulty.Rainstorm:
+                m_DifficultyTimeMultiplier = 1.0f; // 표준 속도
+                break;
+            case EGameDifficulty.Monsoon:
+                m_DifficultyTimeMultiplier = 1.5f; // 매우 빠른 상승 
+                break;
+        }
+        Debug.Log($"<color=yellow>[DifficultyManager] 난이도가 {difficulty}(으)로 설정됨. 시간 배율: {m_DifficultyTimeMultiplier}</color>");
+    }
+ 
     /// <summary>
     /// 골드 드랍 배율. 몬스터가 사망 이벤트 발행 전에 곱한다.
     /// </summary>
@@ -137,7 +158,8 @@ public class DifficultyManager : Singleton<DifficultyManager>
         }
         m_ElapsedSeconds += Time.deltaTime;
         // Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 60f) * k_TimeFactor * k_DifficultyValue;
-        Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 180f);
+        //Coefficient = k_BaseCoeff + (m_ElapsedSeconds / 180f);
+        Coefficient = k_BaseCoeff + ((m_ElapsedSeconds / 180f) * m_DifficultyTimeMultiplier);
 
         EDifficultyLevel newLevel = CalculateLevel(Coefficient);
 
