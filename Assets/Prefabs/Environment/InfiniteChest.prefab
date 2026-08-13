@@ -130,9 +130,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfiniteChest
   m_PossibleItems:
-  - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}
-  - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}
-  - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}
+  - {fileID: 11400000, guid: e2e14ef4d1b3d4d429aae4aa38ea3e33, type: 2}
+  - {fileID: 11400000, guid: 2bd3c5f9b29a3d543982bcc7b68d3750, type: 2}
+  - {fileID: 11400000, guid: 7575db06ea9896848848852ebcbb0bd3, type: 2}
+  - {fileID: 11400000, guid: 12aed1533845b834e84d6d8782496660, type: 2}
+  - {fileID: 11400000, guid: 5316a770c34dee04289e09dbde8320ef, type: 2}
+  - {fileID: 11400000, guid: d79f60cebf091044eb40dcf59ba96ffc, type: 2}
+  - {fileID: 11400000, guid: bb4a822403ac1094ab769f622be45d11, type: 2}
+  - {fileID: 11400000, guid: 1a094802b7e511a40bfe00ca0c8531dc, type: 2}
+  - {fileID: 11400000, guid: f083e6d766c87674681e6a15e9a1f64e, type: 2}
   - {fileID: 11400000, guid: bd9220db6b9b64d449390a916b58d5e5, type: 2}
   m_BasePrice: 25
   m_PriceMultiplier: 1.5

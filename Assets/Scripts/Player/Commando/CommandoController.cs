@@ -16,6 +16,12 @@ public class CommandoController : PlayerController
         float duration = 0.417f / Stats.AttackSpeed.Value;
         return new FullMetalJacketState(this, duration);
     }
+
+    public override IState GetUtilitySkillState()
+    {
+        return new PlayerDashState(this);
+    }
+
     public override IState GetUltimateSkillState()
     {
         if (IsBarrageMode)
