@@ -222,6 +222,7 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 8
+    m_Bits: 16392
   SeparationRadius: 0.8
   SeparationForce: 2.5
   EnemyLayer:
