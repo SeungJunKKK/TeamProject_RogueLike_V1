@@ -21,3 +21,4 @@ MonoBehaviour:
   cooldown: 40
   healPercentage: 0.5
   healSound: {fileID: 8300000, guid: bbb2cd573bb84ff4989df1a48ae41635, type: 3}
+  healVfxPrefab: {fileID: 3868943170451421853, guid: 353e7c1dc976f2142879f58026f783a1, type: 3}
