@@ -130,7 +130,14 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        if (Player == null) return;
+        if (Player == null || EnemyPrefabs.Length == 0) return;
+
+        // 랜덤으로 프리팹 선택
+        GameObject selectedPrefab = EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)];
+
+        Vector2 spawnPoint = Vector2.zero;
+        bool foundValidSpawn = false;
+        bool isFlyingEnemy = false;
 
         for (int i = 0; i < MaxSpawnAttempts; i++)
         {
@@ -147,24 +154,39 @@ public class EnemySpawner : MonoBehaviour
 
             if (Physics2D.OverlapCircle(testPoint, SpawnClearanceRadius, filter, m_OverlapBuffer) == 0)
             {
-                GameObject enemyObj = PoolManager.Instance.Get(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)], testPoint, Quaternion.identity);
-
-                if (enemyObj == null)
-                {
-                    Debug.LogError("[EnemySpawner] PoolManager.Get()이 null을 반환했습니다.");
-                    return;
-                }
-
-                if (!enemyObj.TryGetComponent(out EnemyBase enemyBase))
-                {
-                    Debug.LogError($"[EnemySpawner] {enemyObj.name}에 EnemyBase가 없습니다.");
-                    return;
-                }
-
-                enemyBase.SetTarget(Player);
-                m_ActiveEnemies.Add(enemyObj);
+                spawnPoint = testPoint;
+                foundValidSpawn = true;
                 break;
             }
+        }
+
+        // 유효한 스폰 자리를 찾았을 때 생성 실행
+        if (foundValidSpawn)
+        {
+            GameObject enemyObj = PoolManager.Instance.Get(selectedPrefab, spawnPoint, Quaternion.identity);
+
+            if (enemyObj == null)
+            {
+                Debug.LogError("[EnemySpawner] PoolManager.Get()이 null을 반환했습니다.");
+                return;
+            }
+
+            if (enemyObj.layer == LayerMask.NameToLayer("FlyingEnemy"))
+            {
+                // 공중 몬스터라면 바닥이 아니라 플레이어 주변 허공 좌표로 위치 재배치
+                float randomX = Random.Range(-12f, 12f);
+                float randomY = Random.Range(3f, 7f);
+                enemyObj.transform.position = (Vector2)Player.position + new Vector2(randomX, randomY);
+            }
+
+            if (!enemyObj.TryGetComponent(out EnemyBase enemyBase))
+            {
+                Debug.LogError($"[EnemySpawner] {enemyObj.name}에 EnemyBase가 없습니다.");
+                return;
+            }
+
+            enemyBase.SetTarget(Player);
+            m_ActiveEnemies.Add(enemyObj);
         }
     }
 
