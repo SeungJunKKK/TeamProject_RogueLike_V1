@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
         { 
             Collider2D hit = CheckLadderUp();
-            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+            //Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
         }
     }
 
@@ -334,7 +334,7 @@ public class PlayerController : MonoBehaviour
     }
     public void EnableHitbox()
     {
-        Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
+        //Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
 
         if (MeleeCollider != null)
         {

@@ -33,12 +33,12 @@ public class Item_HeavenCracker : ItemData
         int requiredAttacks = Mathf.Max(1, baseRequiredAttacks - (stackCount - 1));
 
         int currentCount = tracker.IncrementAndGetCount();
-        Debug.Log($"<color=orange>[디버그] 3. 천공 분쇄기 계산 -> 현재: {currentCount}타 / 요구치: {requiredAttacks}타 (현재 {stackCount}스택)</color>");
+        //Debug.Log($"<color=orange>[디버그] 3. 천공 분쇄기 계산 -> 현재: {currentCount}타 / 요구치: {requiredAttacks}타 (현재 {stackCount}스택)</color>");
         // 발동 조건 달성 시
         if (currentCount >= requiredAttacks)
         {
             tracker.ResetCount(); // 카운트 초기화
-            Debug.Log("<color=red>[디버그] 4. 드릴 발사(FireDrill) 함수 호출!</color>");
+            //Debug.Log("<color=red>[디버그] 4. 드릴 발사(FireDrill) 함수 호출!</color>");
             if (drillSound != null)
             {
                 SoundManager.Instance.PlaySFX(drillSound);
@@ -66,7 +66,7 @@ public class Item_HeavenCracker : ItemData
 
         foreach (var hit in hits)
         {
-            Debug.Log($"<color=cyan>[디버그] 판정됨: {hit.collider.name} / pos: {hit.collider.bounds.center} / layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}</color>");
+            //Debug.Log($"<color=cyan>[디버그] 판정됨: {hit.collider.name} / pos: {hit.collider.bounds.center} / layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}</color>");
 
             if (hit.collider.TryGetComponent(out EnemyBase enemy))
             {
@@ -85,7 +85,7 @@ public class Item_HeavenCracker : ItemData
             }
         }
 
-        Debug.Log($"<color=yellow>[천공 분쇄기 발동!] {hits.Length}명의 적을 관통했습니다.</color>");
+        //Debug.Log($"<color=yellow>[천공 분쇄기 발동!] {hits.Length}명의 적을 관통했습니다.</color>");
 
         if (drillVfxPrefab != null)
         {

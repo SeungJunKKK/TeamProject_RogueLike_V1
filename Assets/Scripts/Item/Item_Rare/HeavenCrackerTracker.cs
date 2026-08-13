@@ -11,13 +11,13 @@ public class HeavenCrackerTracker : MonoBehaviour
     public int IncrementAndGetCount()
     {
         m_AttackCount++;
-        Debug.Log($"<color=lime>[디버그] 2. Tracker 카운트 증가! 현재 누적 타격 수: {m_AttackCount}</color>");
+       // Debug.Log($"<color=lime>[디버그] 2. Tracker 카운트 증가! 현재 누적 타격 수: {m_AttackCount}</color>");
         return m_AttackCount;
     }
 
     public void ResetCount()
     {
         m_AttackCount = 0;
-        Debug.Log("<color=lime>[디버그] Tracker 카운트가 0으로 초기화되었습니다.</color>");
+        //Debug.Log("<color=lime>[디버그] Tracker 카운트가 0으로 초기화되었습니다.</color>");
     }
 }
