@@ -4,6 +4,9 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
 {
     [SerializeField] protected AudioClip m_OpenSound;
 
+    [Header("Chest Tier")]
+    [SerializeField] protected ItemTier m_Tier = ItemTier.Common;
+
     [Header("Item Drop Settings")]
     [Tooltip("이 상자에서 나올 수 있는 아이템 데이터들")]
     [SerializeField] protected ItemData[] m_PossibleItems;
@@ -45,7 +48,9 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
         {
             return "";
         }
-        return $"Open Chest [Up] ({GetPrice()} Gold)";
+
+        string hex = ColorUtility.ToHtmlStringRGB(m_Tier.GetColor());
+        return $"<color=#{hex}>[{m_Tier}] Chest</color> {GetPrice()}G [Up]";
     }
     protected abstract bool CanOpen();
     protected abstract int GetPrice();
