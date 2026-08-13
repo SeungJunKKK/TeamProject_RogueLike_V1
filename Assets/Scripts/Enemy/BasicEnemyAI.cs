@@ -63,6 +63,7 @@ public class BasicEnemyAI : EnemyBase
     private EnemyState m_CurrentState;
     private float m_StateTimer = 0f;
     private float m_DesiredVelocityX = 0f;
+    private bool m_IsSpawnFinished = false;
 
     private const float k_GroundCheckDistance = 0.1f;
 
@@ -80,6 +81,7 @@ public class BasicEnemyAI : EnemyBase
 
     public override void OnSpawn()
     {
+        Debug.Log($"<color=yellow>[{gameObject.name}] OnSpawn 호출</color>");
         base.OnSpawn();
 
         var difficulty = DifficultyManager.Instance;
@@ -87,21 +89,33 @@ public class BasicEnemyAI : EnemyBase
 
         ResetState();
         ResetPhysics();
+
+        // AI 정지 상태로 초기화
+        m_IsSpawnFinished = false;
+
+        // 스폰 애니메이션은 여기서만 실행
+        if (m_Animator != null)
+        {
+            m_Animator.Rebind();
+            m_Animator.Update(0f);
+
+            m_Animator.Play("Spawn", -1, 0f);
+        }
     }
 
     private void ResetState()
     {
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+
         m_IsFacingRight = true;
         m_IsGrounded = true;
         m_LastJumpTime = 0f;
-        m_AttackCooldownTimer = 0f; // 스폰 시 쿨타임 초기화
+        m_AttackCooldownTimer = 0f;
+
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
 
-        if (m_Animator != null) m_Animator.Play("Spawn", -1, 0f);
-
-        // 초기 상태를 더미 값으로 둔 뒤 확실하게 Chase로 전환
         m_CurrentState = (EnemyState)(-1);
-        ChangeState(EnemyState.Chase);
+        m_StateTimer = 0f;
     }
 
     private void ResetPhysics()
@@ -115,6 +129,13 @@ public class BasicEnemyAI : EnemyBase
     {
         base.OnDespawn();
         m_Rigidbody.linearVelocity = Vector2.zero;
+
+        // 애니메이터 찌꺼기 초기화
+        if (m_Animator != null)
+        {
+            m_Animator.Rebind();
+            m_Animator.Update(0f);
+        }
     }
 
     public void ChangeState(EnemyState newState)
@@ -135,12 +156,18 @@ public class BasicEnemyAI : EnemyBase
 
     private void Update()
     {
+        if (!m_IsSpawnFinished)
+        {
+            //Debug.Log($"[{gameObject.name}] 스폰 안 끝나서 대기 중...");
+            return;
+        } 
+
         if (Player == null || m_CurrentHp <= 0f) return;
 
         // 매 프레임 속도 초기화
         m_DesiredVelocityX = 0f;
 
-        // 2. 통합 정보 갱신 및 논리 블록 실행
+        // 통합 정보 갱신 및 논리 블록 실행
         UpdateTargetInfo();
         UpdateSensors();
         UpdateCombat();    // 시간에 종속된 모듈
@@ -178,7 +205,7 @@ public class BasicEnemyAI : EnemyBase
             m_Animator.SetBool("IsGrounded", m_IsGrounded);
         }
 
-        Debug.Log($"바닥에 닿았는가? : {m_IsGrounded}");
+        //Debug.Log($"바닥에 닿았는가? : {m_IsGrounded}");
     }
 
     private void UpdateCombat()
@@ -188,6 +215,15 @@ public class BasicEnemyAI : EnemyBase
         {
             m_AttackCooldownTimer -= Time.deltaTime;
         }
+    }
+
+    public void SpawnComplete()
+    {
+        Debug.Log($"<color=cyan>[{gameObject.name}] SpawnComplete 호출</color>");
+
+        m_IsSpawnFinished = true; // 차단막 해제
+        m_CurrentState = (EnemyState)(-1);
+        ChangeState(EnemyState.Chase); // 추적 시작
     }
 
     private bool CanAttack()
@@ -348,6 +384,44 @@ public class BasicEnemyAI : EnemyBase
         Vector3 localScale = transform.localScale;
         localScale.x *= -1f;
         transform.localScale = localScale;
+    }
+
+    // ==========================================
+    // [Module: Death Animation & Pooling]
+    // ==========================================
+    protected override void Die()
+    {
+        base.Die();
+        gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
+        m_Rigidbody.linearVelocity = Vector2.zero;
+
+        if (m_Animator != null)
+        {
+            m_Animator.SetTrigger("Death");
+        }
+        else
+        {
+            ReturnToPool();
+        }
+    }
+
+    // 사망 애니메이션의 맨 마지막 프레임에서 호출될 Animation Event 함수
+    public void DeathComplete()
+    {
+        ReturnToPool();
+    }
+
+    private void ReturnToPool()
+    {
+        // 비로소 오브젝트 풀로 반환
+        if (TryGetComponent(out PooledObject pooledObj))
+        {
+            pooledObj.Return();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnDrawGizmos()

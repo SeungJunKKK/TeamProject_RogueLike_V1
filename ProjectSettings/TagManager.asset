@@ -23,8 +23,8 @@ TagManager:
   - Ladder
   - OneWayGround
   - Interactable
-  - 
-  - 
+  - DeadEnemy
+  - FlyingEnemy
   - 
   - 
   - 
