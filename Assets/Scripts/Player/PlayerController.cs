@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum EDustType
 {
@@ -378,6 +379,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
     /// <summary>
     /// 플레이어가 피해를 입었을 때 호출합니다.
     /// </summary>
@@ -399,6 +402,12 @@ public class PlayerController : MonoBehaviour
             if (isAttackFromFront && !info.IsUnblockable)
             {
                 Debug.Log($"<color=cyan>[방어 성공]</color> 방패로 데미지 {info.Amount:F1}를 막아냈습니다!");
+
+                EventBus.Publish<PlayerBlockSuccessEvent>(new PlayerBlockSuccessEvent
+                {
+                    BlockedAmount = info.Amount,
+                    HitPoint = transform.position + new Vector3(0, 1f, 0) 
+                });
                 // PlayAddressableSFX(m_ShieldBlockSound);
                 return; 
             }
