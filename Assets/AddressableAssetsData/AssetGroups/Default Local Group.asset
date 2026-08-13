@@ -205,6 +205,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fef0a1b6f8a901646ab73474b0f1a4da
+    m_Address: VFX_HeavenCrackerDrill
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e01c90ccb64d4ac44bdf21342aa53f36, type: 2}
   m_SchemaSet:

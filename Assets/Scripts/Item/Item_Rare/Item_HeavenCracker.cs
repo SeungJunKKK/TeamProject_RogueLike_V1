@@ -48,7 +48,7 @@ public class Item_HeavenCracker : ItemData
 
     private void FireDrill(PlayerController player)
     {
-        Vector2 origin = player.transform.position;
+        Vector2 origin = player.MuzzlePos.position;
         Vector2 direction = player.IsFacingRight ? Vector2.right : Vector2.left;
 
         //중심점 보정:
@@ -57,8 +57,6 @@ public class Item_HeavenCracker : ItemData
 
         // ===== 디버그: 실제 판정 박스를 Scene 뷰에 1초간 그림 =====
         DrawDebugBox(boxCenter, boxSize, Color.red, 1f);
-
-
 
         RaycastHit2D[] hits = Physics2D.BoxCastAll(boxCenter, boxSize, 0f, Vector2.zero, 0f, LayerMask.GetMask("Enemy"));
 

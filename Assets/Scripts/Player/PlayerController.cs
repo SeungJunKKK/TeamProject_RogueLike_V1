@@ -84,6 +84,14 @@ public class PlayerController : MonoBehaviour
         OriginalLayer = gameObject.layer;
         Stats = GetComponent<PlayerStats>();
         m_inventory = GetComponent<PlayerInventory>();
+
+        //if (DifficultyManager.Instance.SelectedDifficulty == EGameDifficulty.Drizzle)
+        //{
+        //    // 이슬비 난이도일 경우 체력 50% 증가, 초당 재생량 증가
+        //    Stats.MaxHealth.AddModifier(new StatModifier(0.5f, StatModType.PercentAdd, "DrizzleBuff"));
+        //    Stats.HealthRegen.AddModifier(new StatModifier(2.0f, StatModType.Flat, "DrizzleBuff"));
+        //}
+
     }
 
     private void Start()
