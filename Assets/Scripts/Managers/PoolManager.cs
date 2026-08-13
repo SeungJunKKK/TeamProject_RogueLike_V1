@@ -34,6 +34,7 @@ public class PoolManager : Singleton<PoolManager>
             Debug.Log($"<color=yellow>[PoolManager] 새 객체 생성: {obj.name}</color>");
         }
 
+
         obj.transform.SetPositionAndRotation(pos, rot);
         obj.SetActive(true);
 
@@ -51,6 +52,7 @@ public class PoolManager : Singleton<PoolManager>
 
             Debug.Log($"<color=cyan>[PoolManager] OnSpawn 호출 완료: {obj.name}</color>");
         }
+        obj.GetComponent<IPoolable>()?.OnSpawn();
 
         return obj;
     }
