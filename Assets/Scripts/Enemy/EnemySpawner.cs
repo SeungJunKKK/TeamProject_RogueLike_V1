@@ -9,6 +9,9 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("필수 연결 요소")]
     public Tilemap GroundTilemap;
+    [Tooltip("지형 Tilemap 등록")]
+    [SerializeField] private Tilemap[] m_SpawnTilemaps;
+
     public Transform Player;
     public GameObject[] EnemyPrefabs;
 
@@ -18,6 +21,11 @@ public class EnemySpawner : MonoBehaviour
     public int MaxSpawnAttempts = 10;
     public int MaxEnemyCount = 20;
 
+    [Header("공중 몬스터 스폰 설정")]
+    [SerializeField] private float m_AirSpawnMinHeight = 3f;
+    [SerializeField] private float m_AirSpawnMaxHeight = 7f;
+    [SerializeField] private float m_AirSpawnHorizontalRange = 12f;
+
     [Header("스폰 안전장치")]
     public float SpawnClearanceRadius = 1f;
     public LayerMask EnemyLayer;
@@ -26,7 +34,12 @@ public class EnemySpawner : MonoBehaviour
     private HashSet<GameObject> m_ActiveEnemies = new HashSet<GameObject>();
     private Collider2D[] m_OverlapBuffer = new Collider2D[1];
 
-    // 외부 조회용 프로퍼티 추가 
+    private readonly HashSet<GameObject> m_ActiveEnemies =
+        new HashSet<GameObject>();
+
+    private readonly Collider2D[] m_OverlapBuffer =
+        new Collider2D[1];
+
     public int ActiveEnemyCount => m_ActiveEnemies.Count;
 
     private void Awake()
@@ -36,6 +49,7 @@ public class EnemySpawner : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
        
     }
@@ -51,27 +65,53 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         if (GroundTilemap == null || EnemyPrefabs == null || EnemyPrefabs.Length == 0) 
+        if (m_SpawnTilemaps == null ||
+            m_SpawnTilemaps.Length == 0 ||
+            EnemyPrefabs == null ||
+            EnemyPrefabs.Length == 0)
         {
             Debug.LogError("[EnemySpawner] 필수 요소가 연결되지 않았습니다."); 
             return; 
+            Debug.LogError(
+                "[EnemySpawner] 필수 요소(타일맵 또는 프리팹)가 연결되지 않았습니다."
+            );
+
+            return;
         }
 
         ScanTilemapForSpawnPoints(); 
+        ScanTilemapForSpawnPoints();
 
         if (m_ValidSpawnPoints == null || m_ValidSpawnPoints.Length == 0) 
+        if (m_ValidSpawnPoints == null ||
+            m_ValidSpawnPoints.Length == 0)
         {
             Debug.LogError("[EnemySpawner] 스폰 가능한 위치를 찾지 못했습니다."); 
+            Debug.LogError(
+                "[EnemySpawner] 스폰 가능한 위치를 찾지 못했습니다."
+            );
+
             return;
         }
 
         if (PoolManager.Instance == null) 
+        if (PoolManager.Instance == null)
         {
             Debug.LogError("[EnemySpawner] PoolManager를 찾을 수 없습니다."); 
             return; 
+            Debug.LogError(
+                "[EnemySpawner] PoolManager를 찾을 수 없습니다."
+            );
+
+            return;
         }
 
         StartCoroutine(SpawnRoutine());
     }
+
+    // ==========================================
+    // [Module: Spawn Point Scanning]
+    // ==========================================
 
     private void ScanTilemapForSpawnPoints()
     {
@@ -79,105 +119,307 @@ public class EnemySpawner : MonoBehaviour
         BoundsInt bounds = GroundTilemap.cellBounds;
 
         for (int x = bounds.xMin; x < bounds.xMax; x++)
+        foreach (Tilemap tilemap in m_SpawnTilemaps)
         {
             for (int y = bounds.yMin; y < bounds.yMax; y++)
+            if (tilemap == null)
+            {
+                continue;
+            }
+
+            BoundsInt bounds = tilemap.cellBounds;
+
+            for (int x = bounds.xMin; x < bounds.xMax; x++)
             {
                 Vector3Int currentCell = new Vector3Int(x, y, 0);
                 if (GroundTilemap.HasTile(currentCell))
+                for (int y = bounds.yMin; y < bounds.yMax; y++)
                 {
                     Vector3Int aboveCell = new Vector3Int(x, y + 1, 0);
                     if (!GroundTilemap.HasTile(aboveCell))
+                    Vector3Int currentCell =
+                        new Vector3Int(x, y, 0);
+
+                    if (!tilemap.HasTile(currentCell))
                     {
                         tempPoints.Add(GroundTilemap.GetCellCenterWorld(aboveCell));
+                        continue;
+                    }
+
+                    Vector3Int aboveCell =
+                        new Vector3Int(x, y + 1, 0);
+
+                    // 현재 타일 위가 비어 있으면
+                    // 해당 위치를 지상 몬스터 스폰 후보로 등록
+                    if (!tilemap.HasTile(aboveCell))
+                    {
+                        tempPoints.Add(
+                            tilemap.GetCellCenterWorld(aboveCell)
+                        );
                     }
                 }
             }
         }
 
         m_ValidSpawnPoints = tempPoints.ToArray();
+
+        Debug.Log(
+            $"[EnemySpawner] 총 {m_ValidSpawnPoints.Length}개의 " +
+            $"지상 스폰 포인트가 스캔되었습니다."
+        );
     }
+
+    // ==========================================
+    // [Module: Enemy Registration]
+    // ==========================================
 
     public void UnregisterEnemy(GameObject enemy)
     {
         m_ActiveEnemies.Remove(enemy);
     }
 
+    // ==========================================
+    // [Module: Spawn Routine]
+    // ==========================================
+
     private IEnumerator SpawnRoutine()
     {
         while (true) 
+        while (true)
         {
             if (Player == null)
             {
                 if (GameManager.Instance != null && GameManager.Instance.CurrentPlayer != null)
+                if (GameManager.Instance != null &&
+                    GameManager.Instance.CurrentPlayer != null)
                 {
                     Player = GameManager.Instance.CurrentPlayer.transform;
                     Debug.Log("<color=green>[EnemySpawner] 타겟 플레이어 확인 완료! 스폰 루틴 시작.</color>");
+                    Player =
+                        GameManager.Instance.CurrentPlayer.transform;
+
+                    Debug.Log(
+                        "<color=green>" +
+                        "[EnemySpawner] 타겟 플레이어 확인 완료!" +
+                        "</color>"
+                    );
                 }
                 else
                 {
                 yield return null;
                 continue;
+                    yield return null;
+                    continue;
                 }
             }
             yield return new WaitForSeconds(SpawnInterval); 
 
             if (m_ActiveEnemies.Count < MaxEnemyCount) 
+            yield return new WaitForSeconds(SpawnInterval);
+
+            if (m_ActiveEnemies.Count < MaxEnemyCount)
             {
             SpawnEnemy(); 
+                SpawnEnemy();
             }
         }
     }
 
+    // ==========================================
+    // [Module: Enemy Spawn]
+    // ==========================================
+
     private void SpawnEnemy()
     {
-        if (Player == null) return;
+        if (Player == null || EnemyPrefabs.Length == 0) return;
+        if (Player == null ||
+            EnemyPrefabs == null ||
+            EnemyPrefabs.Length == 0)
+        {
+            return;
+        }
+
+        // 랜덤으로 프리팹 선택
+        GameObject selectedPrefab = EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)];
+        // 랜덤으로 몬스터 프리팹 선택
+        GameObject selectedPrefab =
+            EnemyPrefabs[
+                Random.Range(0, EnemyPrefabs.Length)
+            ];
+
+        Vector2 spawnPoint = Vector2.zero;
+        bool foundValidSpawn = false;
+        bool isFlyingEnemy = false;
+
+        // ------------------------------------------
+        // 지상 스폰 위치 탐색
+        // ------------------------------------------
 
         for (int i = 0; i < MaxSpawnAttempts; i++)
         {
             Vector2 testPoint = m_ValidSpawnPoints[Random.Range(0, m_ValidSpawnPoints.Length)];
 
             if (Vector2.Distance(testPoint, Player.position) < MinDistanceFromPlayer)
+            Vector2 testPoint =
+                m_ValidSpawnPoints[
+                    Random.Range(
+                        0,
+                        m_ValidSpawnPoints.Length
+                    )
+                ];
+
+            // 플레이어와 너무 가까우면 제외
+            if (Vector2.Distance(
+                    testPoint,
+                    Player.position) < MinDistanceFromPlayer)
             {
                 continue;
             }
 
             ContactFilter2D filter = new ContactFilter2D();
+            ContactFilter2D filter =
+                new ContactFilter2D();
+
             filter.useLayerMask = true;
             filter.layerMask = EnemyLayer;
 
             if (Physics2D.OverlapCircle(testPoint, SpawnClearanceRadius, filter, m_OverlapBuffer) == 0)
+            // 다른 몬스터와 겹치는 위치인지 확인
+            if (Physics2D.OverlapCircle(
+                    testPoint,
+                    SpawnClearanceRadius,
+                    filter,
+                    m_OverlapBuffer) == 0)
             {
-                GameObject enemyObj = PoolManager.Instance.Get(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Length)], testPoint, Quaternion.identity);
-
-                if (enemyObj == null)
-                {
-                    Debug.LogError("[EnemySpawner] PoolManager.Get()이 null을 반환했습니다.");
-                    return;
-                }
-
-                if (!enemyObj.TryGetComponent(out EnemyBase enemyBase))
-                {
-                    Debug.LogError($"[EnemySpawner] {enemyObj.name}에 EnemyBase가 없습니다.");
-                    return;
-                }
-
-                enemyBase.SetTarget(Player);
-                m_ActiveEnemies.Add(enemyObj);
+                spawnPoint = testPoint;
+                foundValidSpawn = true;
                 break;
             }
         }
+
+        // 유효한 스폰 자리를 찾았을 때 생성 실행
+        if (foundValidSpawn)
+        if (!foundValidSpawn)
+        {
+            GameObject enemyObj = PoolManager.Instance.Get(selectedPrefab, spawnPoint, Quaternion.identity);
+            return;
+        }
+
+            if (enemyObj == null)
+            {
+                Debug.LogError("[EnemySpawner] PoolManager.Get()이 null을 반환했습니다.");
+                return;
+            }
+        // ------------------------------------------
+        // Pool에서 몬스터 가져오기
+        // ------------------------------------------
+
+            if (enemyObj.layer == LayerMask.NameToLayer("FlyingEnemy"))
+            {
+                // 공중 몬스터라면 바닥이 아니라 플레이어 주변 허공 좌표로 위치 재배치
+                float randomX = Random.Range(-12f, 12f);
+                float randomY = Random.Range(3f, 7f);
+                enemyObj.transform.position = (Vector2)Player.position + new Vector2(randomX, randomY);
+            }
+        GameObject enemyObj =
+            PoolManager.Instance.Get(
+                selectedPrefab,
+                spawnPoint,
+                Quaternion.identity
+            );
+
+            if (!enemyObj.TryGetComponent(out EnemyBase enemyBase))
+            {
+                Debug.LogError($"[EnemySpawner] {enemyObj.name}에 EnemyBase가 없습니다.");
+                return;
+            }
+        if (enemyObj == null)
+        {
+            Debug.LogError(
+                "[EnemySpawner] PoolManager.Get()이 null을 반환했습니다."
+            );
+
+            return;
+        }
+
+        // ------------------------------------------
+        // 공중 몬스터 처리
+        // ------------------------------------------
+
+        if (enemyObj.layer ==
+            LayerMask.NameToLayer("FlyingEnemy"))
+        {
+            float randomX =
+                Random.Range(
+                    -m_AirSpawnHorizontalRange,
+                    m_AirSpawnHorizontalRange
+                );
+
+            float randomY =
+                Random.Range(
+                    m_AirSpawnMinHeight,
+                    m_AirSpawnMaxHeight
+                );
+
+            enemyObj.transform.position =
+                (Vector2)Player.position +
+                new Vector2(randomX, randomY);
+        }
+
+            enemyBase.SetTarget(Player);
+            m_ActiveEnemies.Add(enemyObj);
+        // ------------------------------------------
+        // EnemyBase 확인 및 Target 주입
+        // ------------------------------------------
+
+        if (!enemyObj.TryGetComponent(
+                out EnemyBase enemyBase))
+        {
+            Debug.LogError(
+                $"[EnemySpawner] {enemyObj.name}에 " +
+                "EnemyBase가 없습니다."
+            );
+
+            return;
+        }
+
+        enemyBase.SetTarget(Player);
+
+        // 활성 몬스터 등록
+        m_ActiveEnemies.Add(enemyObj);
     }
+
+    // ==========================================
+    // [Module: Debug]
+    // ==========================================
 
     private void OnDrawGizmosSelected()
     {
         if (m_ValidSpawnPoints == null) return;
+        if (m_ValidSpawnPoints == null)
+        {
+            return;
+        }
+
+        Gizmos.color =
+            new Color(0f, 1f, 0f, 0.3f);
 
         Gizmos.color = new Color(0f, 1f, 0f, 0.3f);
         int drawCount = 0;
+
         foreach (Vector2 point in m_ValidSpawnPoints)
         {
             if (drawCount++ >= 100) break;
             Gizmos.DrawCube(point, new Vector3(0.5f, 0.5f, 0.5f));
+            if (drawCount++ >= 100)
+            {
+                break;
+            }
+
+            Gizmos.DrawCube(
+                point,
+                new Vector3(0.5f, 0.5f, 0.5f)
+            );
         }
     }
 }

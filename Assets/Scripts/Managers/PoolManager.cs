@@ -5,6 +5,9 @@ public class PoolManager : Singleton<PoolManager>
 {
     private Dictionary<GameObject, Queue<GameObject>> m_Pools = new Dictionary<GameObject, Queue<GameObject>>();
 
+    /// <summary>
+    /// 풀에서 오브젝트를 꺼낸다. 자식 포함 모든 IPoolable의 OnSpawn이 호출
+    /// </summary>
     public GameObject Get(GameObject prefab, Vector3 pos, Quaternion rot)
     {
         if (!m_Pools.ContainsKey(prefab))
@@ -13,6 +16,7 @@ public class PoolManager : Singleton<PoolManager>
         }
 
         GameObject obj;
+
         if (m_Pools[prefab].Count > 0)
         {
             obj = m_Pools[prefab].Dequeue();
@@ -25,19 +29,25 @@ public class PoolManager : Singleton<PoolManager>
             {
                 pooledObj = obj.AddComponent<PooledObject>();
             }
-
             pooledObj.Init(prefab);
         }
-
 
         obj.transform.SetPositionAndRotation(pos, rot);
         obj.SetActive(true);
 
-        obj.GetComponent<IPoolable>()?.OnSpawn();
+        // 자식 포함 모든 IPoolable의 OnSpawn 호출 (비활성 자식도 포함)
+        IPoolable[] poolables = obj.GetComponentsInChildren<IPoolable>(true);
+        foreach (IPoolable poolable in poolables)
+        {
+            poolable.OnSpawn();
+        }
 
         return obj;
     }
 
+    /// <summary>
+    /// 오브젝트를 풀로 반납한다. 자식 포함 모든 IPoolable의 OnDespawn이 호출
+    /// </summary>
     public void Return(GameObject prefab, GameObject obj)
     {
         if (!m_Pools.ContainsKey(prefab))
@@ -46,7 +56,12 @@ public class PoolManager : Singleton<PoolManager>
             return;
         }
 
-        obj.GetComponent<IPoolable>()?.OnDespawn();
+        IPoolable[] poolables = obj.GetComponentsInChildren<IPoolable>(true);
+        foreach (IPoolable poolable in poolables)
+        {
+            poolable.OnDespawn();
+        }
+
         obj.SetActive(false);
         m_Pools[prefab].Enqueue(obj);
     }

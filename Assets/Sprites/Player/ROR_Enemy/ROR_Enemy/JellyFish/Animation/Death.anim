@@ -17,36 +17,42 @@ AnimationClip:
   m_PositionCurves: []
   m_ScaleCurves: []
   m_FloatCurves: []
+  m_PPtrCurves: []
+  m_SampleRate: 60
   m_PPtrCurves:
   - serializedVersion: 2
     curve:
     - time: 0
       value: {fileID: -1976211404469199194, guid: d55ead282b42b5748a49e8e28444c516, type: 3}
-    - time: 0.016666668
-      value: {fileID: 7069993223672749891, guid: e3abd2ac4ed4fbb48983e58a26e3e3d2, type: 3}
-    - time: 0.033333335
-      value: {fileID: 5897360740596797413, guid: c2935f7b20bc9044cb43ff51c036832c, type: 3}
-    - time: 0.05
-      value: {fileID: 5341244003883298820, guid: b258f9fe536e0bb418468e59eca367b2, type: 3}
-    - time: 0.06666667
-      value: {fileID: -8012062841296600824, guid: 9b329e1ea5dfdf842b9d8db36d94c53b, type: 3}
     - time: 0.083333336
+      value: {fileID: 7069993223672749891, guid: e3abd2ac4ed4fbb48983e58a26e3e3d2, type: 3}
+    - time: 0.16666667
+      value: {fileID: 5897360740596797413, guid: c2935f7b20bc9044cb43ff51c036832c, type: 3}
+    - time: 0.25
+      value: {fileID: 5341244003883298820, guid: b258f9fe536e0bb418468e59eca367b2, type: 3}
+    - time: 0.33333334
+      value: {fileID: -8012062841296600824, guid: 9b329e1ea5dfdf842b9d8db36d94c53b, type: 3}
+    - time: 0.41666666
       value: {fileID: -6357165547855750356, guid: 9e499332ae2cb4b42b6b5518d6985c94, type: 3}
-    - time: 0.1
+    - time: 0.5
+      value: {fileID: -6357165547855750356, guid: 9e499332ae2cb4b42b6b5518d6985c94, type: 3}
+    - time: 0.5833333
       value: {fileID: -2876028225136574790, guid: 9763597908ecf0e4a9b58ea804331c23, type: 3}
-    - time: 0.11666667
+    - time: 0.6666667
       value: {fileID: -3563010038240874129, guid: 20cee5eca04a963409b966d42358fb9e, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 60
+  m_SampleRate: 12
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   m_ClipBindingConstant:
+    genericBindings: []
+    pptrCurveMapping: []
     genericBindings:
     - serializedVersion: 2
       path: 0
@@ -65,6 +71,7 @@ AnimationClip:
     - {fileID: 5341244003883298820, guid: b258f9fe536e0bb418468e59eca367b2, type: 3}
     - {fileID: -8012062841296600824, guid: 9b329e1ea5dfdf842b9d8db36d94c53b, type: 3}
     - {fileID: -6357165547855750356, guid: 9e499332ae2cb4b42b6b5518d6985c94, type: 3}
+    - {fileID: -6357165547855750356, guid: 9e499332ae2cb4b42b6b5518d6985c94, type: 3}
     - {fileID: -2876028225136574790, guid: 9763597908ecf0e4a9b58ea804331c23, type: 3}
     - {fileID: -3563010038240874129, guid: 20cee5eca04a963409b966d42358fb9e, type: 3}
   m_AnimationClipSettings:
@@ -72,7 +79,8 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.13333334
+    m_StopTime: 1
+    m_StopTime: 0.75
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -92,3 +100,11 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events: []
+  m_Events:
+  - time: 0.6666667
+    functionName: DeathComplete
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

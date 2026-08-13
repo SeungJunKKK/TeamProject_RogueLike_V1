@@ -84,14 +84,10 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
         EventBus.Publish(new MonsterDiedEvent
         {
             Gold = gold,
-            Exp = gold * 0.5f,     // RoR: 경험치는 골드의 절반
+            Exp = gold * 0.5f,
             Position = transform.position
         });
 
-        // 스포너에서 자신을 제거
         EnemySpawner.Instance.UnregisterEnemy(gameObject);
-
-        // 오브젝트 풀로 반환
-        GetComponent<PooledObject>().Return();
     }
 }

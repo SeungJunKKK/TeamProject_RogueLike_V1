@@ -23,7 +23,7 @@ namespace Player.Commando
                                   : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
             float attackRange = 30f;
-            int enemyLayer = LayerMask.GetMask("Enemy");
+            int enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
             RaycastHit2D hit = Physics2D.Raycast(shootOrigin, shootDirection, attackRange, enemyLayer);
 
             if (hit.collider != null)
