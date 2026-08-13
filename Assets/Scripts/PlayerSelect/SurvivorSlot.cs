@@ -1,41 +1,45 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Button))]
 public class SurvivorSlot : MonoBehaviour
 {
-    [Tooltip("여기에 SurvivorData를 넣으면 해당 캐릭터 슬롯이 됩니다. 비워두면 선택 불가 빈칸이 됩니다.")]
     public SurvivorData Data;
     [Header("UI Components")]
     public Image CharacterImage;
-    [Tooltip("캐릭터 데이터가 없을 때 띄워줄 물음표/잠김 이미지입니다.")]
     public Sprite LockedSprite;
 
     [Header("Animation")]
-    public Animator SlotAnimator; // 슬롯 애니메이션을 담당할 컴포넌트
+    public Animator SlotAnimator;
 
     private Button m_Button;
+    private static List<SurvivorSlot> s_AllSlots = new List<SurvivorSlot>();
 
     private void Awake()
     {
         m_Button = GetComponent<Button>();
         m_Button.onClick.AddListener(OnSlotClicked);
+        s_AllSlots.Add(this);
+    }
 
+    private void OnDestroy()
+    {
+        s_AllSlots.Remove(this);
+    }
+
+    private void Start()
+    {
         if (Data != null)
         {
-            CharacterImage.sprite = Data.SelectSprite;
+            ResetToDefault();
             m_Button.interactable = true;
-
-            if (Data.SelectAnimController != null && SlotAnimator != null)
-            {
-                SlotAnimator.runtimeAnimatorController = Data.SelectAnimController;
-                SlotAnimator.enabled = false;
-            }
         }
         else
         {
             CharacterImage.sprite = LockedSprite;
             m_Button.interactable = false;
+            if (SlotAnimator != null) SlotAnimator.enabled = false;
         }
     }
 
@@ -43,12 +47,45 @@ public class SurvivorSlot : MonoBehaviour
     {
         if (Data != null)
         {
+            foreach (var slot in s_AllSlots)
+            {
+                if (slot != this)
+                {
+                    slot.ResetToDefault();
+                }
+            }
+
             CharacterSelectManager.Instance.OnSurvivorSelected(Data);
 
-            if (SlotAnimator != null)
+            if (Data.SelectAnimController != null && SlotAnimator != null)
             {
-                SlotAnimator.enabled = true;
+                SlotAnimator.runtimeAnimatorController = Data.SelectAnimController;
+                SlotAnimator.enabled = true; 
                 SlotAnimator.SetTrigger("Select");
+            }
+        }
+    }
+
+    public void ResetToDefault()
+    {
+        if (SlotAnimator != null)
+        {
+            SlotAnimator.Rebind();
+            SlotAnimator.Update(0f);
+            SlotAnimator.enabled = false;
+        }
+
+        if (Data != null && CharacterImage != null)
+        {
+            CharacterImage.gameObject.SetActive(true);
+
+            if (Data.SelectSprite != null)
+            {
+                CharacterImage.sprite = Data.SelectSprite;
+            }
+            else
+            {
+                Debug.LogWarning($"<color=yellow>[경고] {Data.SurvivorName}의 SelectSprite가 비어있습니다! 인스펙터를 확인하세요.</color>");
             }
         }
     }

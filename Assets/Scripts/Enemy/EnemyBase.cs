@@ -7,26 +7,38 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     [SerializeField] protected float m_HpPerLevel = 24f;
     [SerializeField] protected int m_BaseGold = 2;
 
+    protected float m_MaxHp;
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;
-    
+    public float MaxHp => m_MaxHp;
+    public float CurrentHp => m_CurrentHp;
+    public float GetHpRatio()
+    {
+        return m_MaxHp > 0f ? m_CurrentHp / m_MaxHp : 0f;
+    }
 
 
     // 자식 클래스
     public abstract void SetTarget(Transform target);
 
+    /// <summary>
+    /// 스폰 시점에 호출되는 초기화 함수 -> 난이도에 따른 HP 스케일링 적용 -> 아이템 적용을 위해 MaxHp와 CurrentHp를 설정 
+    /// (item 에서 값을 확인할수 있도록 maxHP와 currentHP를 public으로 노출)
+    /// </summary>
     public virtual void OnSpawn()
     {
         if (DifficultyManager.Instance != null)
         {
             // 스폰 시점의 난이도로 최대 HP 결정
-            m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            //m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
         }
         else
         {
-            m_CurrentHp = m_BaseHp;
+            m_MaxHp = m_BaseHp;
         }
 
+        m_CurrentHp = m_MaxHp;
         // m_Rigidbody가 null일 때만 GetComponent 실행
         m_Rigidbody ??= GetComponent<Rigidbody2D>();
     }

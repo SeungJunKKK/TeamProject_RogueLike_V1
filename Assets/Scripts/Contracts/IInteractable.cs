@@ -11,4 +11,5 @@ public interface IInteractable
     /// </summary>
     /// <param name="interactor">상호작용을 시작한 주체 (보통 플레이어)</param>
     void Interact(GameObject interactor);
+    string GetPromptText(); // 상호작용 UI에 표시할 텍스트를 반환
 }

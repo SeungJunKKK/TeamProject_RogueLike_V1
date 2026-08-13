@@ -15,7 +15,7 @@ public class PlayerDashState : IState
     {
         m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Dash);
         m_Player.Anim.Play("Dash");
-
+        m_Player.PlayAddressableSFX(m_Player.Dash_SFXAddress);
         m_DashTimer = m_Player.DashDuration;
         float dirX = m_Player.MovementInput.x != 0 ? Mathf.Sign(m_Player.MovementInput.x) : (m_Player.IsFacingRight ? 1f : -1f);
         m_DashDirection = new Vector2(dirX, 0f);

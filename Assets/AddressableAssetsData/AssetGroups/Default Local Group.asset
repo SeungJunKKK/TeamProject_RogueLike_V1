@@ -20,13 +20,33 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 088d2ab6144ccd540a8fff800c10c7bf
+    m_Address: SFX_Enforcer_Grenade
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0d617ce978e1d734494ee65e15927b28
     m_Address: MonsterLog
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12aed1533845b834e84d6d8782496660
+    m_Address: HeavenCracker
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a094802b7e511a40bfe00ca0c8531dc
+    m_Address: SoldiersSyringe
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26e7f0581f02a1647af4eddaa7b43bbf
     m_Address: DamageText
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bd3c5f9b29a3d543982bcc7b68d3750
+    m_Address: Crowbar
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -45,6 +65,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b38187b59190aa48a28042f07b20811
+    m_Address: SFX_Shield_Blocking
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4fa94df425ae640468c583f7bbdea157
     m_Address: Dash_Left_Dust
     m_ReadOnly: 0
@@ -60,8 +85,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ae23fc8595531f4da1ec58fb321b622
+    m_Address: SFX_Shielding
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6ec33161be7b9a848a07b66646a5c304
     m_Address: PlayerDustEffect
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7575db06ea9896848848852ebcbb0bd3
+    m_Address: ForeignFruit
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -90,13 +125,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a97c105638bdf8b4a8650670310a4cd3
-    m_Address: JellyfishAttackEffect
+  - m_GUID: b9f2bdd0fcb387e4790ee8c16f5a1359
+    m_Address: SFX_Enforcer_Shot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb4a822403ac1094ab769f622be45d11
+    m_Address: Item_PaulsGoatHoof
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bd9220db6b9b64d449390a916b58d5e5
     m_Address: Ukulele
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c33d97a78caa0dc4baa073b8771b295c
+    m_Address: SFX_Metal_Clang
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -115,8 +160,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d79f60cebf091044eb40dcf59ba96ffc
+    m_Address: MysteriousVial
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dcd62aaa222268e4ea885aa3aef719b7
     m_Address: MainMenuBackground
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e2e14ef4d1b3d4d429aae4aa38ea3e33
+    m_Address: AlienHead
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -132,6 +187,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f59e627079734f442aacd206bd3cdffc
     m_Address: Jump_Left_Dust
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7cf0846b18963b45a8baaf60765b235
+    m_Address: Enforcer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f8da323479bfee44f8f4d9217eafc96c
+    m_Address: SFX_Moving
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

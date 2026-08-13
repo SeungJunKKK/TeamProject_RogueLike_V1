@@ -37,6 +37,10 @@ MonoBehaviour:
       (Cooldown:
       4s)'
     SkillIcon: {fileID: 21300000, guid: 32471a0c41f20b14abe715b7bd6065ea, type: 3}
+  AltUtilitySkill:
+    SkillName: 
+    SkillDescription: 
+    SkillIcon: {fileID: 0}
   UltimateSkill:
     SkillName: 'V - Suppressive Fire '
     SkillDescription: 'Fire rapidly at nearby enemies, stunning them for 6x60% damage.
@@ -45,7 +49,11 @@ MonoBehaviour:
   StrengthenedUltimateSkill:
     SkillName: 'V - Suppressive Barrage '
     SkillDescription: 'Fire rapidly at nearby enemies, stunning them for 10x60% damage.
-      (Cooldown: 5s)'
+      (Cooldown: 5s)
+
+
+      A strengthened skill unlocked by acquiring the Ancient
+      Scepter. The sound effects are altered, and the number of attacks is increased.'
     SkillIcon: {fileID: 21300000, guid: 3bc20965ad354444c917cc8f30267e51, type: 3}
   BaseMaxHealth: 110
   BaseHealthRegen: 0.6

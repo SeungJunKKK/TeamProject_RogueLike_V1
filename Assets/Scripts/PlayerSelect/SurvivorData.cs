@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Survivor", menuName = "RoR/Survivor Data")]
+[CreateAssetMenu(fileName = "New Survivor", menuName = "Player/Survivor Data")]
 public class SurvivorData : ScriptableObject
 {
     [Header("Basic Info")]
@@ -16,11 +16,16 @@ public class SurvivorData : ScriptableObject
     public SkillInfo PrimarySkill;
     public SkillInfo SecondarySkill;
     public SkillInfo UtilitySkill;
+    [Tooltip("엔포서의 방어 해제처럼 상태가 변했을 때 교체되어 보여질 대체 스킬(Alt) 데이터입니다.")]
+    public SkillInfo AltUtilitySkill;
+
     public SkillInfo UltimateSkill;
 
     [Header("Strengthened / Alternate Skills")]
     [Tooltip("에인션트 셉터 획득 시 강화되는 궁극기나, 교체 가능한 대체 스킬을 넣습니다.")]
     public SkillInfo StrengthenedUltimateSkill;
+
+   
 
     [Header("Base Stats (기본 능력치)")]
     public float BaseMaxHealth = 110f;

@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bfcee70b914d744ba50cae6161a717, type: 3}
+  m_Name: Enforcer
+  m_EditorClassIdentifier: Assembly-CSharp::SurvivorData
+  SurvivorName: Enforcer
+  Description: The Enforcer is a survivor characterized by strong frontal defense
+    using a shield and close-range AoE attacks with a shotgun. Through 'Protect and
+    Serve', he can block enemy projectiles and attacks to maintain a stable formation.
+    However, his mobility drops significantly, so he must be careful of enemies attacking
+    from behind or using melee attacks. He excels particularly when facing swarms
+    of enemies in narrow chokepoints.
+  PlayerPrefab: {fileID: 379004888098664237, guid: f5d351f400f0b604d916bad839c7faca, type: 3}
+  SelectSprite: {fileID: 21300000, guid: 6b0382717cb3aac46930206617210b1d, type: 3}
+  SelectAnimController: {fileID: 22100000, guid: 8499839eec226e04ebd0cd40549afe57, type: 2}
+  PrimarySkill:
+    SkillName: Z - Riot Shotgun
+    SkillDescription: Fire a shotgun, dealing 160% damage to all enemies within a
+      short range.
+    SkillIcon: {fileID: 21300000, guid: 3cba7455a9686e9499945a180e027e38, type: 3}
+  SecondarySkill:
+    SkillName: X - Shield Slam
+    SkillDescription: 'Smash nearby enemies, dealing 210% damage and knocking them
+      back. (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: 9e46a05636e8e2d47abe02ebf0b874cc, type: 3}
+  UtilitySkill:
+    SkillName: C - Protect and Serve
+    SkillDescription: 'Take a defensive stance, blocking all frontal damage. Increases
+      attack speed but decreases movement speed. (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: 646f3b7d83a781541ae1b351abe117fa, type: 3}
+  AltUtilitySkill:
+    SkillName: C - Protect and Serve_Exit
+    SkillDescription: 'Take a defensive stance, blocking all frontal damage. Increases
+      attack speed but decreases movement speed. (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: cec42b2a9b92f0b4f8d5bad22773fec8, type: 3}
+  UltimateSkill:
+    SkillName: V - Crowd Control
+    SkillDescription: 'Fire a stun grenade, dealing 250% damage to a wide area and
+      stunning enemies. Can bounce on the ground at a shallow angle. (Cooldown: 5s)'
+    SkillIcon: {fileID: 21300000, guid: 9a8fc339715759a4493b0d0d3d93bbbc, type: 3}
+  StrengthenedUltimateSkill:
+    SkillName: ' V - Tear Gas'
+    SkillDescription: 'Fire a stun grenade, dealing 250% damage to a wide area and
+      causing fear. Can bounce on the ground at a shallow angle. (Cooldown: 5s)
+
+
+      A
+      strengthened skill unlocked by acquiring the Ancient Scepter. All enemies except
+      Jellyfish and Archer Bugs are inflicted with fear and flee from the Enforcer.
+      While creating distance improves survivability, it may also increase the time
+      required to eliminate them. Therefore, you should consider your teammates''
+      situations when acquiring the Ancient Scepter.'
+    SkillIcon: {fileID: 21300000, guid: 646d08fe998506a47aa3b4c6a64a88b1, type: 3}
+  BaseMaxHealth: 119
+  BaseHealthRegen: 1.2
+  BaseDamage: 12
+  BaseArmor: 0
+  BaseMoveSpeed: 3
+  BaseAttackSpeed: 0.8
+  BaseCritChance: 0.1
+  BaseCritDamage: 2
+  HealthPerLevel: 34
+  HealthRegenPerLevel: 0.12
+  DamagePerLevel: 3
+  ArmorPerLevel: 2

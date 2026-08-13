@@ -15,6 +15,7 @@ public class PlayerStats : MonoBehaviour
     [HideInInspector]public CharacterStat CritChance;  // 0.0 ~ 1.0 (0% ~ 100%)
     [HideInInspector]public CharacterStat CritDamage;  // 1.5 = 150%, 2.0 = 200%
     [HideInInspector] public CharacterStat Armor;       // 방어력 (피해 감소율 계산에 사용)
+    [HideInInspector] public CharacterStat CooldownReduction;   //쿨타임 감소 (Rare 아이템 적용) 
 
 
     [Header("Level & EXP")]
@@ -39,7 +40,7 @@ public class PlayerStats : MonoBehaviour
         AttackSpeed = new CharacterStat(CharacterData.BaseAttackSpeed);
         CritChance = new CharacterStat(CharacterData.BaseCritChance);
         CritDamage = new CharacterStat(CharacterData.BaseCritDamage);
-
+        CooldownReduction = new CharacterStat(0f);
         CurrentHealth = MaxHealth.Value;
     }
 
@@ -101,6 +102,7 @@ public class PlayerStats : MonoBehaviour
             case EStatType.MaxHealth: MaxHealth.AddModifier(e.Modifier); break;
             case EStatType.CritChance: CritChance.AddModifier(e.Modifier); break;
             case EStatType.CritDamage: CritDamage.AddModifier(e.Modifier); break;
+            
             default: Debug.LogWarning($"알 수 없는 스탯 타입: {e.TargetStat}"); break;
         }
 

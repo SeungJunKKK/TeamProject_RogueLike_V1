@@ -438,6 +438,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d66f75e9ad45d8848ae14900adcb7c5c, type: 3}
   - {fileID: 8300000, guid: bb073b24e63c6c44c813aff6006d0e77, type: 3}
   - {fileID: 8300000, guid: fd8f51998b484ad49a316cdb493415fa, type: 3}
+  bgmMixerGroup: {fileID: 5640669517711157818, guid: 03d638c2a2d56fb449f34f9230bea2cb, type: 2}
+  sfxMixerGroup: {fileID: -3267015809663851630, guid: 03d638c2a2d56fb449f34f9230bea2cb, type: 2}
 --- !u!114 &2063174200544968173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +453,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   m_TeleportInSound: {fileID: 8300000, guid: 94c9bd113ba4029458e4f5db3f39611a, type: 3}
+  SelectedPlayerPrefab: {fileID: 0}
 --- !u!114 &1271193421356028855
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public class PlayerJumpState : IState
     {
         m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Jump); 
         m_Player.Anim.Play("Jump");
+        m_Player.PlayAddressableSFX(m_Player.Jump_SFXAddress);
         m_Player.Rb.linearVelocity = new Vector2(m_Player.Rb.linearVelocity.x, m_Player.JumpForce);
     }
 
@@ -67,9 +68,14 @@ public class PlayerJumpState : IState
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.C))
              && m_Player.CooldownManager.IsSkillReady(SkillType.Utility_C))
         {
-            m_Player.ChangeState(new PlayerDashState(m_Player));
+            IState state = m_Player.GetUtilitySkillState();
+            if (state != null)
+            {
+                m_Player.ChangeState(state);
+            }
             return;
         }
+
 
         // V 스킬 (궁극기)
         if (Input.GetKeyDown(KeyCode.V) && m_Player.CooldownManager.IsSkillReady(SkillType.Ultimate_V))

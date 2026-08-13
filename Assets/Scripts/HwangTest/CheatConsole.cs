@@ -152,6 +152,7 @@ public class CheatConsole : MonoBehaviour
 
                 Debug.Log($"<color=cyan>[Cheat] ===== 🧑‍🚀 현재 플레이어 정보 =====</color>\n" +
                           $" 체력: {stats.CurrentHealth:F1} / {stats.MaxHealth.Value:F1}\n" +
+                          $" 회복: {stats.HealthRegen.Value:F1} / 초\n" +
                           $" 방어력: {armorValue:F1}\n" +
                           $" 공격력: {stats.Damage.Value:F1} |  공속: {stats.AttackSpeed.Value:F2}\n" +
                           $" 치명타 확률: {stats.CritChance.Value * 100:F1}% |  치명타 배율: {stats.CritDamage.Value * 100:F0}%\n" +
@@ -160,6 +161,59 @@ public class CheatConsole : MonoBehaviour
                           $" <color=yellow>보유 아이템:</color> {itemListStr}");
             }
         }
+
+        //=========================================
+        //숫자 단축기 
+        //=========================================
+
+        if (Keyboard.current.digit0Key.wasPressedThisFrame)
+        {
+            PlayerInventory inventory = FindAnyObjectByType<PlayerInventory>();
+            if (inventory == null)
+            {
+                Debug.LogWarning($"[Cheat] 숫자 0: 씬에 PlayerInventory가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"<color=cyan>[Cheat] 숫자 0 pressed: 모든 쿨타임 즉시 초기화!</color>");
+
+                inventory.ResetActiveCooldown();
+
+                // 나중에 PlayerController 쪽에 스킬(Q, E, R 등) 쿨타임 기능이 생기면 
+                // 여기에 player.ResetAllSkillCooldowns(); 같은 함수를 추가로 호출
+            }
+        }
+
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            Chest chest = FindAnyObjectByType<Chest>();
+            if (chest == null)
+            {
+                Debug.LogWarning($"[Cheat] 숫자 1: 씬에 Chest가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"<color=green>[Cheat] 숫자 1 pressed: 상자 오픈 (Chest.Interact)</color>");
+                chest.Interact(gameObject);
+            }
+        }
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null || player.Stats == null)
+            {
+                Debug.LogWarning($"[Cheat] 숫자 2: 씬에 PlayerController 또는 PlayerStats가 없습니다.");
+            }
+            else
+            {
+                float damageAmount = player.Stats.CurrentHealth * 0.7f;
+                Debug.Log($"<color=orange>[Cheat] 숫자 2 pressed: 현재 체력 70% 감소 (-{damageAmount:F1} 피해)</color>");
+                player.TakeDamage(damageAmount);
+            }
+        }
+
+
 
     }
 }
