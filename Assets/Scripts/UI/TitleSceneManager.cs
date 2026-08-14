@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class TitleSceneManager : MonoBehaviour
 {
@@ -51,7 +50,7 @@ public class TitleSceneManager : MonoBehaviour
         // 게임 씬으로 넘어가기 전에 사용 완료한 배경 이미지 메모리 해제
         AddressableManager.Instance.UnloadAsset(m_BackgroundAddress);
        
-        SceneManager.LoadScene("PlayerSelectScene");
+        SceneLoader.Instance.LoadScene("PlayerSelectScene", false);
     }
 
     private void HandleQuit() // 게임 종료
