@@ -38,7 +38,7 @@ public class Teleporter : MonoBehaviour, IInteractable
             {
                 SoundManager.Instance.PlaySFX(m_TeleportOutSound);
             }
-            SceneLoader.Instance.LoadScene(m_NextStageName);
+            SceneLoader.Instance.LoadScene(m_NextStageName, true, "Shared");
         }
     }
 

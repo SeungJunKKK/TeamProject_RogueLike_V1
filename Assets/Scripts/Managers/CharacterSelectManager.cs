@@ -102,7 +102,7 @@ public class CharacterSelectManager : MonoBehaviour
             }
 
             GameManager.Instance.SetSelectedPlayer(m_SelectedSurvivor.PlayerPrefab);
-            SceneLoader.Instance.LoadScene("Stage1_Scene"); // 실제 게임 씬 이름으로 변경
+            SceneLoader.Instance.LoadScene("Stage1_Scene", true, "Shared"); // 실제 게임 씬 이름으로 변경
         }
     }
 }

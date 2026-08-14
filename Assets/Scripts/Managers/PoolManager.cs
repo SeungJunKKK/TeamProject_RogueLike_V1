@@ -46,6 +46,36 @@ public class PoolManager : Singleton<PoolManager>
     }
 
     /// <summary>
+    /// 프리팹을 미리 생성하여 풀에 넣는다. 자식 포함 모든 IPoolable의 OnSpawn이 호출
+    /// </summary>
+    /// <param name="prefab"></param>
+    /// <param name="count"></param>
+    public void Prewarm(GameObject prefab, int count)
+    {
+        if (prefab == null || count == 0)
+        {
+            return;
+        }
+
+        if (!m_Pools.ContainsKey(prefab))
+        {
+            m_Pools[prefab] = new Queue<GameObject>();
+        }
+
+        for (int i = 0; i < count; ++i)
+        {
+            GameObject obj = Instantiate(prefab);
+            if (!obj.TryGetComponent(out PooledObject pooledObj))
+            {
+                pooledObj = obj.AddComponent<PooledObject>();
+            }
+            pooledObj.Init(prefab);
+            obj.SetActive(false);
+            m_Pools[prefab].Enqueue(obj);
+        }
+    }
+
+    /// <summary>
     /// 오브젝트를 풀로 반납한다. 자식 포함 모든 IPoolable의 OnDespawn이 호출
     /// </summary>
     public void Return(GameObject prefab, GameObject obj)

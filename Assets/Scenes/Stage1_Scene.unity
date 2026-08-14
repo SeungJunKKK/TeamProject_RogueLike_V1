@@ -395,6 +395,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
+--- !u!1839735485 &1530021452 stripped
+Tilemap:
+  m_CorrespondingSourceObject: {fileID: 7279669969549302008, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
+  m_PrefabInstance: {fileID: 1530021451}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1839735485 &1530021453 stripped
 Tilemap:
   m_CorrespondingSourceObject: {fileID: 7561259771679092481, guid: a81d772d6496cfe468178ca4a016c068, type: 3}
@@ -408,6 +413,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: 'm_SpawnTilemaps.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1530021453}
+    - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: 'm_SpawnTilemaps.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1530021452}
     - target: {fileID: 3143715729613884232, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.80535
@@ -452,43 +465,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonsterSpawnManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8560593116285068361, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: m_Entries.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560593116285068361, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: m_Entries.Array.data[0].count
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560593116285068361, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: m_Entries.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5614509464661613285, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1688110918}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
---- !u!1 &1688110917 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5614509464661613285, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
-  m_PrefabInstance: {fileID: 1688110916}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1688110918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688110917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e1ad6b1a71adc4bb112307140cde44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  GroundTilemap: {fileID: 1530021453}
-  Player: {fileID: 0}
-  EnemyPrefabs:
-  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
-  SpawnInterval: 3
-  MinDistanceFromPlayer: 10
-  MaxSpawnAttempts: 10
-  MaxEnemyCount: 20
-  SpawnClearanceRadius: 1
-  EnemyLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1001 &1711803188
 PrefabInstance:
   m_ObjectHideFlags: 0

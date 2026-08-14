@@ -10,19 +10,21 @@ public class SceneLoader : Singleton<SceneLoader>
     [SerializeField]
     private Slider m_Slider;
 
+    [SerializeField] private float m_FillSpeed = 1.5f;
+
     private bool m_IsLoading;
 
-    public void LoadScene(string scene, bool showLoading = true)
+    public void LoadScene(string scene, bool showLoading = true, string preloadLabel = null)
     {
         if (m_IsLoading)
         {
             return;
         }
 
-        StartCoroutine(LoadRoutine(scene, showLoading));
+        StartCoroutine(LoadRoutine(scene, showLoading, preloadLabel));
     }
 
-    private IEnumerator LoadRoutine(string scene, bool showLoading)
+    private IEnumerator LoadRoutine(string scene, bool showLoading, string preloadLabel)
     {
         m_IsLoading = true;
         ShowLoadingScreen(showLoading);
@@ -30,6 +32,19 @@ public class SceneLoader : Singleton<SceneLoader>
 
         PoolManager.Instance.ClearAll();
         AddressableManager.Instance.UnloadAllAssets();
+
+        if (!string.IsNullOrEmpty(preloadLabel))
+        {
+            var preload = AddressableManager.Instance.PreloadLabelAsync(preloadLabel);
+            while (!preload.IsDone)
+            {
+                if (showLoading && m_Slider != null)
+                {
+                    m_Slider.value = preload.PercentComplete * 0.5f;
+                }
+                yield return null;
+            }
+        }
 
         AsyncOperation op = SceneManager.LoadSceneAsync(scene);
 
@@ -47,14 +62,22 @@ public class SceneLoader : Singleton<SceneLoader>
 
         while (!op.isDone)
         {
+            float target = (op.progress < 0.9f)
+                            ? 0.5f + (op.progress / 0.9f) * 0.5f
+                            : 1f;
+
             if (showLoading && m_Slider != null)
             {
-                m_Slider.value = Mathf.Clamp01(op.progress / 0.9f);
-            }
+                m_Slider.value = Mathf.MoveTowards(m_Slider.value, target, Time.unscaledDeltaTime * m_FillSpeed);
 
-            if (op.progress >= 0.9f)
+                if (op.progress >= 0.9f && m_Slider.value >= 0.999f)
+                {
+                    op.allowSceneActivation = true;
+                }
+            }
+            else if (op.progress >= 0.9f)
             {
-                op.allowSceneActivation = true;
+                op.allowSceneActivation = true;   // 로딩화면 없으면 즉시
             }
 
             yield return null;
