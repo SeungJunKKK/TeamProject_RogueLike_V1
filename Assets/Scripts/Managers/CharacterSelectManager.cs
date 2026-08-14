@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class CharacterSelectManager : MonoBehaviour
 {
@@ -103,7 +102,7 @@ public class CharacterSelectManager : MonoBehaviour
             }
 
             GameManager.Instance.SetSelectedPlayer(m_SelectedSurvivor.PlayerPrefab);
-            SceneManager.LoadScene("Stage1_Scene"); // 실제 게임 씬 이름으로 변경
+            SceneLoader.Instance.LoadScene("Stage1_Scene"); // 실제 게임 씬 이름으로 변경
         }
     }
 }

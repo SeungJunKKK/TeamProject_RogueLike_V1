@@ -12,30 +12,31 @@ public class SceneLoader : Singleton<SceneLoader>
 
     private bool m_IsLoading;
 
-    public void LoadScene(string scene)
+    public void LoadScene(string scene, bool showLoading = true)
     {
         if (m_IsLoading)
         {
             return;
         }
 
-        StartCoroutine(LoadRoutine(scene));
+        StartCoroutine(LoadRoutine(scene, showLoading));
     }
 
-    private IEnumerator LoadRoutine(string scene)
+    private IEnumerator LoadRoutine(string scene, bool showLoading)
     {
         m_IsLoading = true;
-        m_LoadingScreen.SetActive(true);
+        ShowLoadingScreen(showLoading);
         EventBus.Publish(new SceneLoadStartedEvent { SceneName = scene });
 
         PoolManager.Instance.ClearAll();
+        AddressableManager.Instance.UnloadAllAssets();
 
         AsyncOperation op = SceneManager.LoadSceneAsync(scene);
 
         if (op == null)
         {
             Debug.LogError($"[SceneLoader] Failed to load scene: {scene}");
-            m_LoadingScreen.SetActive(false);
+            ShowLoadingScreen(false);
             m_IsLoading = false;
             yield break;
         }
@@ -46,7 +47,10 @@ public class SceneLoader : Singleton<SceneLoader>
 
         while (!op.isDone)
         {
-            m_Slider.value = Mathf.Clamp01(op.progress / 0.9f);
+            if (showLoading && m_Slider != null)
+            {
+                m_Slider.value = Mathf.Clamp01(op.progress / 0.9f);
+            }
 
             if (op.progress >= 0.9f)
             {
@@ -57,8 +61,15 @@ public class SceneLoader : Singleton<SceneLoader>
         }
 
         EventBus.Publish(new SceneLoadCompletedEvent { SceneName = scene });
-        m_LoadingScreen.SetActive(false);
+        ShowLoadingScreen(false);
         m_IsLoading = false;
     }
 
+    private void ShowLoadingScreen(bool on)
+    {
+        if (m_LoadingScreen != null)
+        {
+            m_LoadingScreen.SetActive(on);
+        }
+    }
 }
