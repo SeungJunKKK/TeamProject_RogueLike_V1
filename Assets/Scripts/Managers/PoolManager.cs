@@ -46,7 +46,7 @@ public class PoolManager : Singleton<PoolManager>
     }
 
     /// <summary>
-    /// 프리팹을 미리 생성하여 풀에 넣는다. 자식 포함 모든 IPoolable의 OnSpawn이 호출
+    /// 프리팹을 미리 생성하여 풀에 넣는다.
     /// </summary>
     /// <param name="prefab"></param>
     /// <param name="count"></param>
