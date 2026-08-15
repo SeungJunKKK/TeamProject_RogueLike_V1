@@ -1667,18 +1667,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e1ad6b1a71adc4bb112307140cde44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  GroundTilemap: {fileID: 601327060}
   m_SpawnTilemaps:
   - {fileID: 601327060}
   - {fileID: 2105308625}
   Player: {fileID: 1424128609}
   EnemyPrefabs:
-  - {fileID: 5093403589806644815, guid: b8518763ea202bd49b6294f6b6b5795e, type: 3}
-  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
+  - {fileID: 2807211743726025604, guid: ef64ce6eee7476646bc431bd30574390, type: 3}
   SpawnInterval: 3
   MinDistanceFromPlayer: 3
   MaxSpawnAttempts: 10
-  MaxEnemyCount: 10
+  MaxEnemyCount: 1
   m_AirSpawnMinHeight: 3
   m_AirSpawnMaxHeight: 7
   m_AirSpawnHorizontalRange: 12

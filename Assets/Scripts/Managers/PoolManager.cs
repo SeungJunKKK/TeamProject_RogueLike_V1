@@ -13,12 +13,9 @@ public class PoolManager : Singleton<PoolManager>
         }
 
         GameObject obj;
-
         if (m_Pools[prefab].Count > 0)
         {
             obj = m_Pools[prefab].Dequeue();
-
-            Debug.Log($"<color=orange>[PoolManager] 기존 객체 재사용: {obj.name}</color>");
         }
         else
         {
@@ -30,28 +27,12 @@ public class PoolManager : Singleton<PoolManager>
             }
 
             pooledObj.Init(prefab);
-
-            Debug.Log($"<color=yellow>[PoolManager] 새 객체 생성: {obj.name}</color>");
         }
 
 
         obj.transform.SetPositionAndRotation(pos, rot);
         obj.SetActive(true);
 
-        IPoolable poolable = obj.GetComponent<IPoolable>();
-
-        if (poolable == null)
-        {
-            Debug.LogError($"<color=red>[PoolManager] {obj.name}에서 IPoolable을 찾지 못했습니다!</color>");
-        }
-        else
-        {
-            Debug.Log($"<color=green>[PoolManager] OnSpawn 호출 직전: {obj.name}</color>");
-
-            poolable.OnSpawn();
-
-            Debug.Log($"<color=cyan>[PoolManager] OnSpawn 호출 완료: {obj.name}</color>");
-        }
         obj.GetComponent<IPoolable>()?.OnSpawn();
 
         return obj;
