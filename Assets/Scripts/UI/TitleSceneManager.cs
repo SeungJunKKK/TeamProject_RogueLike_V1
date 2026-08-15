@@ -29,7 +29,6 @@ public class TitleSceneManager : MonoBehaviour
         {
             titleMenu.OnStartSinglePlayerPressed += HandleStartSinglePlayer;
             titleMenu.OnFullscreenToggled += HandleFullscreenToggle;
-            titleMenu.OnVolumeChanged += HandleVolumeChange;
             titleMenu.OnQuitPressed += HandleQuit;
         }
     }
@@ -41,7 +40,6 @@ public class TitleSceneManager : MonoBehaviour
             titleMenu.OnStartSinglePlayerPressed -= HandleStartSinglePlayer;
             titleMenu.OnQuitPressed -= HandleQuit;
             titleMenu.OnFullscreenToggled -= HandleFullscreenToggle;
-            titleMenu.OnVolumeChanged -= HandleVolumeChange;
         }
     }
 
@@ -75,11 +73,5 @@ public class TitleSceneManager : MonoBehaviour
             // false- 창모드
             Screen.SetResolution(1280, 720, false);
         }
-    }
-
-    private void HandleVolumeChange(float volume) // 소리 줄이기 바
-    {
-        Debug.Log($"마스터 볼륨 변경: {volume}");
-        AudioListener.volume = volume;
     }
 }
