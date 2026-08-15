@@ -24,6 +24,7 @@ public class InteractableSpawner : MonoBehaviour
     [Header("텔레포터")]
     [SerializeField] private GameObject m_TeleporterPrefab;
     [SerializeField] private int m_TeleportCount = 1;
+    [SerializeField] private string m_nextStageName;
 
     [Header("배치 거리")]
     [SerializeField] private float m_MinDistance = 3f;
@@ -35,7 +36,11 @@ public class InteractableSpawner : MonoBehaviour
         // 텔레포터
         for (int i = 0; i < m_TeleportCount && valid.Count > 0; i++)
         {
-            PlaceRandom(m_TeleporterPrefab, valid);
+            GameObject tp = PlaceRandom(m_TeleporterPrefab, valid);
+            if (tp != null && tp.TryGetComponent(out Teleporter teleporter))
+            {
+                teleporter.SetNextStage(m_nextStageName);
+            }
         }
 
         // 무한 상자
@@ -58,17 +63,18 @@ public class InteractableSpawner : MonoBehaviour
         }
     }
 
-    private void PlaceRandom(GameObject prefab, List<Vector2> positions)
+    private GameObject PlaceRandom(GameObject prefab, List<Vector2> positions)
     {
         if (positions.Count == 0)  
         {
-            return;
+            return null;
         }
 
         int index = Random.Range(0, positions.Count);
         Vector2 pos = positions[index];
-        Instantiate(prefab, pos, Quaternion.identity);
+        GameObject instance = Instantiate(prefab, pos, Quaternion.identity);
         positions.RemoveAll(p => Vector2.Distance(p, pos) < m_MinDistance);
+        return instance;
     }
 
     private List<Vector2> ScanValidPositions()
