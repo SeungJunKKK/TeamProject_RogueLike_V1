@@ -25,7 +25,7 @@ public class RockGolemAI : EnemyBase
     [SerializeField] private GameObject m_ShockwavePrefab;
 
     [Header("Raycast Sensors")]
-    [SerializeField] private float m_CliffRayLength = 1.5f; // 💡 직관적인 이름으로 변경 (구 m_GroundRayLength)
+    [SerializeField] private float m_CliffRayLength = 1.5f;
     [SerializeField] private float m_WallRayLength = 0.3f;
     [SerializeField] private LayerMask m_GroundLayer;
 
@@ -105,6 +105,7 @@ public class RockGolemAI : EnemyBase
         }
     }
 
+
     private void ResetState()
     {
         gameObject.layer = LayerMask.NameToLayer("Enemy");
@@ -143,7 +144,7 @@ public class RockGolemAI : EnemyBase
 
     public void SpawnComplete()
     {
-        Debug.Log("[RockGolem] ★ SpawnComplete 호출됨");
+        Debug.Log("[RockGolem] SpawnComplete 호출됨");
 
         m_IsSpawnFinished = true;
         m_CurrentState = ERockGolemState.None;
@@ -154,6 +155,7 @@ public class RockGolemAI : EnemyBase
     private void Update()
     {
         if (!m_IsSpawnFinished || m_Target == null || m_CurrentHp <= 0f) return;
+
 
         m_DesiredVelocityX = 0f;
 
@@ -182,14 +184,11 @@ public class RockGolemAI : EnemyBase
 
         Vector2 cliffCheckPos = new Vector2(checkX, safeStartY);
 
-        // 💡 절벽 감지 레이캐스트 및 디버그 추가
         RaycastHit2D cliffHit = Physics2D.Raycast(cliffCheckPos, Vector2.down, m_CliffRayLength + 0.1f, m_GroundLayer);
         m_IsGroundAhead = (cliffHit.collider != null);
 
-        // 🟢 Scene 창에서 빨간색 선으로 절벽 센서가 어디를 찌르는지 시각화
         Debug.DrawRay(cliffCheckPos, Vector2.down * (m_CliffRayLength + 0.1f), m_IsGroundAhead ? Color.green : Color.red);
 
-        // 💬 바닥을 못 찾을 때 콘솔에 경고 로그 출력 (움직이지 않는 원인 파악용)
         if (!m_IsGroundAhead)
         {
             Debug.LogWarning("[RockGolemAI] 앞쪽 바닥을 인식하지 못했습니다! (절벽으로 판정되어 멈춤)");
@@ -267,6 +266,7 @@ public class RockGolemAI : EnemyBase
     {
         if (CanAttack())
         {
+            Debug.Log($"[RockGolem] 공격 전환 | Distance={Mathf.Abs(m_Target.position.x - transform.position.x):F2}");
             ChangeState(ERockGolemState.Attack);
             return;
         }
@@ -346,6 +346,14 @@ public class RockGolemAI : EnemyBase
         float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, m_Acceleration * Time.deltaTime);
 
         m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+
+   //     Debug.Log(
+   //    $"[RockGolem] 실제 이동 | " +
+   //    $"Desired={m_DesiredVelocityX:F2} | " +
+   //    $"Separation={separationX:F2} | " +
+   //    $"Final={finalTargetVelocityX:F2} | " +
+   //    $"VelocityX={m_Rigidbody.linearVelocity.x:F2}"
+   //);
     }
 
     private float CalculateSeparation()

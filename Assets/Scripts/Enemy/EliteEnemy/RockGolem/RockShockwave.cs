@@ -71,12 +71,23 @@ public class RockShockwave : MonoBehaviour
             return;
         }
 
-        // 데미지 대상 검사 (IDamageable 인터페이스 활용)
+        // 공격자 자신이나 다른 적들은 맞추지 않음 (공통 처리)
+        if (collision.gameObject == m_Attacker || collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) return;
+
+        // 💡 1. 플레이어 타격 검사 (팀원 코드 맞춤형 우회 처리 - 넉백 제외)
+        if (collision.TryGetComponent(out PlayerController player))
+        {
+            // 데미지는 float로 깔끔하게 전달
+            player.TakeDamage(m_Damage);
+
+            // 한 번 타격하면 즉시 소멸
+            ReturnToPool();
+            return;
+        }
+
+        // 💡 2. 데미지 대상 검사 (IDamageable 인터페이스 활용 - 플레이어가 아닌 다른 오브젝트들)
         if (collision.TryGetComponent(out IDamageable target))
         {
-            // 공격자 자신이나 다른 적들은 맞추지 않음
-            if (collision.gameObject == m_Attacker || collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) return;
-
             // DamageInfo 구조체 생성 및 데이터 주입
             DamageInfo info = new DamageInfo
             {

@@ -1672,7 +1672,7 @@ MonoBehaviour:
   - {fileID: 2105308625}
   Player: {fileID: 1424128609}
   EnemyPrefabs:
-  - {fileID: 2807211743726025604, guid: ef64ce6eee7476646bc431bd30574390, type: 3}
+  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
   SpawnInterval: 3
   MinDistanceFromPlayer: 3
   MaxSpawnAttempts: 10
