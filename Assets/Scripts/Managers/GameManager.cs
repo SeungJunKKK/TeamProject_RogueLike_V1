@@ -86,6 +86,7 @@ public class GameManager : Singleton<GameManager>
         Vector3 spawnPosition = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
         CurrentPlayer = Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
+        SaveLoadManager.Instance.CurrentRun.ResetRun(SelectedPlayerPrefab.name);
         Debug.Log($"<color=cyan>[GameManager] 플레이어 스폰 완료 위치: {spawnPosition}</color>");
     }
 
@@ -186,6 +187,8 @@ public class GameManager : Singleton<GameManager>
         CancelHitStop();
         ChangeState(EGameState.GameOver);
         Time.timeScale = 0.0f;
+
+        Object.FindAnyObjectByType<GameResultUI>(FindObjectsInactive.Include).DisplayResult(false);
     }
 
     private void OnMonsterDied(MonsterDiedEvent e)
