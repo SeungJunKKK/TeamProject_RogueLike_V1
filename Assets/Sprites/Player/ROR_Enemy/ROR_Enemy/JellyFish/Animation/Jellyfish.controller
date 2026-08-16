@@ -11,7 +11,6 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -1577983124837209892}
-    m_Position: {x: 200, y: 160, z: 0}
     m_Position: {x: 300, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1720353386519247368}
@@ -61,7 +60,6 @@ AnimatorController:
   m_PrefabAsset: {fileID: 0}
   m_Name: Jellyfish
   serializedVersion: 6
-  m_AnimatorParameters: []
   m_AnimatorParameters:
   - m_Name: Death
     m_Type: 9
@@ -116,7 +114,6 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Death

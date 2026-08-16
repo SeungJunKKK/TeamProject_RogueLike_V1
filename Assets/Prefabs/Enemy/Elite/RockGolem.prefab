@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2213924329140337995
+--- !u!1 &968693558974192264
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,43 +8,74 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2659843209743882261}
-  - component: {fileID: 6839582345600144916}
-  - component: {fileID: 3516739234862220751}
-  - component: {fileID: 6970170355931125071}
-  - component: {fileID: 2005801367737998319}
-  - component: {fileID: 3868171937270935512}
-  - component: {fileID: 1307967891149324325}
-  m_Layer: 9
-  m_Name: Lemurian
-  m_TagString: Enemy
+  - component: {fileID: 3614119596547283869}
+  m_Layer: 0
+  m_Name: ShockwaveSpawnPos
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2659843209743882261
+--- !u!4 &3614119596547283869
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
+  m_GameObject: {fileID: 968693558974192264}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1631, y: -2.3918, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
+  m_Father: {fileID: 3875893621453165587}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2807211743726025604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3875893621453165587}
+  - component: {fileID: 1355762757525270222}
+  - component: {fileID: 236840333433354993}
+  - component: {fileID: 5843563289062349866}
+  - component: {fileID: 2016049240816571302}
+  - component: {fileID: 3189653814624214216}
+  m_Layer: 0
+  m_Name: RockGolem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3875893621453165587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807211743726025604}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.149775, y: -6.465437, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3614119596547283869}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6839582345600144916
+--- !u!212 &1355762757525270222
 SpriteRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
+  m_GameObject: {fileID: 2807211743726025604}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -86,46 +117,51 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: aef44ecf652cdb04b906755f2fae5d61, type: 3}
+  m_Sprite: {fileID: 226105505343071863, guid: 299a713083b356e44bcb0fc6546a73bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.46875, y: 0.46875}
+  m_Size: {x: 0.2, y: 0.29}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!95 &3516739234862220751
-Animator:
-  serializedVersion: 7
+--- !u!50 &236840333433354993
+Rigidbody2D:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1090ac08d6d130a459bb8cfb89bffbd2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!61 &6970170355931125071
+  m_GameObject: {fileID: 2807211743726025604}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!61 &5843563289062349866
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
+  m_GameObject: {fileID: 2807211743726025604}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -153,90 +189,69 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.00013168156, y: 0.00073079765}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5, y: 1.5}
-    newSize: {x: 0.46875, y: 0.46875}
+    oldSize: {x: 0.2, y: 0.29}
+    newSize: {x: 0.2, y: 0.29}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 0.20561108, y: 0.29503474}
   m_EdgeRadius: 0
---- !u!50 &2005801367737998319
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!114 &3868171937270935512
+--- !u!114 &2016049240816571302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
+  m_GameObject: {fileID: 2807211743726025604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dbe7cc1294917844b6562927e96faed, type: 3}
+  m_Script: {fileID: 11500000, guid: f3ee68f29ff694e4c8d813b75314c483, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyAI
+  m_EditorClassIdentifier: Assembly-CSharp::RockGolemAI
   m_BaseHp: 80
   m_HpPerLevel: 24
   m_BaseGold: 2
-  Player: {fileID: 0}
-  m_BaseDamage: 12
-  MoveSpeed: 2
-  Acceleration: 15
-  JumpForce: 3.5
-  JumpCooldown: 0.5
-  AttackRange: 0.6
-  AttackWindup: 0.5
-  AttackCooldown: 0.5
-  AttackMoveRatio: 0
-  GroundRayLength: 1
-  WallRayLength: 0.5
-  GroundLayer:
+  m_BaseDamage: 34
+  m_MoveSpeed: 1.8
+  m_Acceleration: 6
+  m_AttackStartRange: 2
+  m_AttackCooldown: 3.5
+  m_ShockwaveSpawnPos: {fileID: 3614119596547283869}
+  m_ShockwavePrefab: {fileID: 8505469617465925257, guid: 323faceb321c2c24ab20e1232bdd1111, type: 3}
+  m_CliffRayLength: 1.5
+  m_WallRayLength: 0.3
+  m_GroundLayer:
     serializedVersion: 2
-    m_Bits: 8
     m_Bits: 16392
-  SeparationRadius: 0.8
-  SeparationForce: 2.5
-  EnemyLayer:
+  m_SeparationRadius: 1.2
+  m_SeparationForce: 1
+  m_EnemyLayer:
     serializedVersion: 2
     m_Bits: 512
---- !u!114 &1307967891149324325
-MonoBehaviour:
+--- !u!95 &3189653814624214216
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2213924329140337995}
+  m_GameObject: {fileID: 2807211743726025604}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a77a9af8ebeedd94693e36f6437289a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PooledObject
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29af033ede59a5b4991523c5745b0fcd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

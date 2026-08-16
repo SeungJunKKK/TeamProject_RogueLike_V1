@@ -16,7 +16,6 @@ public class PoolManager : Singleton<PoolManager>
         }
 
         GameObject obj;
-
         if (m_Pools[prefab].Count > 0)
         {
             obj = m_Pools[prefab].Dequeue();

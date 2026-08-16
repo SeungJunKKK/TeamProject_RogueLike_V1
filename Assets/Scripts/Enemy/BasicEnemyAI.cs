@@ -278,32 +278,37 @@ public class BasicEnemyAI : EnemyBase
             ChangeState(EnemyState.Chase);
             return;
         }
-
-        m_DesiredVelocityX = m_Direction * MoveSpeed * AttackMoveRatio;
-
-        if (m_StateTimer >= AttackWindup)
+        }
+    public void TriggerAttack()
+    {
+        if (Player != null && m_DistanceToPlayer <= AttackRange)
         {
-            if (Player != null && m_DistanceToPlayer <= AttackRange)
+            if (Player.TryGetComponent(out PlayerController playerController))
             {
-                if (Player.TryGetComponent(out IDamageable targetDamageable))
+                playerController.TakeDamage(m_Damage);
+            }
+            else if (Player.TryGetComponent(out IDamageable targetDamageable))
+            {
+                DamageInfo info = new DamageInfo
                 {
-                    DamageInfo info = new DamageInfo
-                    {
-                        Amount = m_Damage,
-                        HitPoint = Player.position,
-                        HitDirection = new Vector2(m_Direction, 0f),
-                        KnockbackForce = 0f,
-                        Attacker = gameObject,
-                        IsCrit = false,
-                        CanProc = false
-                    };
-                    targetDamageable.TakeDamage(info);
-                }
+                    Amount = m_Damage,
+                    HitPoint = Player.position,
+                    HitDirection = new Vector2(m_Direction, 0f),
+                    KnockbackForce = 0f,
+                    Attacker = gameObject,
+                    IsCrit = false,
+                    CanProc = false
+                };
+                targetDamageable.TakeDamage(info);
+            }
+        }
+    }
             }
 
-            m_AttackCooldownTimer = AttackCooldown;
-            ChangeState(EnemyState.Chase);
-        }
+    public void FinishAttack()
+    {
+        m_AttackCooldownTimer = AttackCooldown;
+        ChangeState(EnemyState.Chase);
     }
 
     protected virtual void JumpIfNeeded()
