@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8971656066643195291}
   - component: {fileID: 7028181631505580851}
   - component: {fileID: 859458796880906227}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Providence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -208,4 +208,20 @@ MonoBehaviour:
   m_BaseGold: 2
   Player: {fileID: 0}
   m_BaseDamage: 20
+  m_MoveSpeed: 4
+  m_Acceleration: 10
+  m_TooCloseRange: 1
+  m_OptimalRangeMax: 1
+  m_SlashCooldown: 3
+  m_SlashHitboxOffset: {x: 1.5, y: 0}
+  m_SlashHitboxSize: {x: 2, y: 2}
+  m_TargetLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_TrailRenderer: {fileID: 0}
+  m_TeleportThresholdDistance: 3
+  m_GroundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   m_CurrentState: 0
+  m_CombatState: 0
