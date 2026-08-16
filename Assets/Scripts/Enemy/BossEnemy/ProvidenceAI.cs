@@ -70,8 +70,17 @@ public class ProvidenceAI : EnemyBase
     public void ExitArenaForPhase2()
     {
         m_IsBattleStarted = false;
+
+        // 1. 진행 중인 모든 코루틴 강제 종료 (텔레포트 슬래시 등)
+        StopAllCoroutines();
+
+        // 2. 물리 상태 강제 초기화 및 복구
+        m_Rigidbody.linearVelocity = Vector2.zero;
+        m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+
         ChangeState(EProvidenceState.PhaseTransition);
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
+
         gameObject.SetActive(false);
     }
 
@@ -79,6 +88,10 @@ public class ProvidenceAI : EnemyBase
     {
         gameObject.SetActive(true);
         m_IsBattleStarted = true;
+
+        // 재등장 시 물리 상태 명시적 확인
+        m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
+
         ChangeCombatState(EProvidenceCombatState.Approach);
         ChangeState(EProvidenceState.Combat);
     }
