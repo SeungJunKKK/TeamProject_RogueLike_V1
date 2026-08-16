@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum EDustType
 {
@@ -84,6 +85,14 @@ public class PlayerController : MonoBehaviour
         OriginalLayer = gameObject.layer;
         Stats = GetComponent<PlayerStats>();
         m_inventory = GetComponent<PlayerInventory>();
+
+        //if (DifficultyManager.Instance.SelectedDifficulty == EGameDifficulty.Drizzle)
+        //{
+        //    // 이슬비 난이도일 경우 체력 50% 증가, 초당 재생량 증가
+        //    Stats.MaxHealth.AddModifier(new StatModifier(0.5f, StatModType.PercentAdd, "DrizzleBuff"));
+        //    Stats.HealthRegen.AddModifier(new StatModifier(2.0f, StatModType.Flat, "DrizzleBuff"));
+        //}
+
     }
 
     private void Start()
@@ -97,59 +106,16 @@ public class PlayerController : MonoBehaviour
         float verticalInput = Input.GetAxisRaw("Vertical");
 
         MovementInput = new Vector2(horizontalInput, verticalInput).normalized;
-        
         UpdateFacingDirection();
-
-        //if (MovementInput.x > 0)
-        //{
-        //    IsFacingRight = true;
-        //    //SpriteRendererComponent.flipX = false;
-        //    transform.rotation = Quaternion.Euler(0, 0, 0);
-        //}
-        //else if (MovementInput.x < 0)
-        //{
-        //    IsFacingRight = false;
-        //    //SpriteRendererComponent.flipX = true;
-        //    transform.rotation = Quaternion.Euler(0, 180, 0);
-        //}
         if (m_CurrentState != null)
         {
             m_CurrentState.Update();
         }
-
-
-        //===============================아이템 테스트===============================
-        //if (Input.GetKeyDown(KeyCode.I))
-        //{
-        //    EventBus.Publish(new ItemPickedUpEvent
-        //    {
-        //        ItemName = "군인의 주사기",
-        //        TargetStat = EStatType.AttackSpeed,
-        //        Modifier = new StatModifier(0.15f, StatModType.PercentAdd, "Syringe")
-        //    });
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.O))
-        //{
-        //    EventBus.Publish(new ItemPickedUpEvent
-        //    {
-        //        ItemName = "안경 메이커의 안경",
-        //        TargetStat = EStatType.CritChance,
-        //        Modifier = new StatModifier(0.10f, StatModType.Flat, "Glasses")
-        //    });
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    Stats.AddExp(50f);
-        //}
-
-
         ////===============================아이템 테스트===============================
         if (Input.GetKeyDown(KeyCode.UpArrow)) // 위 방향키 누를 때마다 확인
         { 
             Collider2D hit = CheckLadderUp();
-            Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
+            //Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
         }
     }
 
@@ -369,7 +335,7 @@ public class PlayerController : MonoBehaviour
     }
     public void EnableHitbox()
     {
-        Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
+        //Debug.Log("<color=cyan>[PlayerController] EnableHitbox 호출 - 공격 판정 ON</color>");
 
         if (MeleeCollider != null)
         {
@@ -413,17 +379,44 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
     /// <summary>
     /// 플레이어가 피해를 입었을 때 호출합니다.
     /// </summary>
-    public void TakeDamage(float incomingDamage)
+    public void TakeDamage(DamageInfo info)
     {
         if (m_CurrentState is PlayerDeathState)
         {
             return;
         }
 
-        float finalDamage = incomingDamage;
+        // ==========================================
+        //  방패 방어 모드 (전방 타격 무효화)
+        // ==========================================
+        if (IsDefending)
+        {
+            bool isAttackFromFront = (IsFacingRight && info.HitDirection.x < 0) ||
+                                     (!IsFacingRight && info.HitDirection.x > 0);
+
+            if (isAttackFromFront && !info.IsUnblockable)
+            {
+                Debug.Log($"<color=cyan>[방어 성공]</color> 방패로 데미지 {info.Amount:F1}를 막아냈습니다!");
+
+                EventBus.Publish<PlayerBlockSuccessEvent>(new PlayerBlockSuccessEvent
+                {
+                    BlockedAmount = info.Amount,
+                    HitPoint = transform.position + new Vector3(0, 1f, 0) 
+                });
+                // PlayAddressableSFX(m_ShieldBlockSound);
+                return; 
+            }
+        }
+
+        // ==========================================
+        // . 기존 피격 및 체력 차감 로직 (방어 실패 또는 일반 피격)
+        // ==========================================
+        float finalDamage = info.Amount; 
 
         if (m_inventory != null)
         {
@@ -433,7 +426,7 @@ public class PlayerController : MonoBehaviour
         if (Stats != null)
         {
             Stats.CurrentHealth -= finalDamage;
-            Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth); 
+            Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth);
 
             Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
 
@@ -442,6 +435,11 @@ public class PlayerController : MonoBehaviour
                 Die();
             }
         }
+    }
+
+    public void TakeDamage(float incomingDamage)
+    {
+        TakeDamage(new DamageInfo { Amount = incomingDamage, IsUnblockable = true });
     }
 
     /// <summary>

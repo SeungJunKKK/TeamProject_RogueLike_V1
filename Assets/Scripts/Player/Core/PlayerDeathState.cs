@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerDeathState : IState
 {
@@ -52,8 +51,6 @@ public class PlayerDeathState : IState
 
     private void ReturnToCharacterSelect()
     {
-        string targetSceneName = "PlayerSelectScene";
-        Debug.Log($"[Player] 씬 전환: {targetSceneName}으로 이동합니다.");
-        SceneManager.LoadScene(targetSceneName);
+        SceneLoader.Instance.LoadScene("PlayerSelectScene", false);
     }
 }

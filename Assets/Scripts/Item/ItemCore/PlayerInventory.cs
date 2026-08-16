@@ -10,6 +10,9 @@ public class PlayerInventory : MonoBehaviour
     public ItemData currentActiveItem;
     private float m_ActiveCooldownTimer = 0f;
 
+    [Header("UI Reference")]
+    [SerializeField] private UseItemSlotUI useItemSlotUI;
+    
     private PlayerController player;
     private PlayerStats stats;
 
@@ -26,6 +29,11 @@ public class PlayerInventory : MonoBehaviour
             m_ActiveCooldownTimer -= Time.deltaTime;
         }
 
+        if (useItemSlotUI != null && currentActiveItem != null)
+        {
+            useItemSlotUI.UpdateCooldown(m_ActiveCooldownTimer, currentActiveItem.cooldown);
+        }
+
         // 키보드 'E'를 누르면 액티브 아이템을 사용하도록 설정 (추후 원하는 키로 변경 가능 => 매핑 시스템 )
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -39,7 +47,13 @@ public class PlayerInventory : MonoBehaviour
         if (newItem.tier == ItemTier.Use)
         {
             currentActiveItem = newItem;
-            m_ActiveCooldownTimer = 0f; 
+            m_ActiveCooldownTimer = 0f;
+
+            if (useItemSlotUI != null)
+            {
+                useItemSlotUI.SetItem(newItem.itemIcon);
+            }
+
             Debug.Log($"[Inventory] 액티브 아이템 장착: {newItem.itemName}");
             return;
         }
@@ -49,7 +63,7 @@ public class PlayerInventory : MonoBehaviour
             if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
             {
                 passiveItems[newItem]++;
-                Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
+                //Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
             }
         }
         else
@@ -57,7 +71,7 @@ public class PlayerInventory : MonoBehaviour
             passiveItems.Add(newItem, 1);
             Debug.Log($"[Inventory] {newItem.itemName} 획득!");
         }
-
+        EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
         UpdatePassiveStats();
     }
 
@@ -82,6 +96,10 @@ public class PlayerInventory : MonoBehaviour
         if (currentActiveItem.OnUse(player))
         {
             m_ActiveCooldownTimer = currentActiveItem.cooldown;
+            if (useItemSlotUI != null && currentActiveItem is Item_ForeignFruit fruit) // 아이템 사용시 버프 UI 표시
+            {
+                useItemSlotUI.ShowHealBuff(fruit.buffDisplayDuration);
+            }
         }
     }
 
@@ -133,7 +151,7 @@ public class PlayerInventory : MonoBehaviour
     // 플레이어가 기본 공격을 했을 때 호출할 트리거
     public void OnBasicAttackTrigger()
     {
-        Debug.Log("<color=cyan>[디버그] 1. PlayerInventory의 OnBasicAttackTrigger가 정상 호출</color>");
+        //Debug.Log("<color=cyan>[디버그] 1. PlayerInventory의 OnBasicAttackTrigger가 정상 호출</color>");
         foreach (var pair in passiveItems)
         {
             pair.Key.OnBasicAttack(player, pair.Value);
@@ -147,6 +165,12 @@ public class PlayerInventory : MonoBehaviour
     public void ResetActiveCooldown()
     {
         m_ActiveCooldownTimer = 0f;
+
+        if (useItemSlotUI != null && currentActiveItem != null)
+        {
+            useItemSlotUI.UpdateCooldown(0f, currentActiveItem.cooldown);
+        }
+
         Debug.Log("<color=cyan>[시스템] 액티브 아이템 쿨타임이 초기화되었습니다!</color>");
     }
 

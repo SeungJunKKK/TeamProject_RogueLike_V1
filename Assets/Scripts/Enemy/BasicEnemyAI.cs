@@ -271,9 +271,14 @@ public class BasicEnemyAI : EnemyBase
 
     protected virtual void UpdateAttack()
     {
-        m_DesiredVelocityX = m_Direction * MoveSpeed * AttackMoveRatio;
-    }
+        m_StateTimer += Time.deltaTime;
 
+        if (m_DistanceToPlayer > AttackRange)
+        {
+            ChangeState(EnemyState.Chase);
+            return;
+        }
+        }
     public void TriggerAttack()
     {
         if (Player != null && m_DistanceToPlayer <= AttackRange)
@@ -298,6 +303,7 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
+            }
 
     public void FinishAttack()
     {

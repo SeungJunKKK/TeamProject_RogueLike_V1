@@ -118,3 +118,10 @@ public struct InteractableInRangeEvent
 }
 
 public struct InteractableOutOfRangeEvent { }
+
+
+public struct PlayerBlockSuccessEvent
+{
+    public float BlockedAmount; // 막아낸 데미지 양 (숫자를 띄우고 싶을 때 대비)
+    public Vector2 HitPoint;    // 텍스트를 띄울 위치
+}

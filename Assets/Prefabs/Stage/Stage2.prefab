@@ -436,6 +436,18 @@ PrefabInstance:
       value: InteractableSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_nextStageName
+      value: Boss_Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_InfiniteChestPrefab
+      value: 
+      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
       propertyPath: 'm_GroundTilemaps.Array.data[0]'
       value: 
       objectReference: {fileID: 6274052673954341963}
@@ -443,6 +455,30 @@ PrefabInstance:
       propertyPath: 'm_GroundTilemaps.Array.data[1]'
       value: 
       objectReference: {fileID: 3820456800336121170}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[0].count
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[1].count
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[2].count
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 5625729454700561339, guid: 34c1c49428aa7f44c846e729a75048a8, type: 3}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 5625729454700561339, guid: e0e209d20448b6046845f2465a0d60b3, type: 3}
+    - target: {fileID: 3046387185607300092, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
+      propertyPath: m_ChestTypes.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 5625729454700561339, guid: 0f06ece9a11e34d4586a6be29c116e8c, type: 3}
     - target: {fileID: 4222792030848589313, guid: fdf0fa4882b96474094837fdd5365ebf, type: 3}
       propertyPath: m_LocalPosition.x
       value: -25.32738

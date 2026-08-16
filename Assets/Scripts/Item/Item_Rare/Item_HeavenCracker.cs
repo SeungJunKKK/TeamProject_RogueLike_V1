@@ -8,7 +8,8 @@ public class Item_HeavenCracker : ItemData
     public float damageMultiplier = 1.0f; // 100% 피해
     public float drillRange = 10f; // 드릴 관통 사거리
     public float drillThickness = 1.5f; // 드릴 타격 범위 두께
-    public string drillVfxAddress = "VFX_HeavenCrackerDrill";
+    [Header("VFX Settings")]
+    public GameObject drillVfxPrefab;
     [Header("Sound Settings")]
     public AudioClip drillSound;
 
@@ -32,12 +33,12 @@ public class Item_HeavenCracker : ItemData
         int requiredAttacks = Mathf.Max(1, baseRequiredAttacks - (stackCount - 1));
 
         int currentCount = tracker.IncrementAndGetCount();
-        Debug.Log($"<color=orange>[디버그] 3. 천공 분쇄기 계산 -> 현재: {currentCount}타 / 요구치: {requiredAttacks}타 (현재 {stackCount}스택)</color>");
+        //Debug.Log($"<color=orange>[디버그] 3. 천공 분쇄기 계산 -> 현재: {currentCount}타 / 요구치: {requiredAttacks}타 (현재 {stackCount}스택)</color>");
         // 발동 조건 달성 시
         if (currentCount >= requiredAttacks)
         {
             tracker.ResetCount(); // 카운트 초기화
-            Debug.Log("<color=red>[디버그] 4. 드릴 발사(FireDrill) 함수 호출!</color>");
+            //Debug.Log("<color=red>[디버그] 4. 드릴 발사(FireDrill) 함수 호출!</color>");
             if (drillSound != null)
             {
                 SoundManager.Instance.PlaySFX(drillSound);
@@ -48,7 +49,7 @@ public class Item_HeavenCracker : ItemData
 
     private void FireDrill(PlayerController player)
     {
-        Vector2 origin = player.transform.position;
+        Vector2 origin = player.MuzzlePos.position;
         Vector2 direction = player.IsFacingRight ? Vector2.right : Vector2.left;
 
         //중심점 보정:
@@ -58,8 +59,6 @@ public class Item_HeavenCracker : ItemData
         // ===== 디버그: 실제 판정 박스를 Scene 뷰에 1초간 그림 =====
         DrawDebugBox(boxCenter, boxSize, Color.red, 1f);
 
-
-
         RaycastHit2D[] hits = Physics2D.BoxCastAll(boxCenter, boxSize, 0f, Vector2.zero, 0f, LayerMask.GetMask("Enemy"));
 
         PlayerStats stats = player.GetComponent<PlayerStats>();
@@ -67,7 +66,7 @@ public class Item_HeavenCracker : ItemData
 
         foreach (var hit in hits)
         {
-            Debug.Log($"<color=cyan>[디버그] 판정됨: {hit.collider.name} / pos: {hit.collider.bounds.center} / layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}</color>");
+            //Debug.Log($"<color=cyan>[디버그] 판정됨: {hit.collider.name} / pos: {hit.collider.bounds.center} / layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}</color>");
 
             if (hit.collider.TryGetComponent(out EnemyBase enemy))
             {
@@ -86,24 +85,20 @@ public class Item_HeavenCracker : ItemData
             }
         }
 
-        Debug.Log($"<color=yellow>[천공 분쇄기 발동!] {hits.Length}명의 적을 관통했습니다.</color>");
+        //Debug.Log($"<color=yellow>[천공 분쇄기 발동!] {hits.Length}명의 적을 관통했습니다.</color>");
 
-        if (!string.IsNullOrEmpty(drillVfxAddress))
+        if (drillVfxPrefab != null)
         {
-            AddressableManager.Instance.LoadAssetAsync<GameObject>(drillVfxAddress, (prefab) =>
-            {
-                if (prefab != null)
-                {
-                    GameObject vfx = Instantiate(prefab, origin, player.transform.rotation);
+            GameObject vfx = PoolManager.Instance.Get(drillVfxPrefab, origin, player.transform.rotation);
 
-                    //if (!player.IsFacingRight)
-                    //{
-                    //    vfx.transform.localScale = new Vector3(-1, 1, 1);
-                    //}
-
-                    Destroy(vfx, 0.5f); 
-                }
-            });
+            //if (!player.IsFacingRight)
+            //{
+            //    vfx.transform.localScale = new Vector3(-1, 1, 1);
+            //}
+            //else
+            //{
+            //    vfx.transform.localScale = new Vector3(1, 1, 1);
+            //}
         }
     }
 

@@ -21,7 +21,7 @@ public class PlayerDashState : IState
         m_DashDirection = new Vector2(dirX, 0f);
 
         m_Player.IsInvincible = true;
-        Debug.Log("시스템: 플레이어 대시 상태 진입. 무적 상태 시작.");
+        //Debug.Log("시스템: 플레이어 대시 상태 진입. 무적 상태 시작.");
         m_Player.gameObject.layer = LayerMask.NameToLayer("PlayerDodge");
         m_Player.CooldownManager.UseSkill(SkillType.Utility_C);
 
@@ -60,7 +60,7 @@ public class PlayerDashState : IState
     {
         m_Player.IsInvincible = false;
         m_Player.gameObject.layer = m_Player.OriginalLayer;
-        Debug.Log("시스템: 플레이어 대시 상태 종료. 무적 상태 해제.");
+       // Debug.Log("시스템: 플레이어 대시 상태 종료. 무적 상태 해제.");
         m_Player.Rb.gravityScale = 3f;
         m_Player.Rb.linearVelocity = Vector2.zero;
     }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class CharacterSelectManager : MonoBehaviour
 {
@@ -18,6 +17,14 @@ public class CharacterSelectManager : MonoBehaviour
     public TextMeshProUGUI[] SkillNames;
     public TextMeshProUGUI[] SkillDescs;
 
+    [Header("Difficulty UI")]
+    public Image[] DifficultyImages;           // 0: 이슬비, 1: 폭풍우, 2: 몬순 버튼의 Image 컴포넌트
+    public Sprite[] NormalDifficultySprites;   // 비활성화 회색 스프라이트
+    public Sprite[] SelectedDifficultySprites; // 활성화 컬러 스프라이트 
+
+    private EGameDifficulty m_SelectedDifficulty = EGameDifficulty.Drizzle; 
+
+
     [Header("Game Flow")]
     public Button StartButton;
     private SurvivorData m_SelectedSurvivor;
@@ -32,6 +39,28 @@ public class CharacterSelectManager : MonoBehaviour
         if (LeftInfoPanel != null)
         {
             LeftInfoPanel.SetActive(false);
+        }
+        SetDifficultyUI(0);
+    }
+
+    public void OnDifficultyButtonClicked(int difficultyIndex)
+    {
+        m_SelectedDifficulty = (EGameDifficulty)difficultyIndex;
+        SetDifficultyUI(difficultyIndex);
+    }
+
+    private void SetDifficultyUI(int selectedIndex)
+    {
+        for (int i = 0; i < DifficultyImages.Length; i++)
+        {
+            if (i == selectedIndex)
+            {
+                DifficultyImages[i].sprite = SelectedDifficultySprites[i];
+            }
+            else
+            {
+                DifficultyImages[i].sprite = NormalDifficultySprites[i];
+            }
         }
     }
 
@@ -67,8 +96,13 @@ public class CharacterSelectManager : MonoBehaviour
     {
         if (m_SelectedSurvivor != null)
         {
+            if (DifficultyManager.Instance != null)
+            {
+                DifficultyManager.Instance.SetGameDifficulty(m_SelectedDifficulty);
+            }
+
             GameManager.Instance.SetSelectedPlayer(m_SelectedSurvivor.PlayerPrefab);
-            SceneManager.LoadScene("Stage1_Scene"); // 실제 게임 씬 이름으로 변경
+            SceneLoader.Instance.LoadScene("Stage1_Scene", true, "Shared"); // 실제 게임 씬 이름으로 변경
         }
     }
 }

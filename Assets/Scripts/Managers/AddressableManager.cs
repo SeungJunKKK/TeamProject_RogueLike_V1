@@ -139,4 +139,27 @@ public class AddressableManager : Singleton<AddressableManager>
         Debug.Log("[AddressableManager] 모든 에셋 해제 완료");
     }
     #endregion
+
+    /// <summary>
+    /// 라벨을 이용해 관련된 모든 에셋을 미리 로드하고 캐시에 저장. 이후 UnloadAllAssets() 호출 시 해제됨
+    /// </summary>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    public AsyncOperationHandle<IList<UnityEngine.Object>> PreloadLabelAsync(string label)
+    {
+        var handle = Addressables.LoadAssetsAsync<UnityEngine.Object>(label, null);
+        handle.Completed += (op) =>
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                _loadedAssets[label] = op;   // 라벨 키로 보관 → UnloadAllAssets가 해제
+            }
+            else
+            {
+                Debug.LogError($"[AddressableManager] 라벨 프리로드 실패: {label}");
+            }
+        };
+
+        return handle;
+    }
 }

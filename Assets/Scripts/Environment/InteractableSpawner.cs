@@ -1,70 +1,80 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 
 public class InteractableSpawner : MonoBehaviour
 {
+    [System.Serializable]
+    public struct ChestSpawnInfo
+    {
+        public GameObject prefab;
+        public int count;
+    }
+
     [SerializeField]
     private Tilemap[] m_GroundTilemaps;
 
-    [Header("배치 설정")]
-    [SerializeField]
-    private int m_ChestCount = 12;
-    [SerializeField]
-    private int m_TeleportCount = 1;
-    [SerializeField]
-    private int m_InfiniteChestCount = 1;
+    [Header("등급 상자")]
+    [SerializeField] private ChestSpawnInfo[] m_ChestTypes;
 
-    [Header("프리팹 연결")]
-    [SerializeField]
-    private GameObject m_TeleporterPrefab;
-    [SerializeField]
-    private GameObject m_ChestPrefab;
-    [SerializeField]
-    private GameObject m_InfiniteChestPrefab;
+    [Header("무한 상자")]
+    [SerializeField] private GameObject m_InfiniteChestPrefab;
+    [SerializeField] private int m_InfiniteChestCount = 1;
 
-    [SerializeField]
-    private float m_MinDistance = 3f;
+    [Header("텔레포터")]
+    [SerializeField] private GameObject m_TeleporterPrefab;
+    [SerializeField] private int m_TeleportCount = 1;
+    [SerializeField] private string m_nextStageName;
+
+    [Header("배치 거리")]
+    [SerializeField] private float m_MinDistance = 3f;
 
     private void Start()
     {
         List<Vector2> valid = ScanValidPositions();
 
-        if (valid.Count <  m_ChestCount + m_TeleportCount)
+        // 텔레포터
+        for (int i = 0; i < m_TeleportCount && valid.Count > 0; i++)
         {
-            Debug.LogWarning($"[InteractableSpawner] 배치 공간 부족 " +
-                $"(필요: {m_ChestCount + m_TeleportCount}, 있음: {valid.Count})");
-        }
-
-        if (m_TeleportCount > 0)
-        {
-            PlaceRandom(m_TeleporterPrefab, valid);
-        }
-
-        if (m_InfiniteChestCount > 0)
-        {
-            for (int i = 0; i < m_InfiniteChestCount && valid.Count > 0; ++i)
+            GameObject tp = PlaceRandom(m_TeleporterPrefab, valid);
+            if (tp != null && tp.TryGetComponent(out Teleporter teleporter))
             {
-                PlaceRandom(m_InfiniteChestPrefab, valid);
+                teleporter.SetNextStage(m_nextStageName);
             }
         }
 
-        if (m_ChestCount > 0)
+        // 무한 상자
+        for (int i = 0; i < m_InfiniteChestCount && valid.Count > 0; i++)
         {
-            for (int i = 0; i < m_ChestCount && valid.Count > 0; ++i)
+            PlaceRandom(m_InfiniteChestPrefab, valid);
+        }
+
+        // 등급상자
+        foreach (var info in m_ChestTypes)
+        {
+            if (info.prefab == null)
             {
-                PlaceRandom(m_ChestPrefab, valid);
+                continue;
+            }
+            for (int i = 0; i < info.count && valid.Count > 0; i++)
+            {
+                PlaceRandom(info.prefab, valid);
             }
         }
     }
 
-    private void PlaceRandom(GameObject prefab, List<Vector2> positions)
+    private GameObject PlaceRandom(GameObject prefab, List<Vector2> positions)
     {
+        if (positions.Count == 0)  
+        {
+            return null;
+        }
+
         int index = Random.Range(0, positions.Count);
         Vector2 pos = positions[index];
-        Instantiate(prefab, pos, Quaternion.identity);
+        GameObject instance = Instantiate(prefab, pos, Quaternion.identity);
         positions.RemoveAll(p => Vector2.Distance(p, pos) < m_MinDistance);
+        return instance;
     }
 
     private List<Vector2> ScanValidPositions()

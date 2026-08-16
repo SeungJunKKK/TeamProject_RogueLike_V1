@@ -4,8 +4,15 @@ using UnityEngine.Audio;
 
 public class SoundManager : Singleton<SoundManager>
 {
-    private const string k_SFXVolumeKey = "SFXVolume";
+    [SerializeField] private AudioMixer m_Mixer;
+    private const string k_MasterParam = "MasterVolume";
+    private const string k_BGMParam = "BGMVolume";
+    private const string k_SFXParam = "SFXVolume";
+
+    // playerprefs 용
+    private const string k_MasterVolumeKey = "MasterVolume";
     private const string k_BGMVolumeKey = "BGMVolume";
+    private const string k_SFXVolumeKey = "SFXVolume";
     private const float k_FadeDuration = 1.0f;
     private Coroutine m_PlaylistCoroutine;
 
@@ -25,6 +32,13 @@ public class SoundManager : Singleton<SoundManager>
     [Header("Audio Mixers")]
     public AudioMixerGroup bgmMixerGroup;
     public AudioMixerGroup sfxMixerGroup;
+
+    private void Start()
+    {
+        SetMasterVolume(PlayerPrefs.GetFloat(k_MasterVolumeKey, 1f));
+        SetBGMVolume(PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f));
+        SetSFXVolume(PlayerPrefs.GetFloat(k_SFXVolumeKey, 1f));
+    }
 
     protected override void Awake()
     {
@@ -49,9 +63,6 @@ public class SoundManager : Singleton<SoundManager>
         {
             m_BGMSource.outputAudioMixerGroup = bgmMixerGroup;
         }
-
-        m_SFXSource.volume = PlayerPrefs.GetFloat(k_SFXVolumeKey, 1f);
-        m_BGMSource.volume = PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f);
 
         EventBus.Subscribe<SceneLoadStartedEvent>(OnSceneLoadStarted);
         EventBus.Subscribe<GameStateChangedEvent>(OnGameStateChanged);
@@ -164,18 +175,16 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-    public void SetSFXVolume(float volume)
-    {
-        volume = Mathf.Clamp01(volume);
-        m_SFXSource.volume = volume;
-        PlayerPrefs.SetFloat(k_SFXVolumeKey, volume);
-    }
+    public void SetMasterVolume(float volume)   => ApplyVolume(k_MasterParam, k_MasterVolumeKey, volume);
+    public void SetSFXVolume(float volume)      => ApplyVolume(k_SFXParam, k_SFXVolumeKey, volume);
+    public void SetBGMVolume(float volume)      => ApplyVolume(k_BGMParam, k_BGMVolumeKey, volume);
 
-    public void SetBGMVolume(float volume)
+    private void ApplyVolume(string param, string prefsKey, float linear)
     {
-        volume = Mathf.Clamp01(volume);
-        m_BGMSource.volume = volume;
-        PlayerPrefs.SetFloat(k_BGMVolumeKey, volume);
+        linear = Mathf.Clamp01(linear);
+        float dB = (linear <= 0.0001f) ? -80f : Mathf.Log10(linear) * 20f; // 0 -> -무한대 방지
+        m_Mixer.SetFloat(param, dB);
+        PlayerPrefs.SetFloat(prefsKey, linear);
     }
 
     private void OnSceneLoadStarted(SceneLoadStartedEvent e)
@@ -197,7 +206,7 @@ public class SoundManager : Singleton<SoundManager>
         }
 
         m_BGMSource.Stop();
-        m_BGMSource.volume = PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f);  // 다음 BGM을 위해 볼륨을 원래대로 복원
+        m_BGMSource.volume = 1f;  // 다음 BGM을 위해 볼륨을 원래대로 복원
         m_FadeOutCoroutine = null;
     }
 
@@ -210,6 +219,6 @@ public class SoundManager : Singleton<SoundManager>
 
         StopCoroutine(m_FadeOutCoroutine);
         m_FadeOutCoroutine = null;
-        m_BGMSource.volume = PlayerPrefs.GetFloat(k_BGMVolumeKey, 1f); // 볼륨을 원래대로 복원
+        m_BGMSource.volume = 1f; // 볼륨을 원래대로 복원
     }
 }

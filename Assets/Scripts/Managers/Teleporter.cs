@@ -38,13 +38,18 @@ public class Teleporter : MonoBehaviour, IInteractable
             {
                 SoundManager.Instance.PlaySFX(m_TeleportOutSound);
             }
-            SceneLoader.Instance.LoadScene(m_NextStageName);
+            SceneLoader.Instance.LoadScene(m_NextStageName, true, "Shared");
         }
     }
 
     public string GetPromptText()
     {
         return State switch { ETeleporterState.Idle => "Activate [Up]", ETeleporterState.Cleared => "Next Stage [Up]", _ => "" };
+    }
+
+    public void SetNextStage(string nextStageName)
+    {
+        m_NextStageName = nextStageName;
     }
 
     private void Awake()

@@ -11,6 +11,8 @@ public struct DamageInfo
     public bool IsCrit;            // 크리티컬 여부 — 플로팅 텍스트 연출 분기용
     public bool CanProc;           // 온힛 아이템 발동 가능 여부 (RoR1의 Active/Inactive 구분)
                                    // 플레이어 직접 공격 = true / 아이템이 발동시킨 공격 = false (무한 연쇄 방지)
+
+    public bool IsUnblockable;
 }
 
 public interface IDamageable 
