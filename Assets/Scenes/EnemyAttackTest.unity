@@ -1826,6 +1826,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Testmanagers
       objectReference: {fileID: 0}
+    - target: {fileID: 5614509464661613285, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
