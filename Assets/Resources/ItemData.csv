@@ -1,0 +1,4 @@
+ID,Name,Description,Tier
+Item_Syringe,SoldiersSyringe,Increases attack speed by 15% (+15% per stack),0
+Item_PaulsGoatHoof,PaulsGoatHoof,Increases movement speed by 20% (+20% per stack),0
+Item_MysteriousVial,MysteriousVial,Increases health regeneration by 1.2 hp/s (+1.2 hp/s per stack),0

@@ -57,7 +57,7 @@ public class PlayerInventory : MonoBehaviour
             passiveItems.Add(newItem, 1);
             Debug.Log($"[Inventory] {newItem.itemName} 획득!");
         }
-
+        EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
         UpdatePassiveStats();
     }
 

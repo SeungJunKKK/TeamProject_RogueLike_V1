@@ -56,9 +56,6 @@ public class EnforcerGrenadeState : IState
 
     private void ThrowGrenade()
     {
-
-      
-
         Vector2 spawnPos = m_Player.MuzzlePos != null
             ? (Vector2)m_Player.MuzzlePos.position
             : (Vector2)m_Player.transform.position + new Vector2(m_Player.IsFacingRight ? 0.5f : -0.5f, 0.2f);
