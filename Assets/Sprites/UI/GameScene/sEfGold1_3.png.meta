@@ -1,28 +1,10 @@
 fileFormatVersion: 2
-guid: 044bb80e1bc2af843aa648f66504fd4d
+guid: 89b2ec1507327fd44a8902ab0f84d028
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4653647174715963860
-    second: sEfLevelUp2_kr_1_0
-  - first:
-      213: 981235998084916606
-    second: sEfLevelUp2_kr_1_1
-  - first:
-      213: -5433850870188298051
-    second: sEfLevelUp2_kr_1_2
-  - first:
-      213: 1468973027072216706
-    second: sEfLevelUp2_kr_1_3
-  - first:
-      213: -4845426992623101157
-    second: sEfLevelUp2_kr_1_4
-  - first:
-      213: 4798801203826509715
-    second: sEfLevelUp2_kr_1_5
-  - first:
-      213: 7130077896332728014
-    second: sEfLevelUp2_kr_1_6
+      213: -8446841388349744356
+    second: sEfGold1_3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -66,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -93,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -118,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_0
+      name: sEfGold1_3_0
       rect:
         serializedVersion: 2
-        x: 50
+        x: 0
         y: 0
-        width: 112
-        height: 23
+        width: 4
+        height: 4
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4d9f1f60373159040800000000000000
-      internalID: 4653647174715963860
+      spriteID: c1b9855b28ac6ca80800000000000000
+      internalID: -8446841388349744356
       vertices: []
       indices: 
       edges: []
@@ -143,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -153,13 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sEfLevelUp2_kr_1_0: 4653647174715963860
-      sEfLevelUp2_kr_1_1: 981235998084916606
-      sEfLevelUp2_kr_1_2: -5433850870188298051
-      sEfLevelUp2_kr_1_3: 1468973027072216706
-      sEfLevelUp2_kr_1_4: -4845426992623101157
-      sEfLevelUp2_kr_1_5: 4798801203826509715
-      sEfLevelUp2_kr_1_6: 7130077896332728014
+      sEfGold1_3_0: -8446841388349744356
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
