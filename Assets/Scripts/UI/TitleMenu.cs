@@ -25,14 +25,12 @@ public class TitleMenu : MonoBehaviour
     [Header("Options Popup UI")]
     [SerializeField] private GameObject optionsPopup;
     [SerializeField] private Toggle fullscreenToggle;
-    [SerializeField] private Slider volumeSlider;
     [SerializeField] private Button backButton;
 
     public event Action OnStartSinglePlayerPressed;
     //public event Action OnOptionsPressed;
     public event Action OnQuitPressed;
     public event Action<bool> OnFullscreenToggled;
-    public event Action<float> OnVolumeChanged;
 
     private void Awake()
     {
@@ -67,9 +65,6 @@ public class TitleMenu : MonoBehaviour
         // 화면 크기 조정 및 소리 설정
         if (fullscreenToggle != null)
             fullscreenToggle.onValueChanged.AddListener((isOn) => OnFullscreenToggled?.Invoke(isOn));
-
-        if (volumeSlider != null)
-            volumeSlider.onValueChanged.AddListener((value) => OnVolumeChanged?.Invoke(value));
     }
 
     private void Start() // 현재 설정값으로 UI 업데이트
@@ -77,8 +72,6 @@ public class TitleMenu : MonoBehaviour
         if (fullscreenToggle != null)
             fullscreenToggle.isOn = Screen.fullScreen;
 
-        if (volumeSlider != null)
-            volumeSlider.value = AudioListener.volume;
     }
 
     public void SetBackgroundImage(Sprite sprite)

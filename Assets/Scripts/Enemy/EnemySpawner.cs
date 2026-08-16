@@ -37,6 +37,8 @@ public class EnemySpawner : MonoBehaviour
     private readonly Collider2D[] m_OverlapBuffer =
         new Collider2D[1];
 
+    private bool m_SpawningEnabled = true;
+
     public int ActiveEnemyCount => m_ActiveEnemies.Count;
 
     private void Awake()
@@ -48,6 +50,8 @@ public class EnemySpawner : MonoBehaviour
         }
 
         Instance = this;
+
+        EventBus.Subscribe<TeleporterStateChangedEvent>(OnTeleporterState);
     }
 
     private void OnDestroy()
@@ -55,6 +59,7 @@ public class EnemySpawner : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
+            EventBus.Unsubscribe<TeleporterStateChangedEvent>(OnTeleporterState);
         }
     }
 
@@ -188,7 +193,7 @@ public class EnemySpawner : MonoBehaviour
 
             yield return new WaitForSeconds(SpawnInterval);
 
-            if (m_ActiveEnemies.Count < MaxEnemyCount)
+            if (m_SpawningEnabled && m_ActiveEnemies.Count < MaxEnemyCount)
             {
                 SpawnEnemy();
             }
@@ -356,5 +361,10 @@ public class EnemySpawner : MonoBehaviour
                 new Vector3(0.5f, 0.5f, 0.5f)
             );
         }
+    }
+
+    private void OnTeleporterState(TeleporterStateChangedEvent e)
+    {
+        m_SpawningEnabled = (e.State == ETeleporterState.Idle) || e.State == ETeleporterState.Charging;
     }
 }

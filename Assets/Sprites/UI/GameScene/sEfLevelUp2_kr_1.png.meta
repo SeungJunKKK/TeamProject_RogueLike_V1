@@ -55,7 +55,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -93,7 +93,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -121,10 +121,10 @@ TextureImporter:
       name: sEfLevelUp2_kr_1_0
       rect:
         serializedVersion: 2
-        x: 51
+        x: 50
         y: 0
-        width: 36
-        height: 21
+        width: 112
+        height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,138 +135,6 @@ TextureImporter:
       bones: []
       spriteID: 4d9f1f60373159040800000000000000
       internalID: 4653647174715963860
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_1
-      rect:
-        serializedVersion: 2
-        x: 86
-        y: 0
-        width: 6
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e756da201fc0e9d00800000000000000
-      internalID: 981235998084916606
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_2
-      rect:
-        serializedVersion: 2
-        x: 92
-        y: 0
-        width: 17
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: db0baff5c651794b0800000000000000
-      internalID: -5433850870188298051
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_3
-      rect:
-        serializedVersion: 2
-        x: 98
-        y: 0
-        width: 17
-        height: 20
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 28e05476f27d26410800000000000000
-      internalID: 1468973027072216706
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_4
-      rect:
-        serializedVersion: 2
-        x: 118
-        y: 9
-        width: 11
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b1b5c9782d591ccb0800000000000000
-      internalID: -4845426992623101157
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_5
-      rect:
-        serializedVersion: 2
-        x: 121
-        y: 0
-        width: 14
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 397cbcd0544c89240800000000000000
-      internalID: 4798801203826509715
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_6
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 3
-        width: 21
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ec6d6c7e11023f260800000000000000
-      internalID: 7130077896332728014
       vertices: []
       indices: 
       edges: []

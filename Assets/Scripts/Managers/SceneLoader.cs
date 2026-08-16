@@ -10,32 +10,48 @@ public class SceneLoader : Singleton<SceneLoader>
     [SerializeField]
     private Slider m_Slider;
 
+    [SerializeField] private float m_FillSpeed = 1.5f;
+
     private bool m_IsLoading;
 
-    public void LoadScene(string scene)
+    public void LoadScene(string scene, bool showLoading = true, string preloadLabel = null)
     {
         if (m_IsLoading)
         {
             return;
         }
 
-        StartCoroutine(LoadRoutine(scene));
+        StartCoroutine(LoadRoutine(scene, showLoading, preloadLabel));
     }
 
-    private IEnumerator LoadRoutine(string scene)
+    private IEnumerator LoadRoutine(string scene, bool showLoading, string preloadLabel)
     {
         m_IsLoading = true;
-        m_LoadingScreen.SetActive(true);
+        ShowLoadingScreen(showLoading);
         EventBus.Publish(new SceneLoadStartedEvent { SceneName = scene });
 
         PoolManager.Instance.ClearAll();
+        AddressableManager.Instance.UnloadAllAssets();
+
+        if (!string.IsNullOrEmpty(preloadLabel))
+        {
+            var preload = AddressableManager.Instance.PreloadLabelAsync(preloadLabel);
+            while (!preload.IsDone)
+            {
+                if (showLoading && m_Slider != null)
+                {
+                    m_Slider.value = preload.PercentComplete * 0.5f;
+                }
+                yield return null;
+            }
+        }
 
         AsyncOperation op = SceneManager.LoadSceneAsync(scene);
 
         if (op == null)
         {
             Debug.LogError($"[SceneLoader] Failed to load scene: {scene}");
-            m_LoadingScreen.SetActive(false);
+            ShowLoadingScreen(false);
             m_IsLoading = false;
             yield break;
         }
@@ -46,19 +62,37 @@ public class SceneLoader : Singleton<SceneLoader>
 
         while (!op.isDone)
         {
-            m_Slider.value = Mathf.Clamp01(op.progress / 0.9f);
+            float target = (op.progress < 0.9f)
+                            ? 0.5f + (op.progress / 0.9f) * 0.5f
+                            : 1f;
 
-            if (op.progress >= 0.9f)
+            if (showLoading && m_Slider != null)
             {
-                op.allowSceneActivation = true;
+                m_Slider.value = Mathf.MoveTowards(m_Slider.value, target, Time.unscaledDeltaTime * m_FillSpeed);
+
+                if (op.progress >= 0.9f && m_Slider.value >= 0.999f)
+                {
+                    op.allowSceneActivation = true;
+                }
+            }
+            else if (op.progress >= 0.9f)
+            {
+                op.allowSceneActivation = true;   // 로딩화면 없으면 즉시
             }
 
             yield return null;
         }
 
         EventBus.Publish(new SceneLoadCompletedEvent { SceneName = scene });
-        m_LoadingScreen.SetActive(false);
+        ShowLoadingScreen(false);
         m_IsLoading = false;
     }
 
+    private void ShowLoadingScreen(bool on)
+    {
+        if (m_LoadingScreen != null)
+        {
+            m_LoadingScreen.SetActive(on);
+        }
+    }
 }

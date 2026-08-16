@@ -32,10 +32,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5252005386088881366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8724129230604456639
 CanvasRenderer:
@@ -417,6 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bdfc279114ebff4e943544f40925ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  m_Mixer: {fileID: 24100000, guid: 03d638c2a2d56fb449f34f9230bea2cb, type: 2}
   DifficultyUpSound: {fileID: 8300000, guid: 2ac4f1c5aa954df44a954292cbf2a48f, type: 3}
   LobbyBgm: {fileID: 8300000, guid: bb72186dca79e154f9f53634cb481e89, type: 3}
   MainStagePlaylist:
@@ -480,6 +481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
   m_LoadingScreen: {fileID: 3454991554307337341}
   m_Slider: {fileID: 7823899515002897653}
+  m_FillSpeed: 1.5
 --- !u!114 &353958130986468632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,10 +574,10 @@ RectTransform:
   - {fileID: 6875579010601823721}
   m_Father: {fileID: 5252005386088881366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 100}
+  m_SizeDelta: {x: 600, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7823899515002897653
 MonoBehaviour:
@@ -616,7 +618,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6546975506856418270}
   m_HandleRect: {fileID: 0}

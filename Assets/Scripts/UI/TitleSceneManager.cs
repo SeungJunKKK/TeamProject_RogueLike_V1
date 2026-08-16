@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class TitleSceneManager : MonoBehaviour
 {
@@ -30,7 +29,6 @@ public class TitleSceneManager : MonoBehaviour
         {
             titleMenu.OnStartSinglePlayerPressed += HandleStartSinglePlayer;
             titleMenu.OnFullscreenToggled += HandleFullscreenToggle;
-            titleMenu.OnVolumeChanged += HandleVolumeChange;
             titleMenu.OnQuitPressed += HandleQuit;
         }
     }
@@ -42,7 +40,6 @@ public class TitleSceneManager : MonoBehaviour
             titleMenu.OnStartSinglePlayerPressed -= HandleStartSinglePlayer;
             titleMenu.OnQuitPressed -= HandleQuit;
             titleMenu.OnFullscreenToggled -= HandleFullscreenToggle;
-            titleMenu.OnVolumeChanged -= HandleVolumeChange;
         }
     }
 
@@ -51,7 +48,7 @@ public class TitleSceneManager : MonoBehaviour
         // 게임 씬으로 넘어가기 전에 사용 완료한 배경 이미지 메모리 해제
         AddressableManager.Instance.UnloadAsset(m_BackgroundAddress);
        
-        SceneManager.LoadScene("PlayerSelectScene");
+        SceneLoader.Instance.LoadScene("PlayerSelectScene", false);
     }
 
     private void HandleQuit() // 게임 종료
@@ -76,11 +73,5 @@ public class TitleSceneManager : MonoBehaviour
             // false- 창모드
             Screen.SetResolution(1280, 720, false);
         }
-    }
-
-    private void HandleVolumeChange(float volume) // 소리 줄이기 바
-    {
-        Debug.Log($"마스터 볼륨 변경: {volume}");
-        AudioListener.volume = volume;
     }
 }

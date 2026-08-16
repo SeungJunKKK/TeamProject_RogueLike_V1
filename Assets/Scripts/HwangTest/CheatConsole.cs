@@ -110,6 +110,23 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
+        if (Keyboard.current.f10Key.wasPressedThisFrame) // 레벨업 이펙트 테스트용
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null || player.Stats == null)
+            {
+                Debug.LogWarning($"[Cheat] F10: 씬에 PlayerController 또는 PlayerStats가 없습니다.");
+            }
+            else
+            {
+                // 다음 레벨까지 필요한 경험치를 채워서 레벨업
+                float expNeeded = player.Stats.GetRequiredExp(player.Stats.CurrentLevel) - player.Stats.CurrentExp;
+                player.Stats.AddExp(expNeeded > 0 ? expNeeded : 100f);
+
+                Debug.Log($"<color=green>[Cheat] F10 pressed: 플레이어 레벨 업! (현재 레벨: {player.Stats.CurrentLevel})</color>");
+            }
+        }
+
         if (Keyboard.current.f11Key.wasPressedThisFrame)
         {
             PlayerController player = FindAnyObjectByType<PlayerController>();

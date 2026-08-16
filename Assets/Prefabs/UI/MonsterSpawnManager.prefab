@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3143715729613884232}
+  - component: {fileID: 2013672709518922762}
+  - component: {fileID: 8560593116285068361}
   m_Layer: 0
   m_Name: MonsterSpawnManager
   m_TagString: Untagged
@@ -31,3 +33,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2013672709518922762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5614509464661613285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e1ad6b1a71adc4bb112307140cde44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  m_SpawnTilemaps:
+  - {fileID: 0}
+  - {fileID: 0}
+  Player: {fileID: 0}
+  EnemyPrefabs:
+  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
+  SpawnInterval: 3
+  MinDistanceFromPlayer: 10
+  MaxSpawnAttempts: 10
+  MaxEnemyCount: 20
+  m_AirSpawnMinHeight: 3
+  m_AirSpawnMaxHeight: 7
+  m_AirSpawnHorizontalRange: 12
+  SpawnClearanceRadius: 1
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+--- !u!114 &8560593116285068361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5614509464661613285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b90d1fab215104081a5ec95f0db45e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolPrewarmer
+  m_Entries: []
