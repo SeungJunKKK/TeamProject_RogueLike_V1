@@ -10,10 +10,28 @@ public class LevelUpEffect : MonoBehaviour
     [SerializeField] private float moveUpSpeed = 1.0f; // 위로 올라가는 속도
     [SerializeField] private float fadeDuration = 0.5f;// 서서히 사라지는 시간
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip levelUpSound;
+
     public void PlayEffect(Vector3 spawnPosition)
     {
         transform.position = spawnPosition;
+        PlaySound();
         StartCoroutine(CoPlayAnimation());
+    }
+
+    private void PlaySound() // 오디오 재생
+    {
+        if (levelUpSound == null) return;
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(levelUpSound);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(levelUpSound, transform.position);
+        }
     }
 
     private IEnumerator CoPlayAnimation()

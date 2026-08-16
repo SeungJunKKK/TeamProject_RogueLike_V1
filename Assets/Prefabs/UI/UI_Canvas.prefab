@@ -7529,6 +7529,7 @@ MonoBehaviour:
   frameRate: 0.5
   moveUpSpeed: 0.8
   fadeDuration: 2
+  levelUpSound: {fileID: 8300000, guid: e7103ecd3101b554ea19b681ab453b64, type: 3}
 --- !u!1 &8799214401067569881
 GameObject:
   m_ObjectHideFlags: 0
@@ -7698,6 +7699,7 @@ MonoBehaviour:
   cooldownOverlay: {fileID: 9220573255516743409}
   cooldownText: {fileID: 4111748873519462496}
   healBuffUI: {fileID: 3453030556065954035}
+  useItemSound: {fileID: 8300000, guid: 77dae70bc5973ee41b3f9b26c9ddcb13, type: 3}
 --- !u!1 &8878980510884267033
 GameObject:
   m_ObjectHideFlags: 0
