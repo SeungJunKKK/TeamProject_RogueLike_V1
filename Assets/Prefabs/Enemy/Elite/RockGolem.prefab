@@ -219,7 +219,7 @@ MonoBehaviour:
   m_BaseDamage: 34
   m_MoveSpeed: 1.8
   m_Acceleration: 6
-  m_AttackStartRange: 3.5
+  m_AttackStartRange: 2
   m_AttackCooldown: 3.5
   m_ShockwaveSpawnPos: {fileID: 3614119596547283869}
   m_ShockwavePrefab: {fileID: 8505469617465925257, guid: 323faceb321c2c24ab20e1232bdd1111, type: 3}

@@ -215,8 +215,26 @@ public class RockGolemAI : EnemyBase
 
     private bool CanAttack()
     {
-        float horizontalDistance = Mathf.Abs(m_Target.position.x - transform.position.x);
-        return horizontalDistance <= m_AttackStartRange && m_AttackCooldownTimer <= 0f && m_IsGrounded && !m_IsWallAhead;
+        float horizontalDistance =
+            Mathf.Abs(m_Target.position.x - transform.position.x);
+
+        bool inRange = horizontalDistance <= m_AttackStartRange;
+        bool cooldownReady = m_AttackCooldownTimer <= 0f;
+        bool grounded = m_IsGrounded;
+        bool noWall = !m_IsWallAhead;
+
+        Debug.Log(
+            $"[RockGolem] AttackCheck | " +
+            $"Range={inRange} ({horizontalDistance:F2}) | " +
+            $"Cooldown={cooldownReady} ({m_AttackCooldownTimer:F2}) | " +
+            $"Grounded={grounded} | " +
+            $"NoWall={noWall}"
+        );
+
+        return inRange
+            && cooldownReady
+            && grounded
+            && noWall;
     }
 
     private void ChangeState(ERockGolemState newState)
@@ -264,9 +282,16 @@ public class RockGolemAI : EnemyBase
 
     private void UpdateChase()
     {
+        Debug.Log(
+            $"[RockGolem] Chase | " +
+            $"Direction={m_Direction} | " +
+            $"Grounded={m_IsGrounded} | " +
+            $"WallAhead={m_IsWallAhead} | " +
+            $"GroundAhead={m_IsGroundAhead}"
+        );
+
         if (CanAttack())
         {
-            Debug.Log($"[RockGolem] 공격 전환 | Distance={Mathf.Abs(m_Target.position.x - transform.position.x):F2}");
             ChangeState(ERockGolemState.Attack);
             return;
         }
@@ -345,15 +370,18 @@ public class RockGolemAI : EnemyBase
         float currentVelocityX = m_Rigidbody.linearVelocity.x;
         float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, m_Acceleration * Time.deltaTime);
 
-        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+        m_Rigidbody.linearVelocity = new Vector2(
+          m_DesiredVelocityX,
+          m_Rigidbody.linearVelocity.y
+      );
 
-   //     Debug.Log(
-   //    $"[RockGolem] 실제 이동 | " +
-   //    $"Desired={m_DesiredVelocityX:F2} | " +
-   //    $"Separation={separationX:F2} | " +
-   //    $"Final={finalTargetVelocityX:F2} | " +
-   //    $"VelocityX={m_Rigidbody.linearVelocity.x:F2}"
-   //);
+        //     Debug.Log(
+        //    $"[RockGolem] 실제 이동 | " +
+        //    $"Desired={m_DesiredVelocityX:F2} | " +
+        //    $"Separation={separationX:F2} | " +
+        //    $"Final={finalTargetVelocityX:F2} | " +
+        //    $"VelocityX={m_Rigidbody.linearVelocity.x:F2}"
+        //);
     }
 
     private float CalculateSeparation()

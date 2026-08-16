@@ -1669,10 +1669,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   m_SpawnTilemaps:
   - {fileID: 601327060}
-  - {fileID: 2105308625}
   Player: {fileID: 1424128609}
   EnemyPrefabs:
-  - {fileID: 2213924329140337995, guid: 752543bed0c509542ae94ba2b8a74dc3, type: 3}
+  - {fileID: 2807211743726025604, guid: ef64ce6eee7476646bc431bd30574390, type: 3}
   SpawnInterval: 3
   MinDistanceFromPlayer: 3
   MaxSpawnAttempts: 10
@@ -1699,11 +1698,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1839735485 &2105308625 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 8491970303682971070, guid: f0a993d1284805648a478f6da354865a, type: 3}
-  m_PrefabInstance: {fileID: 7768540002648999498}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2076085224276717760
 PrefabInstance:
   m_ObjectHideFlags: 0
