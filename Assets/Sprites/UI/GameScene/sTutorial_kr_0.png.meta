@@ -1,28 +1,58 @@
 fileFormatVersion: 2
-guid: 044bb80e1bc2af843aa648f66504fd4d
+guid: d89ad5e4042355649b3096c53e9e6f5d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4653647174715963860
-    second: sEfLevelUp2_kr_1_0
+      213: -2323102920749537874
+    second: sTutorial_kr_0_0
   - first:
-      213: 981235998084916606
-    second: sEfLevelUp2_kr_1_1
+      213: 1400658210196390086
+    second: sTutorial_kr_0_1
   - first:
-      213: -5433850870188298051
-    second: sEfLevelUp2_kr_1_2
+      213: -2987779474177696507
+    second: sTutorial_kr_0_2
   - first:
-      213: 1468973027072216706
-    second: sEfLevelUp2_kr_1_3
+      213: -8649582264866996235
+    second: sTutorial_kr_0_3
   - first:
-      213: -4845426992623101157
-    second: sEfLevelUp2_kr_1_4
+      213: -3555962868278153961
+    second: sTutorial_kr_0_4
   - first:
-      213: 4798801203826509715
-    second: sEfLevelUp2_kr_1_5
+      213: -3656462180877097285
+    second: sTutorial_kr_0_5
   - first:
-      213: 7130077896332728014
-    second: sEfLevelUp2_kr_1_6
+      213: -7552864574603621509
+    second: sTutorial_kr_0_6
+  - first:
+      213: 8065256043500054042
+    second: sTutorial_kr_0_7
+  - first:
+      213: -5599941300597554104
+    second: sTutorial_kr_0_8
+  - first:
+      213: -4729814998248345147
+    second: sTutorial_kr_0_9
+  - first:
+      213: 8025637830982694969
+    second: sTutorial_kr_0_10
+  - first:
+      213: 6661226770065600575
+    second: sTutorial_kr_0_11
+  - first:
+      213: 564860557247701430
+    second: sTutorial_kr_0_12
+  - first:
+      213: 5399029501418052049
+    second: sTutorial_kr_0_13
+  - first:
+      213: 4345014800385611341
+    second: sTutorial_kr_0_14
+  - first:
+      213: 302085760764690217
+    second: sTutorial_kr_0_15
+  - first:
+      213: -2284294941760104034
+    second: sTutorial_kr_0_16
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -66,11 +96,11 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 11}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -118,23 +148,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sEfLevelUp2_kr_1_0
+      name: sTutorial_kr
       rect:
         serializedVersion: 2
-        x: 50
+        x: 0
         y: 0
-        width: 112
-        height: 23
+        width: 170
+        height: 25
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 4d9f1f60373159040800000000000000
-      internalID: 4653647174715963860
+      spriteID: 27f8f0f430398de4da9943bd9ae9ea4b
+      internalID: -278379119
       vertices: []
       indices: 
       edges: []
@@ -144,7 +174,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -153,13 +183,23 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sEfLevelUp2_kr_1_0: 4653647174715963860
-      sEfLevelUp2_kr_1_1: 981235998084916606
-      sEfLevelUp2_kr_1_2: -5433850870188298051
-      sEfLevelUp2_kr_1_3: 1468973027072216706
-      sEfLevelUp2_kr_1_4: -4845426992623101157
-      sEfLevelUp2_kr_1_5: 4798801203826509715
-      sEfLevelUp2_kr_1_6: 7130077896332728014
+      sTutorial_kr: -2323102920749537874
+      sTutorial_kr_0_1: 1400658210196390086
+      sTutorial_kr_0_10: 8025637830982694969
+      sTutorial_kr_0_11: 6661226770065600575
+      sTutorial_kr_0_12: 564860557247701430
+      sTutorial_kr_0_13: 5399029501418052049
+      sTutorial_kr_0_14: 4345014800385611341
+      sTutorial_kr_0_15: 302085760764690217
+      sTutorial_kr_0_16: -2284294941760104034
+      sTutorial_kr_0_2: -2987779474177696507
+      sTutorial_kr_0_3: -8649582264866996235
+      sTutorial_kr_0_4: -3555962868278153961
+      sTutorial_kr_0_5: -3656462180877097285
+      sTutorial_kr_0_6: -7552864574603621509
+      sTutorial_kr_0_7: 8065256043500054042
+      sTutorial_kr_0_8: -5599941300597554104
+      sTutorial_kr_0_9: -4729814998248345147
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
