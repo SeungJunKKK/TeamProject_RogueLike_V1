@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     // 아이템 데이터를 키(Key)로, 획득한 개수를 값(Value)으로 저장 딕셔너리
-    public Dictionary<ItemData, int> passiveItems = new Dictionary<ItemData, int>(); //[cite: 7]
+    public Dictionary<ItemData, int> passiveItems { get; private set; } = new Dictionary<ItemData, int>(); //[cite: 7]
 
     [Header("Active Item Slot")]
     public ItemData currentActiveItem;

@@ -42,7 +42,7 @@ public class PlayerHealthUI : MonoBehaviour
     private void InitPlayerUI()
     {
         // PlayerStats 컴포넌트 찾기
-        playerStats = FindFirstObjectByType<PlayerStats>();
+        playerStats = FindAnyObjectByType<PlayerStats>();
 
         if (playerStats != null)
         {
