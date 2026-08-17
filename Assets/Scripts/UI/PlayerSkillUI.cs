@@ -36,7 +36,7 @@ public class PlayerSkillUI : MonoBehaviour
     {
         if (player == null)
         {
-            player = FindFirstObjectByType<PlayerController>();
+            player = FindAnyObjectByType<PlayerController>();
         }
     }
 }

@@ -230,8 +230,50 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
+        // =========================================
+        // 방어 UI 테스트 단축키
+        // =========================================
+
+        if (Keyboard.current.digit3Key.wasPressedThisFrame)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null)
+            {
+                Debug.LogWarning($"[Cheat] 숫자 3: 씬에 PlayerController가 없습니다.");
+            }
+            else
+            {
+                bool nextState = !player.IsDefending;
+                var prop = typeof(PlayerController).GetProperty("IsDefending");
+                if (prop != null)
+                {
+                    prop.SetValue(player, nextState, null);
+                    Debug.Log($"<color=yellow>[Cheat] 숫자 3 pressed: 방어 상태 강제 변경 -> {player.IsDefending}</color>");
+                }
+            }
+        }
+
+        if (Keyboard.current.digit4Key.wasPressedThisFrame)
+        {
+            PlayerController player = FindAnyObjectByType<PlayerController>();
+            if (player == null)
+            {
+                Debug.LogWarning($"[Cheat] 숫자 4: 씬에 PlayerController가 없습니다.");
+            }
+            else
+            {
+                Debug.Log($"<color=cyan>[Cheat] 숫자 4 pressed: 방어 성공 이벤트(PlayerBlockSuccessEvent) 강제 발행</color>");
+
+                // 방어 성공 시 방패가 살짝 커지는 펄스 연출 테스트
+                EventBus.Publish<PlayerBlockSuccessEvent>(new PlayerBlockSuccessEvent
+                {
+                    BlockedAmount = 10f,
+                    HitPoint = player.transform.position + new Vector3(0, 1f, 0)
+                });
+            }
+        }
 
 
     }
-}
+};
 #endif
