@@ -126,7 +126,12 @@ public abstract class GildedWurmBase : EnemyBase
 
     private void UpdateVisualDirection()
     {
+        if (m_Velocity.sqrMagnitude <= 0.001f)
+            return;
 
+        float angle = Mathf.Atan2(m_Velocity.y, m_Velocity.x) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
     // =========================================================
     // Path Recording (이전 기획의 완벽한 거리 추적 로직 승계)

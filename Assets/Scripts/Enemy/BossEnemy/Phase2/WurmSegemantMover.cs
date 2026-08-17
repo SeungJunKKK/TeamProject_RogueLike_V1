@@ -44,10 +44,16 @@ public class WurmSegmentMover : MonoBehaviour
     private void UpdateRotation(float distanceBehindHead)
     {
         Vector2 direction = m_Wurm.GetPathDirection(distanceBehindHead);
-        if (direction.sqrMagnitude <= 0.001f) return;
 
-        // 💡 몸통이 바라보는 각도 계산 + 스프라이트 원본 방향 보정(Offset) 적용
+        if (direction.sqrMagnitude <= 0.001f)
+            return;
+
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, 0f, angle + m_RotationOffset), 15f * Time.deltaTime);
+
+        transform.rotation = Quaternion.Euler(
+            0f,
+            0f,
+            angle
+        );
     }
 }
