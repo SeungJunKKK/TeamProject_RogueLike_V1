@@ -98,6 +98,14 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
+        Debug.Log(
+    $"[EnemySpawner] 스폰 시스템 시작 | " +
+    $"PoolManager=OK | " +
+    $"SpawnPoints={m_ValidSpawnPoints.Length} | " +
+    $"MaxEnemyCount={MaxEnemyCount} | " +
+    $"SpawnInterval={SpawnInterval}"
+);
+
         StartCoroutine(SpawnRoutine());
     }
 
@@ -107,6 +115,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void ScanTilemapForSpawnPoints()
     {
+
+    //    Debug.Log(
+    //    $"[EnemySpawner] 실행 객체: {gameObject.name} / " +
+    //    $"Scene: {gameObject.scene.name} / " +
+    //    $"Tilemap 배열 크기: {m_SpawnTilemaps?.Length ?? -1}"
+    //);
+
         List<Vector2> tempPoints = new List<Vector2>();
 
         foreach (Tilemap tilemap in m_SpawnTilemaps)
@@ -129,6 +144,10 @@ public class EnemySpawner : MonoBehaviour
                     {
                         continue;
                     }
+
+                    Debug.Log(
+            $"[EnemySpawner] 연결된 Tilemap: {tilemap.name}"
+        );
 
                     Vector3Int aboveCell =
                         new Vector3Int(x, y + 1, 0);
@@ -168,6 +187,8 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
+        Debug.Log("[EnemySpawner] SpawnRoutine 시작");
+
         while (true)
         {
             if (Player == null)
@@ -193,8 +214,16 @@ public class EnemySpawner : MonoBehaviour
 
             yield return new WaitForSeconds(SpawnInterval);
 
-            if (m_SpawningEnabled && m_ActiveEnemies.Count < MaxEnemyCount)
+            Debug.Log(
+                $"[EnemySpawner] Spawn 검사 | " +
+                $"Enabled={m_SpawningEnabled} | " +
+                $"Active={m_ActiveEnemies.Count} / {MaxEnemyCount}"
+            );
+
+            if (m_SpawningEnabled &&
+                m_ActiveEnemies.Count < MaxEnemyCount)
             {
+                Debug.Log("[EnemySpawner] SpawnEnemy 실행");
                 SpawnEnemy();
             }
         }
@@ -206,6 +235,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
+        Debug.Log("[EnemySpawner] SpawnEnemy 호출");
         if (Player == null ||
             EnemyPrefabs == null ||
             EnemyPrefabs.Length == 0)
@@ -365,6 +395,14 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnTeleporterState(TeleporterStateChangedEvent e)
     {
-        m_SpawningEnabled = (e.State == ETeleporterState.Idle) || e.State == ETeleporterState.Charging;
+        m_SpawningEnabled =
+            (e.State == ETeleporterState.Idle) ||
+            (e.State == ETeleporterState.Charging);
+
+        Debug.Log(
+            $"[EnemySpawner] Teleporter 상태 변경 | " +
+            $"State={e.State} | " +
+            $"SpawningEnabled={m_SpawningEnabled}"
+        );
     }
 }

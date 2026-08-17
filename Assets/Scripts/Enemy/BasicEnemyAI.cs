@@ -126,7 +126,6 @@ public class BasicEnemyAI : EnemyBase
     {
         base.OnDespawn();
 
-        // 💡 피드백 반영: 생명주기 종료 상태 명시적 초기화
         m_IsSpawnFinished = false;
         m_Rigidbody.linearVelocity = Vector2.zero;
 
@@ -157,7 +156,6 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
-    // 💡 피드백 반영: 자식 클래스가 파이프라인을 날려버리지 못하도록 private로 고정
     private void Update()
     {
         if (!m_IsSpawnFinished || Player == null || m_CurrentHp <= 0f) return;
@@ -278,7 +276,8 @@ public class BasicEnemyAI : EnemyBase
             ChangeState(EnemyState.Chase);
             return;
         }
-        }
+    }
+
     public void TriggerAttack()
     {
         if (Player != null && m_DistanceToPlayer <= AttackRange)
@@ -303,7 +302,6 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
-            }
 
     public void FinishAttack()
     {
