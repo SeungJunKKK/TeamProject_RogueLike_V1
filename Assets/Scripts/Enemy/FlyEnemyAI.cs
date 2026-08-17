@@ -86,7 +86,7 @@ public class FlyingEnemyAI : EnemyBase
 
         if (m_Animator != null)
         {
-            m_Animator.Play("Spawn", -1, 0f);
+            //m_Animator.Play("Spawn", -1, 0f);
             Invoke("SpawnComplete", 0.5f);
         }
         else
@@ -159,6 +159,8 @@ public class FlyingEnemyAI : EnemyBase
 
         m_DesiredVelocity = Vector2.zero;
 
+        m_StateTimer += Time.deltaTime;
+
         UpdateTargetInfo();
         UpdateCombat();
 
@@ -207,8 +209,13 @@ public class FlyingEnemyAI : EnemyBase
             case EFlyingEnemyState.Dash:
                 break;
             case EFlyingEnemyState.Attack:
-                if (m_EffectAnimator != null) m_EffectAnimator.SetTrigger("Attack");
-                break;
+                if (m_Animator != null)
+                {
+                    m_Animator.SetTrigger("Attack");
+                }
+                    break;
+                //if (m_EffectAnimator != null) m_EffectAnimator.SetTrigger("Attack");
+                //break;
             default:
                 throw new NotImplementedException($"unhandled: {newState}");
         }
@@ -241,17 +248,23 @@ public class FlyingEnemyAI : EnemyBase
 
     private void UpdateChase()
     {
-        if (m_DistanceToTarget <= m_DashRange)
+        if (m_DistanceToTarget <= m_DashRange && m_AttackCooldownTimer <= 0f)
         {
             ChangeState(EFlyingEnemyState.Dash);
             return;
         }
-
         m_DesiredVelocity = m_DirectionToTarget * m_MoveSpeed;
     }
 
     private void UpdateDash()
     {
+        if (m_StateTimer >= 2f)
+        {
+            FinishAttack();
+            //ChangeState(EFlyingEnemyState.Chase);
+            return;
+        }
+
         // 만약 플레이어가 도망가서 돌진 사거리 밖으로 벗어나면 다시 평범한 Chase로 복귀
         if (m_DistanceToTarget > m_DashRange)
         {
@@ -272,7 +285,13 @@ public class FlyingEnemyAI : EnemyBase
 
     private void UpdateAttack()
     {
+        if (m_StateTimer >= 1f)
+        {
+            FinishAttack();
+            return;
+        }
 
+        m_DesiredVelocity = m_DirectionToTarget * (m_MoveSpeed * 0.5f);
     }
 
     public void TriggerAttack()
@@ -409,4 +428,44 @@ public class FlyingEnemyAI : EnemyBase
             Destroy(gameObject);
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        // 게임이 실행 중일 때만 텍스트를 그립니다.
+        if (!Application.isPlaying) return;
+
+        // 글씨체, 색상, 크기 세팅
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.yellow; // 눈에 잘 띄는 노란색
+        style.fontSize = 14;
+        style.alignment = TextAnchor.LowerCenter;
+        style.fontStyle = FontStyle.Bold;
+
+        // 1. 현재 상태 출력 (Walking 상태는 코딩상 Chase로 표시됩니다)
+        string debugText = $"[State: {m_CurrentState}]\n";
+
+        // 2. 대쉬(Dash) 상태일 때 남은 시간 카운트다운 (1초 기준)
+        if (m_CurrentState == EFlyingEnemyState.Dash)
+        {
+            float dashTimeLeft = 1f - m_StateTimer; // 승준 학생이 수정한 1초 타임아웃 기준
+            debugText += $"Dash Timeout: {Mathf.Max(0, dashTimeLeft):F2}s\n";
+        }
+
+        // 3. 공격 쿨타임 표시
+        if (m_AttackCooldownTimer > 0f)
+        {
+            debugText += $"Attack CD: {m_AttackCooldownTimer:F2}s";
+        }
+        else
+        {
+            debugText += $"Attack READY!";
+        }
+
+        // 몬스터의 위치에서 위쪽으로 1.5만큼 떨어진 곳에 텍스트를 띄웁니다.
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 1.5f, debugText, style);
+    }
+#endif
+
+
 }
