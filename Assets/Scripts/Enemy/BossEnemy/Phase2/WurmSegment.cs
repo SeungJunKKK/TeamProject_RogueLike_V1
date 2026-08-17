@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WurmSegment : MonoBehaviour, IDamageable
 {
-    [SerializeField] private GildedWurmBase m_ParentWurm;
+    private GildedWurmBase m_ParentWurm;
 
     public void Init(GildedWurmBase parentWurm)
     {
@@ -11,11 +11,10 @@ public class WurmSegment : MonoBehaviour, IDamageable
 
     public void TakeDamage(DamageInfo info)
     {
-        if (m_ParentWurm != null)
-        {
-            DamageInfo adjustedInfo = info;
-            adjustedInfo.HitPoint = transform.position;
-            m_ParentWurm.TakeDamage(adjustedInfo);
-        }
+        if (m_ParentWurm == null) return;
+
+        DamageInfo adjustedInfo = info;
+        adjustedInfo.HitPoint = transform.position;
+        m_ParentWurm.TakeDamage(adjustedInfo);
     }
 }

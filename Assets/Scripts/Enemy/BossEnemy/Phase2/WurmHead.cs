@@ -2,34 +2,14 @@ using UnityEngine;
 
 public class WurmHead : GildedWurmBase
 {
-    [Header("Movement Settings")]
-    [SerializeField] private float m_FloatAmplitude = 0.5f;
-    [SerializeField] private float m_FloatFrequency = 2f;
 
-    private float m_RandomOffset;
-
-    protected void Awake()
+    public override void Setup(Transform player)
     {
-        m_RandomOffset = Random.Range(0f, Mathf.PI * 2f);
+        base.Setup(player);
+
+        // 추가적인 공격 패턴이 없는 기본 웜 헤드라면 Setup만 호출해 주면 됩니다.
+        // 스폰 직후 Base 클래스가 알아서 플레이어를 스치고 지나가는 궤적 비행을 시작합니다.
     }
 
-    // 부모 클래스의 위치 기록을 실행하기 위해 override 및 base 호출 필수 적용
-    protected override void Update()
-    {
-        base.Update();
 
-        if (m_Player == null) return;
-
-        Vector2 direction = (m_Player.position - transform.position).normalized;
-
-        float floatY = Mathf.Sin(Time.time * m_FloatFrequency + m_RandomOffset) * m_FloatAmplitude;
-        Vector2 targetPos = new Vector2(m_Player.position.x, m_Player.position.y + floatY);
-
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, m_MoveSpeed * Time.deltaTime);
-
-        if (direction.x != 0)
-        {
-            transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
-        }
-    }
 }
