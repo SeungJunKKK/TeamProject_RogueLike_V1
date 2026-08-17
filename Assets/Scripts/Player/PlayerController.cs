@@ -431,11 +431,11 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
 
            
-        EventBus.Publish<PlayerDamagedEvent>(new PlayerDamagedEvent
-        {
-            CurrentHp = Stats.CurrentHealth,
-            MaxHp = Stats.MaxHealth.Value
-        });
+            EventBus.Publish<PlayerDamagedEvent>(new PlayerDamagedEvent
+            {
+                CurrentHp = Stats.CurrentHealth,
+                MaxHp = Stats.MaxHealth.Value
+            });
 
             if (Stats.CurrentHealth <= 0f)
             {

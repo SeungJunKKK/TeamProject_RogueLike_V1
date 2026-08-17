@@ -35,6 +35,7 @@ public class PlayerHealthUI : MonoBehaviour
         // 경험치 및 레벨 UI 실시간 반영
         if (playerStats != null)
         {
+            UpdateHpUI(playerStats.CurrentHealth, playerStats.MaxHealth.Value);
             UpdateExpAndLevelUI();
         }
     }
@@ -42,7 +43,7 @@ public class PlayerHealthUI : MonoBehaviour
     private void InitPlayerUI()
     {
         // PlayerStats 컴포넌트 찾기
-        playerStats = FindFirstObjectByType<PlayerStats>();
+        playerStats = FindAnyObjectByType<PlayerStats>();
 
         if (playerStats != null)
         {

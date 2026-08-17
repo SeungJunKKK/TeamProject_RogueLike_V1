@@ -7,9 +7,6 @@ public class Item_ForeignFruit : ItemData
     public float healPercentage = 0.5f;
     public float buffDisplayDuration = 2.0f; // 버프 아이콘이 연출될 시간
 
-    //[Header("Item Basic Info")]
-    //public Sprite itemIcon;
-
     [Header("Sound Settings")]
     public AudioClip healSound;
 

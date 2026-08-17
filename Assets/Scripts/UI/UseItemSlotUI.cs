@@ -12,6 +12,9 @@ public class UseItemSlotUI : MonoBehaviour
     [Header("Buff UI Reference")]
     [SerializeField] private GameObject healBuffUI; // Buff_Heal 오브젝트 할당
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip useItemSound; // 아이템 사용 사운드
+
     private float buffDurationTimer = 0f;
 
     private void Update()
@@ -29,10 +32,27 @@ public class UseItemSlotUI : MonoBehaviour
 
     public void ShowHealBuff(float duration) // 지속 시간 지정
     {
+        // 아이템 사용 사운드 재생
+        PlayUseSound();
+
         if (healBuffUI != null)
         {
             healBuffUI.SetActive(true);
             buffDurationTimer = duration; // 지속 시간 세팅
+        }
+    }
+
+    private void PlayUseSound() // 아이템 사용 사운드 재생
+    {
+        if (useItemSound == null) return;
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(useItemSound);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(useItemSound, Camera.main != null ? Camera.main.transform.position : Vector3.zero);
         }
     }
 
