@@ -678,7 +678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
   currentActiveItem: {fileID: 0}
-  useItemSlotUI: {fileID: 0}
+  useItemSlotUI: {fileID: 4672381504800103463, guid: 50765dffe49fef54bada6fdbb53bc0d8, type: 3}
 --- !u!1 &7843936173498945902
 GameObject:
   m_ObjectHideFlags: 0

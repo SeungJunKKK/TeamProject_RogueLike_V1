@@ -9,6 +9,7 @@ public class TeleporterObjectiveUI : MonoBehaviour
     private void Awake()
     {
         EventBus.Subscribe<TeleporterUpdateEvent>(OnTeleporterUpdate);
+        EventBus.Subscribe<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
 
         if (m_ObjectiveText != null)
         {
@@ -20,6 +21,15 @@ public class TeleporterObjectiveUI : MonoBehaviour
     private void OnDestroy()
     {
         EventBus.Unsubscribe<TeleporterUpdateEvent>(OnTeleporterUpdate);
+        EventBus.Unsubscribe<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
+    }
+
+    private void OnSceneLoadCompleted(SceneLoadCompletedEvent e)
+    {
+        if (m_ObjectiveText != null)
+        {
+            m_ObjectiveText.text = "";
+        }
     }
 
     //Flip 방지 

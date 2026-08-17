@@ -278,7 +278,9 @@ public class BasicEnemyAI : EnemyBase
             ChangeState(EnemyState.Chase);
             return;
         }
-        }
+    }
+
+
     public void TriggerAttack()
     {
         if (Player != null && m_DistanceToPlayer <= AttackRange)
@@ -303,7 +305,7 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
-            }
+            
 
     public void FinishAttack()
     {
@@ -324,6 +326,9 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
+    /// <summary>
+    /// 최대 낙하 속도 -20f를 적용하고, 목표 속도와 현재 속도를 기반으로 가속도를 적용하여 이동을 처리합니다.
+    /// </summary>
     protected virtual void ApplyMovement()
     {
         float separationX = CalculateSeparation();
@@ -332,7 +337,8 @@ public class BasicEnemyAI : EnemyBase
         float currentVelocityX = m_Rigidbody.linearVelocity.x;
         float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, Acceleration * Time.deltaTime);
 
-        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+        float clampedFallY = Mathf.Max(m_Rigidbody.linearVelocity.y, -20f);
+        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, clampedFallY);
     }
 
     protected virtual float CalculateSeparation()

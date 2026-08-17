@@ -179,13 +179,13 @@ MonoBehaviour:
     MaxCooldown: 0
     CurrentCooldown: 0
   - Type: 1
-    MaxCooldown: 1
+    MaxCooldown: 3
     CurrentCooldown: 0
   - Type: 2
-    MaxCooldown: 1
+    MaxCooldown: 4
     CurrentCooldown: 0
   - Type: 3
-    MaxCooldown: 1
+    MaxCooldown: 5
     CurrentCooldown: 0
 --- !u!114 &6537694750903709079
 MonoBehaviour:
