@@ -94,6 +94,11 @@ public class PlayerStats : MonoBehaviour
     {
         Debug.Log($"<color=green>[아이템 획득]</color> {e.ItemName} 적용 완료!");
 
+        if (e.Modifier == null)
+        {
+            return;
+        }
+
         switch (e.TargetStat)
         {
             case EStatType.MoveSpeed: MoveSpeed.AddModifier(e.Modifier); break;

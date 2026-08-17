@@ -56,6 +56,7 @@ public class BasicEnemyAI : EnemyBase
     // --- Target Info ---
     protected float m_DistanceToPlayer;
     protected int m_Direction;
+    protected bool m_IsAlignedVertically = false;
 
     // --- Combat Timer ---
     protected float m_AttackCooldownTimer = 0f;
@@ -126,7 +127,6 @@ public class BasicEnemyAI : EnemyBase
     {
         base.OnDespawn();
 
-        // 💡 피드백 반영: 생명주기 종료 상태 명시적 초기화
         m_IsSpawnFinished = false;
         m_Rigidbody.linearVelocity = Vector2.zero;
 
@@ -157,7 +157,6 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
-    // 💡 피드백 반영: 자식 클래스가 파이프라인을 날려버리지 못하도록 private로 고정
     private void Update()
     {
         if (!m_IsSpawnFinished || Player == null || m_CurrentHp <= 0f) return;
@@ -175,7 +174,18 @@ public class BasicEnemyAI : EnemyBase
     protected virtual void UpdateTargetInfo()
     {
         m_DistanceToPlayer = Vector2.Distance(transform.position, Player.position);
-        m_Direction = Player.position.x > transform.position.x ? 1 : -1;
+
+        float xDiff = Player.position.x - transform.position.x;
+
+        if (Mathf.Abs(xDiff) <= 0.1f)
+        {
+            m_IsAlignedVertically = true;
+        }
+        else
+        {
+            m_IsAlignedVertically = false;
+            m_Direction = xDiff > 0 ? 1 : -1;
+        }
     }
 
     protected virtual void UpdateSensors()
@@ -225,9 +235,17 @@ public class BasicEnemyAI : EnemyBase
     // ==========================================
     protected virtual void StateMachine()
     {
-        if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //{
+        //    Flip();
+        //}
+
+        if (m_CurrentState != EnemyState.Attack)
         {
-            Flip();
+            if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+            {
+                Flip();
+            }
         }
 
         switch (m_CurrentState)
@@ -253,6 +271,12 @@ public class BasicEnemyAI : EnemyBase
             return;
         }
 
+        if (m_IsAlignedVertically)
+        {
+            m_DesiredVelocityX = 0f;
+            return;
+        }
+
         if (!m_IsGrounded)
         {
             m_DesiredVelocityX = m_Direction * MoveSpeed;
@@ -273,11 +297,11 @@ public class BasicEnemyAI : EnemyBase
     {
         m_StateTimer += Time.deltaTime;
 
-        if (m_DistanceToPlayer > AttackRange)
-        {
-            ChangeState(EnemyState.Chase);
-            return;
-        }
+        //if (m_DistanceToPlayer > AttackRange)
+        //{
+        //    ChangeState(EnemyState.Chase);
+        //    return;
+        //}
     }
 
 

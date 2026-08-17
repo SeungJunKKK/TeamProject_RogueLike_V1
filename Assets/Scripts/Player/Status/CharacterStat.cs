@@ -55,6 +55,11 @@ public class CharacterStat
     // 아이템 효과 추가
     public void AddModifier(StatModifier mod)
     {
+        if (mod == null)
+        {
+            return;
+        }
+
         m_IsDirty = true;
         StatModifiers.Add(mod);
         // enum의 번호순(Flat -> PercentAdd -> PercentMult)
