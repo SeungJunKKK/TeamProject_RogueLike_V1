@@ -272,31 +272,39 @@ public class FlyingEnemyAI : EnemyBase
 
     private void UpdateAttack()
     {
-        m_StateTimer += Time.deltaTime;
 
-        if (m_StateTimer >= m_AttackWindup)
+    }
+
+    public void TriggerAttack()
+    {
+        if (m_Target != null && m_DistanceToTarget <= m_AttackRange)
         {
-            if (m_Target != null && m_DistanceToTarget <= m_AttackRange)
+            if (m_Target.TryGetComponent(out PlayerController playerController))
             {
-                if (m_Target.TryGetComponent(out IDamageable targetDamageable))
-                {
-                    DamageInfo info = new DamageInfo
-                    {
-                        Amount = m_Damage,
-                        HitPoint = m_Target.position,
-                        HitDirection = m_DirectionToTarget,
-                        KnockbackForce = 0f,
-                        Attacker = gameObject,
-                        IsCrit = false,
-                        CanProc = false
-                    };
-                    targetDamageable.TakeDamage(info);
-                }
+                playerController.TakeDamage(m_Damage);
             }
-
-            m_AttackCooldownTimer = m_AttackCooldown;
-            ChangeState(EFlyingEnemyState.Chase);
+            else if (m_Target.TryGetComponent(out IDamageable targetDamageable))
+            {
+                DamageInfo info = new DamageInfo
+                {
+                    Amount = m_Damage,
+                    HitPoint = m_Target.position,
+                    HitDirection = m_DirectionToTarget,
+                    KnockbackForce = 0f,
+                    Attacker = gameObject,
+                    IsCrit = false,
+                    CanProc = false
+                };
+                targetDamageable.TakeDamage(info);
+            }
         }
+    }
+
+    // 💡 애니메이션 이벤트 2: 공격 애니메이션 마지막 프레임에 호출!
+    public void FinishAttack()
+    {
+        m_AttackCooldownTimer = m_AttackCooldown;
+        ChangeState(EFlyingEnemyState.Chase);
     }
 
     // ==========================================

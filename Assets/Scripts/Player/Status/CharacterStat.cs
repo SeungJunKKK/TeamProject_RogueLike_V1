@@ -10,9 +10,22 @@ public class CharacterStat
     
     protected bool m_IsDirty = true;
     protected float m_LastBaseValue = float.MinValue;
-    protected float m_Value; 
+    protected float m_Value;
 
-    private readonly List<StatModifier> m_StatModifiers;
+    private List<StatModifier> m_StatModifiers;
+
+    protected List<StatModifier> StatModifiers
+    {
+        get
+        {
+            if (m_StatModifiers == null)
+            {
+                m_StatModifiers = new List<StatModifier>();
+            }
+            return m_StatModifiers;
+        }
+    }
+
 
     public CharacterStat()
     {
@@ -43,16 +56,15 @@ public class CharacterStat
     public void AddModifier(StatModifier mod)
     {
         m_IsDirty = true;
-        m_StatModifiers.Add(mod);
-
+        StatModifiers.Add(mod);
         // enum의 번호순(Flat -> PercentAdd -> PercentMult)
-        m_StatModifiers.Sort(CompareModifierOrder);
+        StatModifiers.Sort(CompareModifierOrder);
     }
 
     // 특정 아이템 효과 제거 (아이템 버릴 때 사용)
     public bool RemoveModifier(StatModifier mod)
     {
-        if (m_StatModifiers.Remove(mod))
+        if (StatModifiers.Remove(mod))
         {
             m_IsDirty = true;
             return true;
@@ -63,19 +75,19 @@ public class CharacterStat
     public bool RemoveAllModifiersFromSource(object source)
     {
         bool didRemove = false;
-        for (int i = m_StatModifiers.Count - 1; i >= 0; i--)
+        for (int i = StatModifiers.Count - 1; i >= 0; i--) 
         {
-            if (m_StatModifiers[i].Source == source)
+            if (StatModifiers[i].Source == source)
             {
                 m_IsDirty = true;
                 didRemove = true;
-                m_StatModifiers.RemoveAt(i);
+                StatModifiers.RemoveAt(i);
             }
         }
         return didRemove;
     }
 
-   
+
     protected virtual int CompareModifierOrder(StatModifier a, StatModifier b)
     {
         if (a.Type < b.Type)
@@ -93,23 +105,24 @@ public class CharacterStat
     // 최종 데미지 계산
     protected virtual float CalculateFinalValue()
     {
+        StatModifiers.RemoveAll(mod => mod == null);
+
         float finalValue = BaseValue;
         float sumPercentAdd = 0;
 
-        for (int i = 0; i < m_StatModifiers.Count; i++)
+        for (int i = 0; i < StatModifiers.Count; i++)
         {
-            StatModifier mod = m_StatModifiers[i];
+            StatModifier mod = StatModifiers[i];
 
             if (mod.Type == StatModType.Flat)
             {
-                finalValue += mod.Value; // 합연산 
+                finalValue += mod.Value;
             }
             else if (mod.Type == StatModType.PercentAdd)
             {
-                sumPercentAdd += mod.Value; // 퍼센트끼리 
+                sumPercentAdd += mod.Value;
 
-                // 다음 조절자가 PercentAdd가 아니거나 배열의 끝이면 곱셈
-                if (i + 1 >= m_StatModifiers.Count || m_StatModifiers[i + 1].Type != StatModType.PercentAdd)
+                if (i + 1 >= StatModifiers.Count || StatModifiers[i + 1].Type != StatModType.PercentAdd)
                 {
                     finalValue *= (1.0f + sumPercentAdd);
                     sumPercentAdd = 0;
@@ -117,10 +130,10 @@ public class CharacterStat
             }
             else if (mod.Type == StatModType.PercentMult)
             {
-                finalValue *= (1.0f + mod.Value); 
+                finalValue *= (1.0f + mod.Value);
             }
         }
-        
+
         return (float)Math.Round(finalValue, 4);
     }
 }

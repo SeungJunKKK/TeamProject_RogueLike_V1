@@ -126,7 +126,6 @@ public class BasicEnemyAI : EnemyBase
     {
         base.OnDespawn();
 
-        // 💡 피드백 반영: 생명주기 종료 상태 명시적 초기화
         m_IsSpawnFinished = false;
         m_Rigidbody.linearVelocity = Vector2.zero;
 
@@ -157,7 +156,6 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
-    // 💡 피드백 반영: 자식 클래스가 파이프라인을 날려버리지 못하도록 private로 고정
     private void Update()
     {
         if (!m_IsSpawnFinished || Player == null || m_CurrentHp <= 0f) return;
@@ -278,32 +276,37 @@ public class BasicEnemyAI : EnemyBase
             ChangeState(EnemyState.Chase);
             return;
         }
+    }
 
-        m_DesiredVelocityX = m_Direction * MoveSpeed * AttackMoveRatio;
-
-        if (m_StateTimer >= AttackWindup)
+    public void TriggerAttack()
+    {
+        if (Player != null && m_DistanceToPlayer <= AttackRange)
         {
-            if (Player != null && m_DistanceToPlayer <= AttackRange)
+            if (Player.TryGetComponent(out PlayerController playerController))
             {
-                if (Player.TryGetComponent(out IDamageable targetDamageable))
-                {
-                    DamageInfo info = new DamageInfo
-                    {
-                        Amount = m_Damage,
-                        HitPoint = Player.position,
-                        HitDirection = new Vector2(m_Direction, 0f),
-                        KnockbackForce = 0f,
-                        Attacker = gameObject,
-                        IsCrit = false,
-                        CanProc = false
-                    };
-                    targetDamageable.TakeDamage(info);
-                }
+                playerController.TakeDamage(m_Damage);
             }
-
-            m_AttackCooldownTimer = AttackCooldown;
-            ChangeState(EnemyState.Chase);
+            else if (Player.TryGetComponent(out IDamageable targetDamageable))
+            {
+                DamageInfo info = new DamageInfo
+                {
+                    Amount = m_Damage,
+                    HitPoint = Player.position,
+                    HitDirection = new Vector2(m_Direction, 0f),
+                    KnockbackForce = 0f,
+                    Attacker = gameObject,
+                    IsCrit = false,
+                    CanProc = false
+                };
+                targetDamageable.TakeDamage(info);
+            }
         }
+    }
+
+    public void FinishAttack()
+    {
+        m_AttackCooldownTimer = AttackCooldown;
+        ChangeState(EnemyState.Chase);
     }
 
     protected virtual void JumpIfNeeded()

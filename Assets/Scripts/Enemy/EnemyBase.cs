@@ -10,8 +10,11 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     protected float m_MaxHp;
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;
+    protected virtual bool CanReceiveKnockback => true;
     public float MaxHp => m_MaxHp;
     public float CurrentHp => m_CurrentHp;
+
+
     public float GetHpRatio()
     {
         return m_MaxHp > 0f ? m_CurrentHp / m_MaxHp : 0f;
@@ -58,10 +61,11 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
         m_CurrentHp -= info.Amount;
 
-        if (m_Rigidbody != null)
+        if (CanReceiveKnockback && m_Rigidbody != null)
         {
             m_Rigidbody.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);
         }
+
 
         EventBus.Publish(new MonsterDamagedEvent
         {
