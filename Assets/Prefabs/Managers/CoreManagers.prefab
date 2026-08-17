@@ -382,6 +382,8 @@ GameObject:
   - component: {fileID: -550375569016202373}
   - component: {fileID: 1406153826975438522}
   - component: {fileID: -2497387529813484429}
+  - component: {fileID: 7389383937955070182}
+  - component: {fileID: 4796978492990190425}
   m_Layer: 0
   m_Name: CoreManagers
   m_TagString: Untagged
@@ -541,6 +543,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloatingTextManager
   DamageTextAddress: DamageText
+--- !u!114 &7389383937955070182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785546532067763248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bdec0f2d3ac1c142be9ad5df644ad90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveLoadManager
+--- !u!114 &4796978492990190425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785546532067763248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8b15fc00e2e5740b2ab50895ef6b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MasterDataManager
 --- !u!1 &7584994299066660253
 GameObject:
   m_ObjectHideFlags: 0

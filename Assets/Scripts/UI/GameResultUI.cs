@@ -159,4 +159,14 @@ public class GameResultUI : MonoBehaviour
             if (recordTagObject != null) recordTagObject.SetActive(false);
         }
     }
+
+    // ==========================================
+    //  타이틀 씬으로 돌아가기 (버튼 클릭용)
+    // ==========================================
+    public void OnClickReturnToTitle()
+    {
+        Time.timeScale = 1f;
+        SceneLoader.Instance.LoadScene("TitleScene", true,"Shared");
+    }
+
 }

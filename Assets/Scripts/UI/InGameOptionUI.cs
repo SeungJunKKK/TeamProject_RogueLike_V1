@@ -21,6 +21,8 @@ public class InGameOptionUI : MonoBehaviour
     [Header("Title Scene Name")]
     [SerializeField] private string titleSceneName = "TitleScene";
 
+    private PlayerController m_Player;
+
     private void Awake()
     {
         // 일시정지 메뉴 버튼 이벤트
@@ -36,6 +38,8 @@ public class InGameOptionUI : MonoBehaviour
 
     private void Start()
     {
+        m_Player = Object.FindAnyObjectByType<PlayerController>();
+
         CloseAllPanels();
         Time.timeScale = 1f;
     }

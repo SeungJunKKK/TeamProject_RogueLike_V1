@@ -56,6 +56,7 @@ public class BasicEnemyAI : EnemyBase
     // --- Target Info ---
     protected float m_DistanceToPlayer;
     protected int m_Direction;
+    protected bool m_IsAlignedVertically = false;
 
     // --- Combat Timer ---
     protected float m_AttackCooldownTimer = 0f;
@@ -173,7 +174,18 @@ public class BasicEnemyAI : EnemyBase
     protected virtual void UpdateTargetInfo()
     {
         m_DistanceToPlayer = Vector2.Distance(transform.position, Player.position);
-        m_Direction = Player.position.x > transform.position.x ? 1 : -1;
+
+        float xDiff = Player.position.x - transform.position.x;
+
+        if (Mathf.Abs(xDiff) <= 0.1f)
+        {
+            m_IsAlignedVertically = true;
+        }
+        else
+        {
+            m_IsAlignedVertically = false;
+            m_Direction = xDiff > 0 ? 1 : -1;
+        }
     }
 
     protected virtual void UpdateSensors()
@@ -223,9 +235,17 @@ public class BasicEnemyAI : EnemyBase
     // ==========================================
     protected virtual void StateMachine()
     {
-        if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //{
+        //    Flip();
+        //}
+
+        if (m_CurrentState != EnemyState.Attack)
         {
-            Flip();
+            if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+            {
+                Flip();
+            }
         }
 
         switch (m_CurrentState)
@@ -251,6 +271,12 @@ public class BasicEnemyAI : EnemyBase
             return;
         }
 
+        if (m_IsAlignedVertically)
+        {
+            m_DesiredVelocityX = 0f;
+            return;
+        }
+
         if (!m_IsGrounded)
         {
             m_DesiredVelocityX = m_Direction * MoveSpeed;
@@ -271,12 +297,13 @@ public class BasicEnemyAI : EnemyBase
     {
         m_StateTimer += Time.deltaTime;
 
-        if (m_DistanceToPlayer > AttackRange)
-        {
-            ChangeState(EnemyState.Chase);
-            return;
-        }
+        //if (m_DistanceToPlayer > AttackRange)
+        //{
+        //    ChangeState(EnemyState.Chase);
+        //    return;
+        //}
     }
+
 
     public void TriggerAttack()
     {
@@ -302,6 +329,7 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
+            
 
     public void FinishAttack()
     {
@@ -322,6 +350,9 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
+    /// <summary>
+    /// 최대 낙하 속도 -20f를 적용하고, 목표 속도와 현재 속도를 기반으로 가속도를 적용하여 이동을 처리합니다.
+    /// </summary>
     protected virtual void ApplyMovement()
     {
         float separationX = CalculateSeparation();
@@ -330,7 +361,8 @@ public class BasicEnemyAI : EnemyBase
         float currentVelocityX = m_Rigidbody.linearVelocity.x;
         float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, Acceleration * Time.deltaTime);
 
-        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+        float clampedFallY = Mathf.Max(m_Rigidbody.linearVelocity.y, -20f);
+        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, clampedFallY);
     }
 
     protected virtual float CalculateSeparation()
