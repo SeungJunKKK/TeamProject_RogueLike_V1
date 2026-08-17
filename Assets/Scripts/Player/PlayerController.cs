@@ -430,7 +430,7 @@ public class PlayerController : MonoBehaviour
 
             Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
 
-            // 체력 변경 이벤트를 EventBus에 발행 - PlayerHealthUI가 인지하도록 처리 
+           
             EventBus.Publish<PlayerDamagedEvent>(new PlayerDamagedEvent
             {
                 CurrentHp = Stats.CurrentHealth,

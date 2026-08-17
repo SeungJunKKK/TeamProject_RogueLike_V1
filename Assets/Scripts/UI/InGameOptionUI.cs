@@ -22,6 +22,8 @@ public class InGameOptionUI : MonoBehaviour
     [Header("Title Scene Name")]
     [SerializeField] private string titleSceneName = "TitleScene";
 
+    private PlayerController m_Player;
+
     private void Awake()
     {
         // 우측 상단 설정 아이콘 이벤트
@@ -38,6 +40,8 @@ public class InGameOptionUI : MonoBehaviour
 
     private void Start()
     {
+        m_Player = Object.FindAnyObjectByType<PlayerController>();
+
         CloseAllPanels();
         Time.timeScale = 1f;
     }

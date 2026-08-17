@@ -20,6 +20,8 @@ public class PlayerInventory : MonoBehaviour
     {
         player = GetComponent<PlayerController>();
         stats = GetComponent<PlayerStats>();
+
+        useItemSlotUI = UnityEngine.Object.FindAnyObjectByType<UseItemSlotUI>();
     }
 
     private void Update()
@@ -55,26 +57,28 @@ public class PlayerInventory : MonoBehaviour
             }
 
             Debug.Log($"[Inventory] 액티브 아이템 장착: {newItem.itemName}");
-            return;
-        }
 
-        if (passiveItems.ContainsKey(newItem))
+        }
+        else 
         {
-            if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
+            if (passiveItems.ContainsKey(newItem))
             {
-                passiveItems[newItem]++;
-                //Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
+                if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
+                {
+                    passiveItems[newItem]++;
+                }
             }
-        }
-        else
-        {
-            passiveItems.Add(newItem, 1);
-            Debug.Log($"[Inventory] {newItem.itemName} 획득!");
-        }
-        EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
-        UpdatePassiveStats();
-    }
+            else
+            {
+                passiveItems.Add(newItem, 1);
+                Debug.Log($"[Inventory] {newItem.itemName} 획득!");
+            }
 
+            UpdatePassiveStats();
+        }
+
+        EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
+    }
     /// <summary>
     ///액티브 아이템 사용 실행 함수 
     /// </summary>

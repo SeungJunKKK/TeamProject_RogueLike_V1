@@ -12,7 +12,7 @@ public class PoolPrewarmer : MonoBehaviour
 
     [SerializeField] private PrewarmEntry[] m_Entries;
 
-    private IEnumerator Start()
+    public IEnumerator PrewarmRoutine()
     {
         if (PoolManager.Instance == null)
         {

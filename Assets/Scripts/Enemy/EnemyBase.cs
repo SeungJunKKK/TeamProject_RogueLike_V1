@@ -7,6 +7,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     [SerializeField] protected float m_HpPerLevel = 24f;
     [SerializeField] protected int m_BaseGold = 2;
 
+    [SerializeField] protected float m_BaseExp = 12f;
+    [SerializeField] protected float m_ExpPerLevel = 3f;
+
     protected float m_MaxHp;
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;
@@ -84,11 +87,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     protected virtual void Die()
     {
         int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
+        float exp = DifficultyManager.Instance.GetScaledStat(m_BaseExp, m_ExpPerLevel);
 
         EventBus.Publish(new MonsterDiedEvent
         {
             Gold = gold,
-            Exp = gold * 0.5f,
+            Exp = exp,
             Position = transform.position
         });
 

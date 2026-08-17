@@ -177,7 +177,7 @@ public class BasicEnemyAI : EnemyBase
 
         float xDiff = Player.position.x - transform.position.x;
 
-        if (Mathf.Abs(xDiff) <= 1f)
+        if (Mathf.Abs(xDiff) <= 0.1f)
         {
             m_IsAlignedVertically = true;
         }
@@ -329,6 +329,7 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
+            
 
 
     public void FinishAttack()
