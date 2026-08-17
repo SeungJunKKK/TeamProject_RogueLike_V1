@@ -8,9 +8,10 @@ public class InGameOptionUI : MonoBehaviour
     [SerializeField] private GameObject pauseMenuPanel; // 수직 버튼 목록 패널
     [SerializeField] private GameObject settingsPanel; // 볼륨/전체화면 설정 패널
 
+    [Header("Top Right UI Button")]
+    [SerializeField] private Button pauseIconButton;   // 화면 우측 상단 설정 아이콘 버튼
+
     [Header("Pause Menu Buttons")]
-    [SerializeField] private Button pauseButton;
-    [SerializeField] private Button resumeButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button quitToMenuButton;
     [SerializeField] private Button quitToDesktopButton;
@@ -23,9 +24,10 @@ public class InGameOptionUI : MonoBehaviour
 
     private void Awake()
     {
+        // 우측 상단 설정 아이콘 이벤트
+        if (pauseIconButton != null) pauseIconButton.onClick.AddListener(OpenPauseMenu);
+
         // 일시정지 메뉴 버튼 이벤트
-        if (pauseButton != null) pauseButton.onClick.AddListener(PauseGame);
-        if (resumeButton != null) resumeButton.onClick.AddListener(ResumeGame);
         if (settingsButton != null) settingsButton.onClick.AddListener(OpenSettings);
         if (quitToMenuButton != null) quitToMenuButton.onClick.AddListener(QuitToMenu);
         if (quitToDesktopButton != null) quitToDesktopButton.onClick.AddListener(QuitToDesktop);
@@ -60,24 +62,28 @@ public class InGameOptionUI : MonoBehaviour
     {
         if (pauseMenuPanel == null) return;
 
-        bool isActive = !pauseMenuPanel.activeSelf;
-        pauseMenuPanel.SetActive(isActive);
+        bool isCurrentlyActive = pauseMenuPanel.activeSelf;
 
-        if (!isActive && settingsPanel != null)
+        if (isCurrentlyActive)
         {
-            settingsPanel.SetActive(false);
+            ResumeGame();
+        }
+        else
+        {
+            OpenPauseMenu();
         }
     }
 
-    public void PauseGame()
+    public void OpenPauseMenu()
     {
+        if (pauseMenuPanel != null) pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void ResumeGame()
     {
-        Time.timeScale = 1f;
         CloseAllPanels();
+        Time.timeScale = 1f;
     }
 
     public void OpenSettings()
