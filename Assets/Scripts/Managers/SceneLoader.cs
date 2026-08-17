@@ -83,6 +83,12 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
         }
 
+        PoolPrewarmer prewarmer = FindAnyObjectByType<PoolPrewarmer>();
+        if (prewarmer != null)
+        {
+            yield return prewarmer.PrewarmRoutine();
+        }
+
         EventBus.Publish(new SceneLoadCompletedEvent { SceneName = scene });
         ShowLoadingScreen(false);
         m_IsLoading = false;
