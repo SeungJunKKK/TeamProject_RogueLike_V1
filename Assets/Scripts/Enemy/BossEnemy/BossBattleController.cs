@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public enum EBossPhase
 {
@@ -22,9 +23,17 @@ public class BossBattleController : MonoBehaviour
     [SerializeField] private GameObject m_RedWurmPrefab;
     [SerializeField] private GameObject m_BlueWurmPrefab;
 
-    // 💡 이제 수동으로 등록 안 해도 코드가 알아서 좌우 위치를 잡습니다 (선택 사항으로 남겨둠)
-    [SerializeField] private Transform m_SpawnPointLeft;
-    [SerializeField] private Transform m_SpawnPointRight;
+    [Header("Phase 2 Crosshair Attack Settings")]
+    [SerializeField] private GameObject m_CrosshairPrefab; // TargetCrosshair 프리팹
+    [SerializeField] private GameObject m_LaserPrefab;       // Laser 프리팹
+    [SerializeField] private float m_CrosshairMinInterval = 3.0f;
+    [SerializeField] private float m_CrosshairMaxInterval = 6.0f;
+    [SerializeField] private float m_CrosshairDuration = 1.2f;
+
+    [Header("Crosshair Spawn Offset Settings")]
+    [SerializeField] private float m_SpawnHeightOffset = 5.0f;     // 플레이어 기준 위쪽으로 떨어질 높이
+    [SerializeField] private float m_SpawnHorizontalRange = 4.0f;  // 플레이어 기준 좌우 랜덤 퍼짐 범위
+    private Coroutine m_CrosshairSchedulerRoutine;
 
     private int m_AliveWurmCount = 0;
 
@@ -100,14 +109,46 @@ public class BossBattleController : MonoBehaviour
 
         m_AliveWurmCount = 2;
 
-        // 💡 1. 수동 지정된 포인트가 있으면 그거 쓰고, 없으면 현재 보스/컨트롤러 위치 기준으로 좌우 자동 계산 (간격은 필요시 숫자 조절 가능)
+        // 중심 위치 기준으로 좌우 자동 계산
         Vector3 centerPos = m_ProvidenceBoss != null ? m_ProvidenceBoss.transform.position : transform.position;
-
-        Vector3 leftPos = m_SpawnPointLeft != null ? m_SpawnPointLeft.position : centerPos + new Vector3(-7f, 0f, 0f);
-        Vector3 rightPos = m_SpawnPointRight != null ? m_SpawnPointRight.position : centerPos + new Vector3(7f, 0f, 0f);
+        Vector3 leftPos = centerPos + new Vector3(-7f, 0f, 0f);
+        Vector3 rightPos = centerPos + new Vector3(7f, 0f, 0f);
 
         SpawnWurmAt(m_RedWurmPrefab, leftPos);
         SpawnWurmAt(m_BlueWurmPrefab, rightPos);
+
+        // 페이즈 2 크로스헤어 독립 스케줄러 시작
+        if (m_CrosshairSchedulerRoutine != null) StopCoroutine(m_CrosshairSchedulerRoutine);
+        m_CrosshairSchedulerRoutine = StartCoroutine(CrosshairAttackScheduler());
+    }
+
+    private IEnumerator CrosshairAttackScheduler()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        while (m_CurrentPhase == EBossPhase.Phase2_Wurms)
+        {
+            float waitTime = Random.Range(m_CrosshairMinInterval, m_CrosshairMaxInterval);
+            yield return new WaitForSeconds(waitTime);
+
+            if (m_Player != null && m_CrosshairPrefab != null)
+            {
+                // 플레이어 기준 위쪽 지정한 오프셋 위치에 고정 생성
+                float randomX = Random.Range(-m_SpawnHorizontalRange, m_SpawnHorizontalRange);
+                Vector2 spawnPos = (Vector2)m_Player.position + new Vector2(randomX, m_SpawnHeightOffset);
+
+                GameObject crosshairObj = Instantiate(m_CrosshairPrefab, spawnPos, Quaternion.identity);
+                if (crosshairObj.TryGetComponent(out TargetCrosshair crosshairScript))
+                {
+                    crosshairScript.Init(
+                        spawnPos,
+                        m_CrosshairDuration,
+                        m_Player,
+                        m_LaserPrefab
+                    );
+                }
+            }
+        }
     }
 
     private void SpawnWurmAt(GameObject wurmPrefab, Vector3 spawnPos)
@@ -136,6 +177,14 @@ public class BossBattleController : MonoBehaviour
     private void TransitionToPhase3()
     {
         m_CurrentPhase = EBossPhase.Phase3;
+
+        // 페이즈 종료 시 크로스헤어 스케줄러 중지
+        if (m_CrosshairSchedulerRoutine != null)
+        {
+            StopCoroutine(m_CrosshairSchedulerRoutine);
+            m_CrosshairSchedulerRoutine = null;
+        }
+
         Debug.Log("<color=magenta>[BossBattleController] 페이즈 3 진입 - 프로비던스 복귀</color>");
         m_ProvidenceBoss.ReturnToArenaForPhase3();
     }

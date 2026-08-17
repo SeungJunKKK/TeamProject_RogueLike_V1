@@ -152,8 +152,13 @@ MonoBehaviour:
   m_Player: {fileID: 1424128609}
   m_RedWurmPrefab: {fileID: 7494016083134878846, guid: c9666c0b4f44447419eda03bec3d2578, type: 3}
   m_BlueWurmPrefab: {fileID: 0}
-  m_SpawnPointLeft: {fileID: 0}
-  m_SpawnPointRight: {fileID: 0}
+  m_CrosshairPrefab: {fileID: 7685425172967886955, guid: 88a88d61dd1743e4bb3c8b640ccd0c30, type: 3}
+  m_LaserPrefab: {fileID: 8685017280897920458, guid: 91786892a3fbeff4babc79dcd474f6c0, type: 3}
+  m_CrosshairMinInterval: 3
+  m_CrosshairMaxInterval: 6
+  m_CrosshairDuration: 1.2
+  m_SpawnHeightOffset: 2.3
+  m_SpawnHorizontalRange: 2
   m_CurrentPhase: 0
   m_EnableDebugKeys: 1
 --- !u!4 &168566534

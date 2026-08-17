@@ -1219,6 +1219,7 @@ GameObject:
   - component: {fileID: 3481285871849831676}
   - component: {fileID: 8694772230253843929}
   - component: {fileID: 6366651447479113552}
+  - component: {fileID: 2146285342107407089}
   m_Layer: 17
   m_Name: RedGildedWurm
   m_TagString: Untagged
@@ -1454,6 +1455,28 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!95 &2146285342107407089
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7494016083134878846}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3075296af1ea4e44e95d799a7d6557a1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7612681119056934139
 GameObject:
   m_ObjectHideFlags: 0
