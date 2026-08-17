@@ -21,10 +21,29 @@ public class ProvidenceAI : EnemyBase
 
     [Header("Combat Patterns & Distances")]
     [SerializeField] private float m_SlashCooldown = 3.0f;
-    [Tooltip("이 거리보다 멀어지면 텔레포트 내리찍기(Z2) 발동")]
-    [SerializeField] private float m_TeleportThresholdDistance = 3.0f;
-    [Tooltip("근거리(Z1)와 중거리(X1/C1)를 나누는 기준 거리")]
+    [Tooltip("근거리(Z1/Z2/X1)와 원거리(Z2/X1)를 나누는 기준 거리")]
     [SerializeField] private float m_MeleeRangeLimit = 1.5f;
+    [SerializeField] private float m_RecoveryDelay = 0.2f;
+
+    [Header("Combat: X1 Cascading Explosion Setting")]
+    [Tooltip("통합된 폭발 이펙트 프리팹 (하나만 등록)")]
+    [SerializeField] private GameObject m_ExplosionPrefab;
+    [Tooltip("폭발 생성 간격 (거리)")]
+    [SerializeField] private float m_ExplosionStep = 1.2f;
+    [Tooltip("폭발 간 딜레이 (초)")]
+    [SerializeField] private float m_ExplosionStepDelay = 0.06f;
+
+    [Header("Combat: Pattern Counter")]
+    [SerializeField] private int m_X1Count = 0;
+    private const int k_MaxX1BeforeC1 = 2;
+
+    [Header("Combat: C1 Purple Circle Setting")]
+    [Tooltip("플레이어 위치에 생성될 보라색 원 프리팹")]
+    [SerializeField] private GameObject m_PurpleCirclePrefab;
+    [Tooltip("원 연속 소환 횟수")]
+    [SerializeField] private int m_CircleCount = 4;
+    [Tooltip("원 소환 간격 (초)")]
+    [SerializeField] private float m_CircleSpawnInterval = 0.4f;
 
     [Header("Environment & Effects")]
     [SerializeField] private LayerMask m_GroundLayer;
@@ -34,7 +53,7 @@ public class ProvidenceAI : EnemyBase
     private float m_SlashCooldownTimer = 0f;
     private string m_LastAttackName = "";
 
-    [Header("Hitbox")]
+    [Header("Hitbox (Z1 Slash)")]
     [SerializeField] private Vector2 m_SlashHitboxOffset = new Vector2(1.5f, 0f);
     [SerializeField] private Vector2 m_SlashHitboxSize = new Vector2(2f, 2f);
 
@@ -60,27 +79,35 @@ public class ProvidenceAI : EnemyBase
     }
 
     public override void SetTarget(Transform target) => Player = target;
-    public override void OnSpawn() { base.OnSpawn(); m_IsBattleStarted = false; m_SlashCooldownTimer = 0f; ChangeState(EProvidenceState.None); }
 
+    public override void OnSpawn()
+    {
+        base.OnSpawn();
+        var difficulty = DifficultyManager.Instance;
+        m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+
+        m_IsBattleStarted = false;
+        m_IsFacingRight = true;
+        m_SlashCooldownTimer = 0f;
+        if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
+        ChangeState(EProvidenceState.None);
+    }
+
+    // ==========================================
+    // [Lifecycle & Phase Transitions]
+    // ==========================================
     public void StartIntro() { ChangeState(EProvidenceState.Intro); StartCoroutine(CoIntroRoutine()); }
     public void IntroComplete() { if (BossBattleController.Instance != null) BossBattleController.Instance.OnIntroFinished(); }
     public void EnterPhase1() { m_IsBattleStarted = true; ChangeCombatState(EProvidenceCombatState.Approach); ChangeState(EProvidenceState.Combat); }
 
-    // 💡 페이즈 2/3 전환 메서드 (여기에 있어야 함!)
     public void ExitArenaForPhase2()
     {
         m_IsBattleStarted = false;
-
-        // 1. 진행 중인 모든 코루틴 강제 종료 (텔레포트 슬래시 등)
         StopAllCoroutines();
-
-        // 2. 물리 상태 강제 초기화 및 복구
         m_Rigidbody.linearVelocity = Vector2.zero;
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
-
         ChangeState(EProvidenceState.PhaseTransition);
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
-
         gameObject.SetActive(false);
     }
 
@@ -88,10 +115,7 @@ public class ProvidenceAI : EnemyBase
     {
         gameObject.SetActive(true);
         m_IsBattleStarted = true;
-
-        // 재등장 시 물리 상태 명시적 확인
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
-
         ChangeCombatState(EProvidenceCombatState.Approach);
         ChangeState(EProvidenceState.Combat);
     }
@@ -112,15 +136,29 @@ public class ProvidenceAI : EnemyBase
     private IEnumerator CoIntroRoutine() { yield return new WaitForSeconds(1.0f); IntroComplete(); }
     private void StateMachine() { if (m_CurrentState == EProvidenceState.Combat) UpdateCombatFSM(); }
 
+    // ==========================================
+    // [Combat FSM Logic]
+    // ==========================================
     private void UpdateCombatFSM()
     {
         UpdateTimers();
-        if (m_CombatState == EProvidenceCombatState.Attack || m_CombatState == EProvidenceCombatState.Recover)
+
+        if (m_CombatState == EProvidenceCombatState.Attack)
         {
             ApplyMovement();
             if (m_ActionFailsafeTimer <= 0f) FinishAction();
             return;
         }
+        else if (m_CombatState == EProvidenceCombatState.Recover)
+        {
+            ApplyMovement();
+            if (m_ActionFailsafeTimer <= 0f)
+            {
+                ChangeCombatState(EProvidenceCombatState.Approach);
+            }
+            return;
+        }
+
         UpdateTargetInfo();
         CheckAttackConditions();
         ApplyMovement();
@@ -140,41 +178,195 @@ public class ProvidenceAI : EnemyBase
     private void CheckAttackConditions()
     {
         if (m_SlashCooldownTimer > 0f) return;
-        if (m_DistanceXToPlayer < m_MeleeRangeLimit) ExecuteNormalSlash();
-        else if (m_DistanceXToPlayer <= m_TeleportThresholdDistance) ExecuteMediumRangePattern();
-        else ExecuteTeleportSlash();
-    }
 
-    private void ExecuteMediumRangePattern()
-    {
-        float weightX1 = (m_LastAttackName == "ShootX1") ? 20f : 60f;
-        float weightC1 = (m_LastAttackName == "ShootC1") ? 20f : 40f;
-        if (UnityEngine.Random.Range(0f, weightX1 + weightC1) < weightX1) ExecuteX1Attack();
-        else ExecuteC1Attack();
-    }
-
-    private void ExecuteNormalSlash() { m_LastAttackName = "ShootZ1"; StartAction("ShootZ1"); }
-    private void ExecuteX1Attack() { m_LastAttackName = "ShootX1"; StartAction("ShootX1"); }
-    private void ExecuteC1Attack() { m_LastAttackName = "ShootC1"; StartAction("ShootC1"); }
-    private void ExecuteTeleportSlash() { m_LastAttackName = "ShootZ2"; StartCoroutine(CoTeleportDownwardSlashRoutine()); }
-
-    private void ApplyMovement()
-    {
-        if (m_CombatState == EProvidenceCombatState.Attack || m_CombatState == EProvidenceCombatState.Recover)
+        if (m_DistanceXToPlayer < m_MeleeRangeLimit)
         {
-            if (m_Rigidbody != null) m_Rigidbody.linearVelocity = new Vector2(0f, m_Rigidbody.linearVelocity.y);
-            return;
+            ExecuteNearRangePattern(); // 근접: Z1 / Z2 / X1 랜덤
         }
-        float speed = (m_DistanceXToPlayer > m_MeleeRangeLimit) ? m_MoveSpeed : 0f;
-        m_Rigidbody.linearVelocity = new Vector2(Mathf.MoveTowards(m_Rigidbody.linearVelocity.x, m_Direction * speed, m_Acceleration * Time.deltaTime), m_Rigidbody.linearVelocity.y);
+        else
+        {
+            ExecuteFarRangePattern();  // 원거리: Z2 / X1 랜덤
+        }
     }
 
-    private void Flip()
+    private void ExecuteNearRangePattern()
     {
-        m_IsFacingRight = !m_IsFacingRight;
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1f;
-        transform.localScale = localScale;
+        float weightZ1 = (m_LastAttackName == "ShootZ1") ? 20f : 60f;
+        float weightZ2 = (m_LastAttackName == "ShootZ2") ? 20f : 40f;
+        float weightX1 = (m_LastAttackName == "ShootX1") ? 20f : 40f;
+
+        float total = weightZ1 + weightZ2 + weightX1;
+        float roll = UnityEngine.Random.Range(0f, total);
+
+        if (roll < weightZ1)
+        {
+            ExecuteNormalSlash();
+        }
+        else if (roll < weightZ1 + weightZ2)
+        {
+            ExecuteTeleportSlash();
+        }
+        else
+        {
+            ExecuteX1Attack();
+        }
+    }
+
+    private void ExecuteFarRangePattern()
+    {
+        float weightZ2 = (m_LastAttackName == "ShootZ2") ? 20f : 60f;
+        float weightX1 = (m_LastAttackName == "ShootX1") ? 20f : 50f;
+
+        float total = weightZ2 + weightX1;
+        float roll = UnityEngine.Random.Range(0f, total);
+
+        if (roll < weightZ2)
+        {
+            ExecuteTeleportSlash();
+        }
+        else
+        {
+            ExecuteX1Attack();
+        }
+    }
+
+    // ==========================================
+    // [Attack Execution Methods]
+    // ==========================================
+    private void ExecuteNormalSlash()
+    {
+        m_LastAttackName = "ShootZ1";
+        StartAction("ShootZ1");
+    }
+
+    private void ExecuteX1Attack()
+    {
+        m_LastAttackName = "ShootX1";
+        m_X1Count++;
+        StartAction("ShootX1");
+    }
+
+    private void ExecuteC1Attack()
+    {
+        m_LastAttackName = "ShootC1";
+        StartCoroutine(CoPurpleCircleRoutine());
+    }
+
+    private void ExecuteTeleportSlash()
+    {
+        m_LastAttackName = "ShootZ2";
+        StartCoroutine(CoTeleportDownwardSlashRoutine());
+    }
+
+    // ==========================================
+    // [Attack Coroutines & Events]
+    // ==========================================
+    public void PerformExplosion()
+    {
+        StartCoroutine(CoCascadingExplosionRoutine(1f));
+        StartCoroutine(CoCascadingExplosionRoutine(-1f));
+    }
+
+    private IEnumerator CoCascadingExplosionRoutine(float waveDirection)
+    {
+        float currentX = transform.position.x + (waveDirection * 1.5f);
+        bool isHitPlayer = false;
+        bool isHitWall = false;
+
+        int maxSteps = 20;
+        int currentStep = 0;
+
+        while (!isHitPlayer && !isHitWall && currentStep < maxSteps)
+        {
+            float groundY = transform.position.y;
+            RaycastHit2D groundHit = Physics2D.Raycast(new Vector2(currentX, transform.position.y + 1f), Vector2.down, 5f, m_GroundLayer);
+            if (groundHit.collider != null) groundY = groundHit.point.y;
+
+            RaycastHit2D wallHit = Physics2D.Raycast(new Vector2(currentX, groundY + 0.5f), Vector2.right * waveDirection, m_ExplosionStep, m_GroundLayer);
+            if (wallHit.collider != null && !wallHit.collider.isTrigger)
+            {
+                isHitWall = true;
+                break;
+            }
+
+            Vector2 checkCenter = new Vector2(currentX, groundY + 1f);
+            Vector2 checkSize = new Vector2(m_ExplosionStep, 3f);
+            Collider2D playerHit = Physics2D.OverlapBox(checkCenter, checkSize, 0f, m_TargetLayer);
+
+            if (playerHit != null)
+            {
+                isHitPlayer = true;
+                SpawnExplosionEffect(currentX, groundY, waveDirection, true);
+                break;
+            }
+
+            SpawnExplosionEffect(currentX, groundY, waveDirection, false);
+
+            currentX += waveDirection * m_ExplosionStep;
+            currentStep++;
+            yield return new WaitForSeconds(m_ExplosionStepDelay);
+        }
+    }
+
+    private void SpawnExplosionEffect(float x, float y, float dir, bool isBigPillar)
+    {
+        if (m_ExplosionPrefab != null)
+        {
+            GameObject fx = Instantiate(m_ExplosionPrefab, new Vector2(x, y), Quaternion.identity);
+            if (fx.TryGetComponent(out BossSpreadingEffect effect))
+            {
+                float dmg = isBigPillar ? m_Damage * 1.5f : m_Damage * 0.8f;
+                effect.Setup(dmg, (int)dir, gameObject, isBigPillar);
+            }
+        }
+    }
+
+    private IEnumerator CoPurpleCircleRoutine()
+    {
+        ChangeCombatState(EProvidenceCombatState.Attack);
+        m_Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        m_Rigidbody.linearVelocity = Vector2.zero;
+
+        m_ActionFailsafeTimer = 6.0f;
+
+        if (m_Animator != null)
+        {
+            m_Animator.Play("ShootC1_1");
+        }
+        yield return new WaitForSeconds(1.0f);
+
+        if (m_Animator != null)
+        {
+            m_Animator.Play("ShootC1_2");
+        }
+
+        float duration = 4.0f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            if (Player != null && m_PurpleCirclePrefab != null)
+            {
+                Vector2 targetPos = Player.GetComponent<Collider2D>() != null
+                    ? Player.GetComponent<Collider2D>().bounds.center
+                    : Player.position;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    GameObject circle = Instantiate(m_PurpleCirclePrefab, targetPos, Quaternion.identity);
+                    if (circle.TryGetComponent(out PurpleCircleEffect effect))
+                    {
+                        float direction = (i == 0) ? 1f : -1f;
+                        effect.Setup(m_Damage * 0.7f, gameObject, direction);
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(m_CircleSpawnInterval);
+            elapsed += m_CircleSpawnInterval;
+        }
+
+        FinishAction();
     }
 
     private IEnumerator CoTeleportDownwardSlashRoutine()
@@ -207,16 +399,6 @@ public class ProvidenceAI : EnemyBase
         transform.position = targetPos;
     }
 
-    private void StartAction(string clipName)
-    {
-        ChangeCombatState(EProvidenceCombatState.Attack);
-        m_Rigidbody.bodyType = RigidbodyType2D.Kinematic;
-        m_Rigidbody.linearVelocity = Vector2.zero;
-        m_SlashCooldownTimer = m_SlashCooldown;
-        m_ActionFailsafeTimer = k_MaxActionTime;
-        if (m_Animator != null) m_Animator.Play(clipName);
-    }
-
     public void PerformSlash()
     {
         Vector2 hitCenter = (Vector2)transform.position + new Vector2(m_Direction * m_SlashHitboxOffset.x, m_SlashHitboxOffset.y);
@@ -245,6 +427,35 @@ public class ProvidenceAI : EnemyBase
         }
     }
 
+    private void StartAction(string clipName)
+    {
+        ChangeCombatState(EProvidenceCombatState.Attack);
+        m_Rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        m_Rigidbody.linearVelocity = Vector2.zero;
+        m_SlashCooldownTimer = m_SlashCooldown;
+        m_ActionFailsafeTimer = k_MaxActionTime;
+        if (m_Animator != null) m_Animator.Play(clipName);
+    }
+
+    private void ApplyMovement()
+    {
+        if (m_CombatState == EProvidenceCombatState.Attack || m_CombatState == EProvidenceCombatState.Recover)
+        {
+            if (m_Rigidbody != null) m_Rigidbody.linearVelocity = new Vector2(0f, m_Rigidbody.linearVelocity.y);
+            return;
+        }
+        float speed = (m_DistanceXToPlayer > m_MeleeRangeLimit) ? m_MoveSpeed : 0f;
+        m_Rigidbody.linearVelocity = new Vector2(Mathf.MoveTowards(m_Rigidbody.linearVelocity.x, m_Direction * speed, m_Acceleration * Time.deltaTime), m_Rigidbody.linearVelocity.y);
+    }
+
+    private void Flip()
+    {
+        m_IsFacingRight = !m_IsFacingRight;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1f;
+        transform.localScale = localScale;
+    }
+
     public void EnterRecovery()
     {
         ChangeCombatState(EProvidenceCombatState.Recover);
@@ -254,10 +465,18 @@ public class ProvidenceAI : EnemyBase
 
     public void FinishAction()
     {
-        m_ActionFailsafeTimer = 0f;
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
+
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
-        ChangeCombatState(EProvidenceCombatState.Approach);
+        if (m_X1Count >= k_MaxX1BeforeC1)
+        {
+            m_X1Count = 0;
+            ExecuteC1Attack();
+            return;
+        }
+
+        ChangeCombatState(EProvidenceCombatState.Recover);
+        m_ActionFailsafeTimer = m_RecoveryDelay;
     }
 
     protected virtual void ChangeState(EProvidenceState newState)
@@ -286,17 +505,17 @@ public class ProvidenceAI : EnemyBase
 
     public void DeathComplete() { gameObject.SetActive(false); }
 
+    private void UpdateTimers()
+    {
+        if (m_SlashCooldownTimer > 0f) m_SlashCooldownTimer -= Time.deltaTime;
+        if (m_ActionFailsafeTimer > 0f) m_ActionFailsafeTimer -= Time.deltaTime;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
         int dir = Application.isPlaying ? m_Direction : (m_IsFacingRight ? 1 : -1);
         Vector2 hitCenter = (Vector2)transform.position + new Vector2(dir * m_SlashHitboxOffset.x, m_SlashHitboxOffset.y);
         Gizmos.DrawCube(hitCenter, m_SlashHitboxSize);
-    }
-
-    private void UpdateTimers()
-    {
-        if (m_SlashCooldownTimer > 0f) m_SlashCooldownTimer -= Time.deltaTime;
-        if (m_ActionFailsafeTimer > 0f) m_ActionFailsafeTimer -= Time.deltaTime;
     }
 }
