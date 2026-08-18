@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: HeavenCracker
   m_EditorClassIdentifier: Assembly-CSharp::Item_HeavenCracker
   itemName: HeavenCracker
-  description: '"Every 4 (-1 per stack) basic attacks pierce through enemies for
-    100% damage'
+  description: Every 4 (-1 per stack) basic attacks pierce through enemies for 100%
+    damage
   itemIcon: {fileID: -4616269783505502659, guid: e1f5aeb89b6b60f47999ef5a52ff4206, type: 3}
   tier: 2
   isStackable: 1

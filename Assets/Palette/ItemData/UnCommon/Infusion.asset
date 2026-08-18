@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f3348a4d4452541a9dcbc747a74586, type: 3}
   m_Name: Infusion
   m_EditorClassIdentifier: Assembly-CSharp::Item_Infusion
-  itemName: "\uC8FC\uC785 \uC57D\uBB3C"
-  description: "\uC801\uC744 \uCC98\uCE58\uD560 \uB54C\uB9C8\uB2E4 \uCCB4\uB825\uC774
-    \uC601\uAD6C\uC801\uC73C\uB85C 1 \uC99D\uAC00\uD55C\uB2E4."
+  itemName: Infusion
+  description: Killing an enemy increases your health permanently by 1.
   itemIcon: {fileID: -3563363799746650301, guid: 83d3ab1f195546c498c0e98d5af57873, type: 3}
   tier: 1
   isStackable: 1
   maxStack: 0
+  cooldown: 0
