@@ -1,10 +1,28 @@
 fileFormatVersion: 2
-guid: d2af65759da70e3428cc820ab955a75a
+guid: f375617e0f7a5004494a9eb7656723e0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6351736027083796051
-    second: sDifficulty_kr_0_0
+      213: -1275535628949736052
+    second: sEfLevelUp_1_0
+  - first:
+      213: 6592097712969752482
+    second: sEfLevelUp_1_1
+  - first:
+      213: -5780970774298428948
+    second: sEfLevelUp_1_2
+  - first:
+      213: -7522488333755884598
+    second: sEfLevelUp_1_3
+  - first:
+      213: 7337758664776088916
+    second: sEfLevelUp_1_4
+  - first:
+      213: -4686574879865204145
+    second: sEfLevelUp_1_5
+  - first:
+      213: -781250633741862070
+    second: sEfLevelUp_1_6
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,36 +118,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sDifficulty_kr_0_0
+      name: sEfLevelUp_1_0
       rect:
         serializedVersion: 2
-        x: 20
+        x: 0
         y: 0
-        width: 53
-        height: 102
+        width: 293
+        height: 27
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline:
-      - - {x: -26.5, y: 30}
-        - {x: 26.5, y: 30}
-        - {x: 26.5, y: 51}
-        - {x: -26.5, y: 51}
-      - - {x: 14.5, y: -34}
-        - {x: 14.5, y: -51}
-        - {x: 26.5, y: -51}
-        - {x: 26.5, y: 30}
-        - {x: 13.5, y: 30}
-      - - {x: 6.5, y: -51}
-        - {x: 14.5, y: -51}
-        - {x: 14.5, y: -34}
-        - {x: 6.5, y: -34}
+      outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 35e61618346e52850800000000000000
-      internalID: 6351736027083796051
+      spriteID: c85b8128a136c4ee0800000000000000
+      internalID: -1275535628949736052
       vertices: []
       indices: 
       edges: []
@@ -138,7 +143,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d476c6935727a3646aed63a2197ebf1d
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,9 +153,13 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sDifficulty_kr_0_0: 6351736027083796051
-      sDifficulty_kr_0_1: 905981288
-      sDifficulty_kr_0_2: 593200631
+      sEfLevelUp_1_0: -1275535628949736052
+      sEfLevelUp_1_1: 6592097712969752482
+      sEfLevelUp_1_2: -5780970774298428948
+      sEfLevelUp_1_3: -7522488333755884598
+      sEfLevelUp_1_4: 7337758664776088916
+      sEfLevelUp_1_5: -4686574879865204145
+      sEfLevelUp_1_6: -781250633741862070
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
