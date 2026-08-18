@@ -3,127 +3,430 @@ using System.Collections;
 
 public class RedGildedWurm : GildedWurmBase
 {
-    [Header("Laser Pattern Settings")]
-    [SerializeField] private LineRenderer m_LaserRenderer;
-    [SerializeField] private GameObject m_CrosshairPrefab;
+    [Header("Laser Animation Settings")]
+    [Tooltip("애니메이션이 적용된 레이저 오브젝트")]
+    [SerializeField] private GameObject m_LaserObject;
+
+    [Tooltip("레이저가 발사될 입 위치")]
+    [SerializeField] private Transform m_MouthPoint;
+
+    [Tooltip("레이저 스프라이트의 기본 방향 보정값")]
+    [SerializeField] private float m_LaserSpriteRotationOffset = -90f;
+
+    [Tooltip("레이저가 플레이어를 추적하며 회전하는 속도")]
+    [SerializeField] private float m_LaserRotationSpeed = 180f;
+
+    [Header("Laser Damage Settings")]
     [SerializeField] private float m_BeamDamage = 15f;
-    [SerializeField] private float m_BeamRotationSpeed = 90f;
+    [SerializeField] private float m_DamageInterval = 0.08f;
     [SerializeField] private LayerMask m_TargetLayer;
     [SerializeField] private float m_LaserRange = 20f;
 
-    private bool m_IsAttacking = false;
-    private Vector2 m_CurrentLaserDir;
+    [Header("Attack Conditions")]
+    [Range(0.5f, 1.0f)]
+    [SerializeField] private float m_FacingThreshold = 0.94f;
 
-    // 공격 시 속도 감속을 위한 원본 수치 저장
+    [Range(0f, 1f)]
+    [SerializeField] private float m_AttackChance = 0.4f;
+
+    [SerializeField] private float m_AttackDuration = 3.0f;
+    [SerializeField] private float m_AttackCooldown = 3.0f;
+
+    [Header("Attack Movement Settings")]
+    [Range(0.1f, 1.0f)]
+    [SerializeField] private float m_AttackSpeedMultiplier = 0.5f;
+
+    [Range(0.1f, 1.0f)]
+    [SerializeField] private float m_AttackTurnMultiplier = 0.6f;
+
+    private bool m_IsAttacking = false;
+
+    private float m_CurrentCooldown = 2.0f;
+    private float m_DamageTimer = 0f;
+
     private float m_OriginalMaxSpeed;
     private float m_OriginalTurnSpeed;
+
+    // 현재 레이저의 실제 회전 각도
+    private float m_CurrentLaserAngle;
+
+
+    // =========================================================
+    // Setup
+    // =========================================================
 
     public override void Setup(Transform player)
     {
         base.Setup(player);
+
         m_OriginalMaxSpeed = m_MaxSpeed;
         m_OriginalTurnSpeed = m_TurnSpeed;
 
-        if (m_LaserRenderer != null) m_LaserRenderer.enabled = false;
-        StartCoroutine(AttackRoutine());
+        m_IsAttacking = false;
+        m_CurrentCooldown = 2.0f;
+        m_DamageTimer = 0f;
+
+        if (m_LaserObject != null)
+        {
+            m_LaserObject.SetActive(false);
+        }
     }
+
+
+    // =========================================================
+    // Update
+    // =========================================================
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (m_Player == null)
+            return;
+
+        if (!m_IsAttacking)
+        {
+            m_CurrentCooldown -= Time.deltaTime;
+
+            if (m_CurrentCooldown <= 0f)
+            {
+                CheckAttackConditions();
+            }
+        }
+    }
+
+
+    // =========================================================
+    // Movement
+    // =========================================================
 
     protected override void UpdateMovement()
     {
-        // 💡 공격과 이동의 완전한 분리: 이동 수치(Parameter)만 간섭
         if (m_IsAttacking)
         {
-            // 공격 중: 속도는 크게 줄이고 회전력은 극도로 둔화시켜 레이저 쏘는 폼을 잡음
-            m_MaxSpeed = Mathf.Lerp(m_MaxSpeed, m_OriginalMaxSpeed * 0.15f, Time.deltaTime * 4f);
-            m_TurnSpeed = Mathf.Lerp(m_TurnSpeed, m_OriginalTurnSpeed * 0.2f, Time.deltaTime * 4f);
+            m_MaxSpeed = Mathf.Lerp(
+                m_MaxSpeed,
+                m_OriginalMaxSpeed * m_AttackSpeedMultiplier,
+                Time.deltaTime * 4f
+            );
+
+            m_TurnSpeed = Mathf.Lerp(
+                m_TurnSpeed,
+                m_OriginalTurnSpeed * m_AttackTurnMultiplier,
+                Time.deltaTime * 4f
+            );
         }
         else
         {
-            // 회복 중: 원래 속도와 회전력을 부드럽게 되찾으며 관성 비행 재개
-            m_MaxSpeed = Mathf.Lerp(m_MaxSpeed, m_OriginalMaxSpeed, Time.deltaTime * 2f);
-            m_TurnSpeed = Mathf.Lerp(m_TurnSpeed, m_OriginalTurnSpeed, Time.deltaTime * 2f);
+            m_MaxSpeed = Mathf.Lerp(
+                m_MaxSpeed,
+                m_OriginalMaxSpeed,
+                Time.deltaTime * 2f
+            );
+
+            m_TurnSpeed = Mathf.Lerp(
+                m_TurnSpeed,
+                m_OriginalTurnSpeed,
+                Time.deltaTime * 2f
+            );
         }
 
-        // 실제 이동 로직은 Base의 Steering AI가 100% 처리
         base.UpdateMovement();
     }
 
-    private IEnumerator AttackRoutine()
+
+    // =========================================================
+    // Attack Condition
+    // =========================================================
+
+    private void CheckAttackConditions()
     {
-        // 스폰 후 초기 진입 비행을 위한 대기 시간
-        yield return new WaitForSeconds(3.0f);
+        if (m_Player == null)
+            return;
 
-        while (true)
+        Vector2 toPlayer = m_Player.position - transform.position;
+        float distance = toPlayer.magnitude;
+
+        // 레이저 최대 사거리 밖이면 공격하지 않음
+        if (distance > m_LaserRange)
+            return;
+
+        if (m_Velocity.sqrMagnitude <= 0.001f)
         {
-            // ==========================================
-            // 1. Telegraph (조준)
-            // ==========================================
-            m_IsAttacking = true; // 이동 속도 감소 시작
-            GameObject crosshair = null;
+            m_CurrentCooldown = 0.5f;
+            return;
+        }
 
-            if (m_CrosshairPrefab != null && m_Player != null)
+        Vector2 velocityDirection = m_Velocity.normalized;
+        Vector2 playerDirection = toPlayer.normalized;
+
+        float dotProduct = Vector2.Dot(
+            velocityDirection,
+            playerDirection
+        );
+
+        // 현재 이동 방향이 플레이어 방향과 어느 정도 일치하는지 확인
+        if (dotProduct > m_FacingThreshold)
+        {
+            if (Random.value <= m_AttackChance)
             {
-                crosshair = Instantiate(m_CrosshairPrefab, m_Player.position, Quaternion.identity);
+                Debug.Log("🔴 빨간 웜: 레이저 공격 시작!");
+
+                StartCoroutine(AttackRoutine());
             }
-
-            yield return new WaitForSeconds(1.2f);
-            if (crosshair != null) Destroy(crosshair);
-
-            // ==========================================
-            // 2. Fire (발사)
-            // ==========================================
-            if (m_LaserRenderer != null) m_LaserRenderer.enabled = true;
-            if (m_Player != null) m_CurrentLaserDir = (m_Player.position - transform.position).normalized;
-
-            float fireDuration = 2.0f;
-            float elapsed = 0f;
-
-            while (elapsed < fireDuration)
+            else
             {
-                UpdateLaserBeam();
-                elapsed += Time.deltaTime;
-                yield return null;
+                m_CurrentCooldown = 1.0f;
             }
-
-            // ==========================================
-            // 3. Recovery (회복)
-            // ==========================================
-            if (m_LaserRenderer != null) m_LaserRenderer.enabled = false;
-            m_IsAttacking = false; // 이동 속도 복구 시작
-
-            // 다음 공격까지 쿨타임 (이 동안 자유롭게 아레나를 휘젓고 다님)
-            yield return new WaitForSeconds(5.0f);
         }
     }
-    
-    private void UpdateLaserBeam()
+
+
+    // =========================================================
+    // Attack Routine
+    // =========================================================
+
+    private IEnumerator AttackRoutine()
     {
-        if (m_Player == null || m_LaserRenderer == null) return;
+        m_IsAttacking = true;
+        m_DamageTimer = 0f;
 
-        Vector2 targetDir = (m_Player.position - transform.position).normalized;
-        float currentAngle = Mathf.Atan2(m_CurrentLaserDir.y, m_CurrentLaserDir.x) * Mathf.Rad2Deg;
-        float targetAngle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
-
-        float smoothedAngle = Mathf.MoveTowardsAngle(currentAngle, targetAngle, m_BeamRotationSpeed * Time.deltaTime);
-        m_CurrentLaserDir = new Vector2(Mathf.Cos(smoothedAngle * Mathf.Deg2Rad), Mathf.Sin(smoothedAngle * Mathf.Deg2Rad)).normalized;
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, m_CurrentLaserDir, m_LaserRange, m_TargetLayer);
-
-        m_LaserRenderer.SetPosition(0, transform.position);
-        m_LaserRenderer.SetPosition(1, hit.collider != null ? (Vector3)hit.point : (transform.position + (Vector3)m_CurrentLaserDir * m_LaserRange));
-
-        if (hit.collider != null && hit.collider.CompareTag("Player"))
+        if (m_LaserObject != null && m_MouthPoint != null)
         {
-            if (hit.collider.TryGetComponent(out IDamageable player))
+            // 💡 1. 자식 Laser 오브젝트에 있는 Animator를 가져와 isAttacking을 true로 설정
+            Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
+            if (laserAnimator != null)
             {
-                DamageInfo info = new DamageInfo
+                laserAnimator.SetBool("isAttacking", true);
+            }
+
+            // 💡 2. 레이저 오브젝트 켜기
+            m_LaserObject.SetActive(true);
+
+            Vector2 startPos = m_MouthPoint.position;
+
+            Vector2 initialDirection =
+                ((Vector2)m_Player.position - startPos).normalized;
+
+            float initialAngle =
+                Mathf.Atan2(
+                    initialDirection.y,
+                    initialDirection.x
+                ) * Mathf.Rad2Deg;
+
+            m_CurrentLaserAngle =
+                initialAngle + m_LaserSpriteRotationOffset;
+
+            m_LaserObject.transform.position = startPos;
+
+            m_LaserObject.transform.rotation =
+                Quaternion.Euler(
+                    0f,
+                    0f,
+                    m_CurrentLaserAngle
+                );
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < m_AttackDuration)
+        {
+            if (m_Player == null)
+                break;
+
+            UpdateLaserLogic();
+
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        // 💡 3. 공격 종료 시 Animator의 isAttacking을 false로 설정하고 레이저 끄기
+        if (m_LaserObject != null)
+        {
+            Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
+            if (laserAnimator != null)
+            {
+                laserAnimator.SetBool("isAttacking", false);
+            }
+
+            m_LaserObject.SetActive(false);
+        }
+
+        m_IsAttacking = false;
+        m_DamageTimer = 0f;
+        m_CurrentCooldown = m_AttackCooldown;
+
+        Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
+    }
+
+
+    // =========================================================
+    // Laser Logic
+    // =========================================================
+
+    private void UpdateLaserLogic()
+    {
+        if (m_Player == null ||
+            m_MouthPoint == null ||
+            m_LaserObject == null)
+        {
+            return;
+        }
+
+        // -----------------------------------------------------
+        // 1. 레이저 시작점
+        // -----------------------------------------------------
+
+        Vector2 startPos = m_MouthPoint.position;
+
+        m_LaserObject.transform.position = startPos;
+
+
+        // -----------------------------------------------------
+        // 2. 플레이어 방향 계산
+        // -----------------------------------------------------
+
+        Vector2 directionToPlayer =
+            ((Vector2)m_Player.position - startPos).normalized;
+
+        if (directionToPlayer.sqrMagnitude <= 0.001f)
+            return;
+
+
+        // -----------------------------------------------------
+        // 3. 목표 각도 계산
+        // -----------------------------------------------------
+
+        float targetAngle =
+            Mathf.Atan2(
+                directionToPlayer.y,
+                directionToPlayer.x
+            ) * Mathf.Rad2Deg;
+
+        targetAngle += m_LaserSpriteRotationOffset;
+
+
+        // -----------------------------------------------------
+        // 4. 현재 레이저 각도를 목표 각도로 천천히 회전
+        // -----------------------------------------------------
+
+        m_CurrentLaserAngle = Mathf.MoveTowardsAngle(
+            m_CurrentLaserAngle,
+            targetAngle,
+            m_LaserRotationSpeed * Time.deltaTime
+        );
+
+
+        // -----------------------------------------------------
+        // 5. 화면에 보이는 레이저 회전
+        // -----------------------------------------------------
+
+        m_LaserObject.transform.rotation =
+            Quaternion.Euler(
+                0f,
+                0f,
+                m_CurrentLaserAngle
+            );
+
+
+        // -----------------------------------------------------
+        // 6. 실제 공격 방향 계산
+        // -----------------------------------------------------
+        //
+        // Sprite Rotation Offset은 이미지 방향 보정용이므로
+        // 실제 Raycast 방향에서는 다시 제거한다.
+        //
+
+        float actualAngle =
+            m_CurrentLaserAngle -
+            m_LaserSpriteRotationOffset;
+
+        Vector2 laserDirection =
+            new Vector2(
+                Mathf.Cos(actualAngle * Mathf.Deg2Rad),
+                Mathf.Sin(actualAngle * Mathf.Deg2Rad)
+            ).normalized;
+
+
+        // -----------------------------------------------------
+        // 7. 레이저 Raycast
+        // -----------------------------------------------------
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            startPos,
+            laserDirection,
+            m_LaserRange,
+            m_TargetLayer
+        );
+
+
+        // -----------------------------------------------------
+        // 8. 플레이어 피격
+        // -----------------------------------------------------
+
+        if(hit.collider != null &&
+            hit.collider.CompareTag("Player"))
+        {
+            m_DamageTimer += Time.deltaTime;
+
+            if (m_DamageTimer >= m_DamageInterval)
+            {
+                m_DamageTimer = 0f;
+
+                if (hit.collider.TryGetComponent(out PlayerController player))
                 {
-                    Amount = m_BeamDamage * Time.deltaTime,
-                    Attacker = gameObject,
-                    HitPoint = hit.point
-                };
-                player.TakeDamage(info);
+                    player.TakeDamage(m_BeamDamage);
+                }
             }
         }
+        else
+        {
+            m_DamageTimer = 0f;
+        }
+    }
+
+
+    // =========================================================
+    // Debug
+    // =========================================================
+
+    private void OnDrawGizmosSelected()
+    {
+        if (m_MouthPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+
+        Vector3 start = m_MouthPoint.position;
+
+        Vector2 direction;
+
+        if (Application.isPlaying)
+        {
+            float actualAngle =
+                m_CurrentLaserAngle -
+                m_LaserSpriteRotationOffset;
+
+            direction = new Vector2(
+                Mathf.Cos(actualAngle * Mathf.Deg2Rad),
+                Mathf.Sin(actualAngle * Mathf.Deg2Rad)
+            );
+        }
+        else if (m_Player != null)
+        {
+            direction =
+                ((Vector2)m_Player.position -
+                 (Vector2)start).normalized;
+        }
+        else
+        {
+            direction = Vector2.right;
+        }
+
+        Gizmos.DrawLine(
+            start,
+            start + (Vector3)direction * m_LaserRange
+        );
     }
 }

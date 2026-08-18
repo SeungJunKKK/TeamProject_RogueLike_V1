@@ -74,39 +74,39 @@ public class GameResultUI : MonoBehaviour
         // Level
         int levelPoints = run.CurrentLevel * 500;
         m_LevelValueText.text = run.CurrentLevel.ToString();
-        m_LevelPointsText.text = $"{levelPoints} POINTS";
+        m_LevelPointsText.text = $"{levelPoints}";
 
         // Time (분:초 변환 형식)
         int minutes = Mathf.FloorToInt(run.PlayTime / 60f);
         int seconds = Mathf.FloorToInt(run.PlayTime % 60f);
         m_TimeValueText.text = $"{minutes}:{seconds:D2}";
         int timePoints = Mathf.FloorToInt(run.PlayTime) * 3;
-        m_TimePointsText.text = $"{timePoints} POINTS";
+        m_TimePointsText.text = $"{timePoints}";
 
         // Kills
         int killPoints = run.Kills * 100;
         m_KillsValueText.text = run.Kills.ToString();
-        m_KillsPointsText.text = $"{killPoints} POINTS";
+        m_KillsPointsText.text = $"{killPoints}";
 
         // Bosses
         int bossPoints = run.BossesKilled * 1000;
         m_BossValueText.text = run.BossesKilled.ToString();
-        m_BossPointsText.text = $"{bossPoints} POINTS";
+        m_BossPointsText.text = $"{bossPoints}";
 
         // Items
         int itemPoints = run.ItemsCollected * 110;
         m_ItemValueText.text = run.ItemsCollected.ToString();
-        m_ItemPointsText.text = $"{itemPoints} POINTS";
+        m_ItemPointsText.text = $"{itemPoints}";
 
         // Gold
         int goldPoints = run.GoldCollected * 2;
         m_GoldValueText.text = run.GoldCollected.ToString();
-        m_GoldPointsText.text = $"{goldPoints} POINTS";
+        m_GoldPointsText.text = $"{goldPoints} ";
 
         // Purchases
         int purchasePoints = run.Purchases * 35;
         m_PurchaseValueText.text = run.Purchases.ToString();
-        m_PurchasePointsText.text = $"{purchasePoints} POINTS";
+        m_PurchasePointsText.text = $"{purchasePoints}";
 
         // 3. 총 점수 계산
         int currentTotalScore = run.CalculateTotalScore();
@@ -159,4 +159,14 @@ public class GameResultUI : MonoBehaviour
             if (recordTagObject != null) recordTagObject.SetActive(false);
         }
     }
+
+    // ==========================================
+    //  타이틀 씬으로 돌아가기 (버튼 클릭용)
+    // ==========================================
+    public void OnClickReturnToTitle()
+    {
+        Time.timeScale = 1f;
+        SceneLoader.Instance.LoadScene("TitleScene", true,"Shared");
+    }
+
 }

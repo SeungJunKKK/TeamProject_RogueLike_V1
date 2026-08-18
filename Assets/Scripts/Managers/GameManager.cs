@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,19 +61,41 @@ public class GameManager : Singleton<GameManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        //  인게임 스테이지일 때
         if (scene.name != "TitleScene" && scene.name != "PlayerSelectScene")
         {
-            SpawnPlayer();
+            // 플레이어 존재 여부에 따라 스폰 또는 이동 처리
+            if (CurrentPlayer != null)
+            {
+                GameObject spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
+                CurrentPlayer.transform.position = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
-            State = EGameState.Ready; 
-            StartGame(); 
+                Debug.Log($"<color=cyan>[GameManager]플레이어를 다음 스테이지({scene.name})로 이동</color>");
+            }
+            else
+            {
+                SpawnPlayer();
+                State = EGameState.Ready;
+                StartGame();
+            }
 
             if (m_TeleportInSound != null && SoundManager.Instance != null)
             {
                 SoundManager.Instance.PlaySFX(m_TeleportInSound);
             }
         }
+        else
+        {
+            // 다음 새 게임을 위해 기존에 살아남아있던 플레이어 정보를 완전히 초기화합니다.
+            if (CurrentPlayer != null)
+            {
+                Destroy(CurrentPlayer);
+                CurrentPlayer = null;
+                State = EGameState.Ready;
+            }
+        }
     }
+
     private void SpawnPlayer()
     {
         if (SelectedPlayerPrefab == null)
@@ -86,6 +109,8 @@ public class GameManager : Singleton<GameManager>
         Vector3 spawnPosition = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
         CurrentPlayer = Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
+        DontDestroyOnLoad(CurrentPlayer);
+
         SaveLoadManager.Instance.CurrentRun.ResetRun(SelectedPlayerPrefab.name);
         Debug.Log($"<color=cyan>[GameManager] 플레이어 스폰 완료 위치: {spawnPosition}</color>");
     }
@@ -194,5 +219,17 @@ public class GameManager : Singleton<GameManager>
     private void OnMonsterDied(MonsterDiedEvent e)
     {
         AddGold(e.Gold);
+
+        if (CurrentPlayer != null)
+        {
+            if (CurrentPlayer.TryGetComponent(out PlayerController player))
+            {
+                if (player.Stats != null)
+                {
+                    player.Stats.AddExp(e.Exp);
+                }
+            }
+        }
+
     }
 }

@@ -103,17 +103,30 @@ TextureImporter:
       name: sDifficulty_kr_0_0
       rect:
         serializedVersion: 2
-        x: 19
+        x: 20
         y: 0
-        width: 54
+        width: 53
         height: 102
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
+      outline:
+      - - {x: -26.5, y: 30}
+        - {x: 26.5, y: 30}
+        - {x: 26.5, y: 51}
+        - {x: -26.5, y: 51}
+      - - {x: 14.5, y: -34}
+        - {x: 14.5, y: -51}
+        - {x: 26.5, y: -51}
+        - {x: 26.5, y: 30}
+        - {x: 13.5, y: 30}
+      - - {x: 6.5, y: -51}
+        - {x: 14.5, y: -51}
+        - {x: 14.5, y: -34}
+        - {x: 6.5, y: -34}
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: 35e61618346e52850800000000000000
       internalID: 6351736027083796051
@@ -125,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d476c6935727a3646aed63a2197ebf1d
     internalID: 0
     vertices: []
     indices: 
@@ -136,6 +149,8 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       sDifficulty_kr_0_0: 6351736027083796051
+      sDifficulty_kr_0_1: 905981288
+      sDifficulty_kr_0_2: 593200631
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

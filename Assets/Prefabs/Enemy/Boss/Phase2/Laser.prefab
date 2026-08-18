@@ -116,8 +116,7 @@ MonoBehaviour:
     m_Bits: 64
   m_SpriteRotationOffset: -90
   m_SpriteRenderer: {fileID: 3795012167378051059}
-  m_LaserThickness: 1
-  m_RotationSpeed: 180
+  m_MoveSpeed: 5
 --- !u!120 &3594058319574397898
 LineRenderer:
   serializedVersion: 3

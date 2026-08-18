@@ -55,11 +55,13 @@ public class Teleporter : MonoBehaviour, IInteractable
     private void Awake()
     {
         EventBus.Subscribe<BossDiedEvent>(OnBossDied);
+        EventBus.Subscribe<EliteDiedEvent>(OnEliteDied);
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<BossDiedEvent>(OnBossDied);
+        EventBus.Unsubscribe<EliteDiedEvent>(OnEliteDied);
     }
 
     private void Update()
@@ -88,6 +90,14 @@ public class Teleporter : MonoBehaviour, IInteractable
         // 웨이브 스폰은 EnemySpawner가 TeleporterStateChangedEvent를 구독해 처리
         //   Charging: 스폰 강화 + 보스 등장 / WaitingForClear: 신규 스폰 중단
 
+        EventBus.Publish(new TeleporterUpdateEvent
+        {
+            State = ETeleporterState.Charging,
+            ProgressPercent = ChargeProgress * 100f,
+            TimeLeft = Mathf.Max(0, m_ChargeDuration - m_ChargeTimer)
+        });
+
+
         float currentPercent = Mathf.Floor(ChargeProgress * 100f / 25f) * 25f;
         if (currentPercent > m_LastLoggedPercent)
         {
@@ -107,6 +117,13 @@ public class Teleporter : MonoBehaviour, IInteractable
         // 스포너가 없는 씬(단독 테스트 등)에서는 적 0으로 간주
         int activeEnemies = EnemySpawner.Instance != null ? EnemySpawner.Instance.ActiveEnemyCount : 0;
         bool bossDead = IsBossDead();
+
+        EventBus.Publish(new TeleporterUpdateEvent
+        {
+            State = ETeleporterState.WaitingForClear,
+            RemainingEnemies = activeEnemies,
+            IsBossDead = bossDead
+        });
 
         if (activeEnemies != m_LastLoggedEnemyCount)
         {
@@ -145,9 +162,16 @@ public class Teleporter : MonoBehaviour, IInteractable
         }
 
         EventBus.Publish(new TeleporterStateChangedEvent { State = State });
+
+        EventBus.Publish(new TeleporterUpdateEvent { State = State });
     }
 
     private void OnBossDied(BossDiedEvent e)
+    {
+        m_IsBossDead = true;
+    }
+
+    private void OnEliteDied(EliteDiedEvent e)
     {
         m_IsBossDead = true;
     }

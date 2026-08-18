@@ -8,6 +8,7 @@ public class SkillSlotUI : MonoBehaviour
     [SerializeField] private SkillType skillType;
 
     [Header("UI Reference")]
+    [SerializeField] private Image skillIcon;
     [SerializeField] private Image cooldownOverlay;
     [SerializeField] private TMP_Text cooldownText;
 
@@ -16,6 +17,15 @@ public class SkillSlotUI : MonoBehaviour
     private void Awake()
     {
         ResetCooldownUI();
+    }
+
+    public void SetSkill(SkillInfo info)
+    {
+        if (skillIcon != null)
+        {
+            skillIcon.sprite = info.SkillIcon;
+            skillIcon.enabled = (info.SkillIcon != null);
+        }
     }
 
     public void UpdateCooldown(float remainingTime, float maxCooldown)

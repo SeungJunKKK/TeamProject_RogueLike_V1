@@ -66,17 +66,11 @@ public class Laser : MonoBehaviour
             if (m_DamageTimer >= m_DamageInterval)
             {
                 m_DamageTimer = 0f;
-                if (hit.collider.TryGetComponent(out IDamageable target))
+
+                // IDamageable 대신 PlayerController를 직접 타겟팅
+                if (hit.collider.TryGetComponent(out PlayerController player))
                 {
-                    DamageInfo info = new DamageInfo
-                    {
-                        Amount = m_BeamDamage,
-                        Attacker = gameObject,
-                        HitPoint = hit.point,
-                        HitDirection = laserDir,
-                        IsUnblockable = true
-                    };
-                    target.TakeDamage(info);
+                    player.TakeDamage(m_BeamDamage);
                 }
             }
         }

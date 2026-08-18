@@ -3,6 +3,7 @@ using UnityEngine;
 public enum ERockGolemState
 {
     None,
+    Idle,
     Chase,
     Attack
 }
@@ -10,29 +11,15 @@ public enum ERockGolemState
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class RockGolemAI : EnemyBase
 {
-    // --- Configurable Settings ---
-    [Header("Stats Setting")]
-    [SerializeField] private float m_BaseDamage = 34f;
-
-    [Header("Movement Setting")]
-    [SerializeField] private float m_MoveSpeed = 1.8f;
-    [SerializeField] private float m_Acceleration = 6.0f;
-
-    [Header("Combat Setting")]
-    [SerializeField] private float m_AttackStartRange = 3.5f;
-    [SerializeField] private float m_AttackCooldown = 3.5f;
+    [Header("Rock Golem Unique Setting")]
     [SerializeField] private Transform m_ShockwaveSpawnPos;
     [SerializeField] private GameObject m_ShockwavePrefab;
 
-    [Header("Raycast Sensors")]
-    [SerializeField] private float m_CliffRayLength = 1.5f;
-    [SerializeField] private float m_WallRayLength = 0.3f;
+    [Header("Layer Setting")]
     [SerializeField] private LayerMask m_GroundLayer;
-
-    [Header("Separation Setting")]
-    [SerializeField] private float m_SeparationRadius = 1.2f;
-    [SerializeField] private float m_SeparationForce = 1.0f;
     [SerializeField] private LayerMask m_EnemyLayer;
+
+    protected GroundEnemyDataSO m_GroundData;
 
     // --- Components & Internal States ---
     private BoxCollider2D m_Collider;
@@ -44,6 +31,7 @@ public class RockGolemAI : EnemyBase
 
     private float m_Damage;
     private float m_AttackCooldownTimer = 0f;
+    private float m_LastJumpTime = 0f;
 
     // --- Sensor Data ---
     private bool m_IsGrounded = true;
@@ -67,24 +55,24 @@ public class RockGolemAI : EnemyBase
         m_Rigidbody = GetComponent<Rigidbody2D>();
         m_Collider = GetComponent<BoxCollider2D>();
         m_Animator = GetComponent<Animator>();
+
+        m_GroundData = m_Data as GroundEnemyDataSO;
     }
 
     public override void SetTarget(Transform target)
     {
         m_Target = target;
-
-        Debug.Log($"[RockGolem] ★ SetTarget 호출됨 / Target = {m_Target}");
     }
 
     public override void OnSpawn()
     {
         base.OnSpawn();
-
-        Debug.Log($"[RockGolem] OnSpawn 호출 / Target = {m_Target}");
+        m_GroundData ??= m_Data as GroundEnemyDataSO;
 
         var difficulty = DifficultyManager.Instance;
-        m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
-
+        //m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+        m_Damage = difficulty != null ? m_GroundData.BaseDamage * difficulty.Coefficient : m_GroundData.BaseDamage;
+        
         ResetState();
         ResetPhysics();
 
@@ -92,15 +80,12 @@ public class RockGolemAI : EnemyBase
 
         if (m_Animator != null)
         {
-            Debug.Log("[RockGolem] Spawn 애니메이션 재생");
-
             m_Animator.Rebind();
             m_Animator.Update(0f);
             m_Animator.Play("Spawn", -1, 0f);
         }
         else
         {
-            Debug.Log("[RockGolem] Animator 없음 → SpawnComplete 직접 호출");
             SpawnComplete();
         }
     }
@@ -144,7 +129,7 @@ public class RockGolemAI : EnemyBase
 
     public void SpawnComplete()
     {
-        Debug.Log("[RockGolem] SpawnComplete 호출됨");
+        //Debug.Log("[RockGolem] SpawnComplete 호출됨");
 
         m_IsSpawnFinished = true;
         m_CurrentState = ERockGolemState.None;
@@ -184,19 +169,19 @@ public class RockGolemAI : EnemyBase
 
         Vector2 cliffCheckPos = new Vector2(checkX, safeStartY);
 
-        RaycastHit2D cliffHit = Physics2D.Raycast(cliffCheckPos, Vector2.down, m_CliffRayLength + 0.1f, m_GroundLayer);
+        RaycastHit2D cliffHit = Physics2D.Raycast(cliffCheckPos, Vector2.down, m_GroundData.GroundRayLength + 0.1f, m_GroundLayer);
         m_IsGroundAhead = (cliffHit.collider != null);
 
-        Debug.DrawRay(cliffCheckPos, Vector2.down * (m_CliffRayLength + 0.1f), m_IsGroundAhead ? Color.green : Color.red);
+        Debug.DrawRay(cliffCheckPos, Vector2.down * (m_GroundData.GroundRayLength + 0.1f), m_IsGroundAhead ? Color.green : Color.red);
 
         if (!m_IsGroundAhead)
         {
-            Debug.LogWarning("[RockGolemAI] 앞쪽 바닥을 인식하지 못했습니다! (절벽으로 판정되어 멈춤)");
+            //Debug.LogWarning("[RockGolemAI] 앞쪽 바닥을 인식하지 못했습니다! (절벽으로 판정되어 멈춤)");
         }
 
         Vector2 wallCheckPos = new Vector2(checkX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
         Vector2 wallDir = m_Direction == 1 ? Vector2.right : Vector2.left;
-        m_IsWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, m_WallRayLength, m_GroundLayer);
+        m_IsWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, m_GroundData.WallRayLength, m_GroundLayer);
 
         if (m_Animator != null)
         {
@@ -215,27 +200,14 @@ public class RockGolemAI : EnemyBase
 
     private bool CanAttack()
     {
-        float horizontalDistance =
-            Mathf.Abs(m_Target.position.x - transform.position.x);
+        float horizontalDistance = Mathf.Abs(m_Target.position.x - transform.position.x);
 
-        bool inRange = horizontalDistance <= m_AttackStartRange;
-        bool cooldownReady = m_AttackCooldownTimer <= 0f;
-        bool grounded = m_IsGrounded;
-        bool noWall = !m_IsWallAhead;
-
-        Debug.Log(
-            $"[RockGolem] AttackCheck | " +
-            $"Range={inRange} ({horizontalDistance:F2}) | " +
-            $"Cooldown={cooldownReady} ({m_AttackCooldownTimer:F2}) | " +
-            $"Grounded={grounded} | " +
-            $"NoWall={noWall}"
-        );
-
-        return inRange
-            && cooldownReady
-            && grounded
-            && noWall;
+        return horizontalDistance <= m_GroundData.AttackRange
+            && m_AttackCooldownTimer <= 0f
+            && m_IsGrounded
+            && !m_IsWallAhead;
     }
+ 
 
     private void ChangeState(ERockGolemState newState)
     {
@@ -245,12 +217,25 @@ public class RockGolemAI : EnemyBase
 
         switch (newState)
         {
+            case ERockGolemState.Idle:
+                m_DesiredVelocityX = 0f;
+                break;
+
             case ERockGolemState.None:
             case ERockGolemState.Chase:
                 break;
             case ERockGolemState.Attack:
                 m_LockedAttackDirection = m_IsFacingRight ? 1 : -1;
-                if (m_Animator != null) m_Animator.SetTrigger("Attack");
+                if (m_Animator != null)
+                { 
+                    m_Animator.SetTrigger("Attack");
+                }
+                
+                if (m_GroundData != null && !string.IsNullOrEmpty(m_GroundData.AttackSoundAddress))
+                {
+                    PlayAddressableSFX(m_GroundData.AttackSoundAddress);
+                }
+
                 break;
             default:
                 break;
@@ -271,6 +256,9 @@ public class RockGolemAI : EnemyBase
         {
             case ERockGolemState.None:
                 break;
+            case ERockGolemState.Idle:   
+                UpdateIdle();
+                break;
             case ERockGolemState.Chase:
                 UpdateChase();
                 break;
@@ -282,27 +270,40 @@ public class RockGolemAI : EnemyBase
 
     private void UpdateChase()
     {
-        Debug.Log(
-            $"[RockGolem] Chase | " +
-            $"Direction={m_Direction} | " +
-            $"Grounded={m_IsGrounded} | " +
-            $"WallAhead={m_IsWallAhead} | " +
-            $"GroundAhead={m_IsGroundAhead}"
-        );
-
         if (CanAttack())
         {
             ChangeState(ERockGolemState.Attack);
             return;
         }
 
-        if (m_IsWallAhead || !m_IsGroundAhead)
+        if (m_IsGrounded && !m_IsGroundAhead)
         {
-            m_DesiredVelocityX = 0f;
+            ChangeState(ERockGolemState.Idle);
+            return;
         }
-        else
+
+        if (m_IsWallAhead && m_IsGroundAhead)
         {
-            m_DesiredVelocityX = m_Direction * m_MoveSpeed;
+            JumpIfNeeded();
+        }
+
+        m_DesiredVelocityX = m_Direction * m_GroundData.MoveSpeed;
+    }
+
+    private void JumpIfNeeded()
+    {
+        if (Time.time - m_LastJumpTime >= m_GroundData.JumpCooldown && m_IsGrounded)
+        {
+            m_LastJumpTime = Time.time;
+            m_IsGrounded = false;
+
+             if (m_Animator != null)
+            {
+                m_Animator.SetTrigger("Jump");
+            }
+
+            m_Rigidbody.linearVelocity = new Vector2(m_Rigidbody.linearVelocity.x, 0f);
+            m_Rigidbody.AddForce(Vector2.up * m_GroundData.JumpForce, ForceMode2D.Impulse);
         }
     }
 
@@ -311,19 +312,41 @@ public class RockGolemAI : EnemyBase
         m_DesiredVelocityX = 0f;
     }
 
+    private void UpdateIdle()
+    {
+        m_DesiredVelocityX = 0f;
+
+        if (CanAttack())
+        {
+            ChangeState(ERockGolemState.Attack);
+            return;
+        }
+        if (m_IsGroundAhead)
+        {
+            ChangeState(ERockGolemState.Chase);
+        }
+
+        //float distanceToPlayer = Vector2.Distance(transform.position, m_Target.position);
+
+        //if (m_IsGroundAhead || distanceToPlayer <= m_GroundData.AttackRange * 1.5f)
+        //{
+        //    ChangeState(ERockGolemState.Chase);
+        //}
+    }
+
     public void SpawnShockwave()
     {
         if (!m_IsSpawnFinished || m_CurrentState != ERockGolemState.Attack || m_CurrentHp <= 0f) return;
 
         if (m_ShockwavePrefab == null)
         {
-            Debug.LogError("[RockGolemAI] 충격파 프리팹이 연결되지 않았습니다.");
+           // Debug.LogError("[RockGolemAI] 충격파 프리팹이 연결되지 않았습니다.");
             return;
         }
 
         if (PoolManager.Instance == null)
         {
-            Debug.LogError("[RockGolemAI] PoolManager.Instance가 없습니다.");
+            //Debug.LogError("[RockGolemAI] PoolManager.Instance가 없습니다.");
             return;
         }
 
@@ -344,7 +367,7 @@ public class RockGolemAI : EnemyBase
         }
         else
         {
-            Debug.LogError("[RockGolemAI] 생성된 충격파에 RockShockwave가 없습니다.");
+            //Debug.LogError("[RockGolemAI] 생성된 충격파에 RockShockwave가 없습니다.");
         }
     }
 
@@ -352,8 +375,14 @@ public class RockGolemAI : EnemyBase
     {
         if (m_CurrentState != ERockGolemState.Attack || m_CurrentHp <= 0f) return;
 
-        m_AttackCooldownTimer = m_AttackCooldown;
+        m_AttackCooldownTimer = m_GroundData.AttackCooldown;
         ChangeState(ERockGolemState.Chase);
+    }
+
+    public override void MakeElite(EliteBuff buff)
+    {
+        base.MakeElite(buff);
+        m_Damage *= buff.DamageMultiplier;
     }
 
     private void ApplyMovement()
@@ -368,20 +397,9 @@ public class RockGolemAI : EnemyBase
         float finalTargetVelocityX = m_DesiredVelocityX + separationX;
 
         float currentVelocityX = m_Rigidbody.linearVelocity.x;
-        float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, m_Acceleration * Time.deltaTime);
+        float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, m_GroundData.Acceleration * Time.deltaTime);
 
-        m_Rigidbody.linearVelocity = new Vector2(
-          m_DesiredVelocityX,
-          m_Rigidbody.linearVelocity.y
-      );
-
-        //     Debug.Log(
-        //    $"[RockGolem] 실제 이동 | " +
-        //    $"Desired={m_DesiredVelocityX:F2} | " +
-        //    $"Separation={separationX:F2} | " +
-        //    $"Final={finalTargetVelocityX:F2} | " +
-        //    $"VelocityX={m_Rigidbody.linearVelocity.x:F2}"
-        //);
+        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
     }
 
     private float CalculateSeparation()
@@ -390,7 +408,7 @@ public class RockGolemAI : EnemyBase
         ContactFilter2D filter = new ContactFilter2D();
         filter.useLayerMask = true;
         filter.layerMask = m_EnemyLayer;
-        int count = Physics2D.OverlapCircle(transform.position, m_SeparationRadius, filter, m_NearbyEnemies);
+        int count = Physics2D.OverlapCircle(transform.position, m_GroundData.SeparationRadius, filter, m_NearbyEnemies);
 
         for (int i = 0; i < count; i++)
         {
@@ -409,15 +427,15 @@ public class RockGolemAI : EnemyBase
                 distance = diff.magnitude;
             }
 
-            float ratio = 1f - (distance / m_SeparationRadius);
+            float ratio = 1f - (distance / m_GroundData.SeparationRadius);
             ratio = Mathf.Clamp01(ratio);
 
-            float pushForce = m_SeparationForce * (ratio * ratio);
+            float pushForce = m_GroundData.SeparationForce * (ratio * ratio);
             Vector2 pushVector = (diff / distance) * pushForce;
             separationForceX += pushVector.x;
         }
 
-        return Mathf.Clamp(separationForceX, -m_MoveSpeed * 1.5f, m_MoveSpeed * 1.5f);
+        return Mathf.Clamp(separationForceX, -m_GroundData.MoveSpeed * 1.5f, m_GroundData.MoveSpeed * 1.5f);
     }
 
     private void Flip()
@@ -466,10 +484,12 @@ public class RockGolemAI : EnemyBase
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         if (m_Collider == null) m_Collider = GetComponent<BoxCollider2D>();
         if (m_Collider == null) return;
+        if (m_GroundData == null) return;
 
         int gizmoDir = Application.isPlaying ? m_Direction : (m_IsFacingRight ? 1 : -1);
         if (gizmoDir == 0) gizmoDir = 1;
@@ -479,17 +499,18 @@ public class RockGolemAI : EnemyBase
 
         Gizmos.color = Color.red;
         Vector2 cliffCheckPos = new Vector2(checkX, m_Collider.bounds.min.y);
-        Gizmos.DrawLine(cliffCheckPos, cliffCheckPos + Vector2.down * m_CliffRayLength);
+        Gizmos.DrawLine(cliffCheckPos, cliffCheckPos + Vector2.down * m_GroundData.GroundRayLength);
 
         Gizmos.color = Color.blue;
         Vector2 wallCheckPos = new Vector2(checkX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
         Vector2 wallDir = gizmoDir == 1 ? Vector2.right : Vector2.left;
-        Gizmos.DrawLine(wallCheckPos, wallCheckPos + wallDir * m_WallRayLength);
+        Gizmos.DrawLine(wallCheckPos, wallCheckPos + wallDir * m_GroundData.WallRayLength);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, m_SeparationRadius);
+        Gizmos.DrawWireSphere(transform.position, m_GroundData.SeparationRadius);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, m_AttackStartRange);
+        Gizmos.DrawWireSphere(transform.position, m_GroundData.AttackRange);
     }
+#endif
 }

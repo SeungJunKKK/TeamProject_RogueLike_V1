@@ -2,17 +2,39 @@ using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 {
-    [Header("Stats (레벨 1 기준)")]
-    [SerializeField] protected float m_BaseHp = 80f;
-    [SerializeField] protected float m_HpPerLevel = 24f;
-    [SerializeField] protected int m_BaseGold = 2;
+    [Header("적 데이터 (SO)")]
+    [SerializeField] protected EnemyDataSO m_Data;
+
+    [Header("사운드 최적화 (Audio Culling)")]
+    [SerializeField] protected AudioSource m_AudioSource;
+    [SerializeField] protected float m_MaxHearingDistance = 40f;
+
+    [Header("적 UI (World Space HP Bar)")]
+    [SerializeField] protected EnemyHPBar m_HpBar;
+
+    //[Header("Stats (레벨 1 기준)")]
+    //[SerializeField] protected float m_BaseHp = 80f;
+    //[SerializeField] protected float m_HpPerLevel = 24f;
+    //[SerializeField] protected int m_BaseGold = 2;
+
+    //[SerializeField] protected float m_BaseExp = 12f;
+    //[SerializeField] protected float m_ExpPerLevel = 3f;
 
     protected float m_MaxHp;
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;
     protected virtual bool CanReceiveKnockback => true;
+    protected bool m_IsElite;
+
     public float MaxHp => m_MaxHp;
     public float CurrentHp => m_CurrentHp;
+    public bool IsElite => m_IsElite;
+
+    protected float m_RewardMultiplier = 1f;
+    private Vector3 m_BaseScale;
+    private Color m_BaseColor = Color.white;
+    private bool m_BaseCached;
+    private SpriteRenderer m_SpriteRenderer;
 
 
     public float GetHpRatio()
@@ -30,20 +52,55 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     /// </summary>
     public virtual void OnSpawn()
     {
+        // 원본 스케일/색 1회 캐싱
+        if (!m_BaseCached)
+        {
+            m_BaseScale = transform.localScale;
+            m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (m_SpriteRenderer != null) m_BaseColor = m_SpriteRenderer.color;
+            m_BaseCached = true;
+        }
+        // 엘리트 상태 리셋
+        m_IsElite = false;
+        m_RewardMultiplier = 1f;
+        transform.localScale = m_BaseScale;
+        if (m_SpriteRenderer != null) m_SpriteRenderer.color = m_BaseColor;
+
         if (DifficultyManager.Instance != null)
         {
             // 스폰 시점의 난이도로 최대 HP 결정
             //m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
-            m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            //m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseHp, m_Data.HpPerLevel);
         }
         else
         {
-            m_MaxHp = m_BaseHp;
+            //m_MaxHp = m_BaseHp;
+            m_MaxHp = m_Data.BaseHp;
         }
 
         m_CurrentHp = m_MaxHp;
         // m_Rigidbody가 null일 때만 GetComponent 실행
         m_Rigidbody ??= GetComponent<Rigidbody2D>();
+
+        // HP바 초기화
+        if (m_HpBar == null)
+        {
+            m_HpBar = GetComponentInChildren<EnemyHPBar>(true);
+        }
+
+        if (m_HpBar != null)
+        {
+            m_HpBar.gameObject.SetActive(true);
+            m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
+        }
+
+        if (m_Data.SpawnSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.SpawnSoundAddress);
+        }
+
+        // if(m_Data.SpawnSound != null) SoundManager.Play(m_Data.SpawnSound);
     }
 
     public virtual void OnDespawn()
@@ -61,6 +118,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
         m_CurrentHp -= info.Amount;
 
+        // 피격 시 HP바 업데이트
+        if (m_HpBar != null)
+        {
+            m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
+        }
+
         if (CanReceiveKnockback && m_Rigidbody != null)
         {
             m_Rigidbody.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);
@@ -74,6 +137,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
             IsCrit = info.IsCrit
         });
 
+        if(m_Data.HitSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.HitSoundAddress);
+        }
+
+
         if (m_CurrentHp <= 0f)
         {
             Die();
@@ -83,15 +152,81 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     // ===== 사망 처리: 보스는 override 해서 페이즈/BossDiedEvent 추가 =====
     protected virtual void Die()
     {
-        int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
+        //int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
+        //float exp = DifficultyManager.Instance.GetScaledStat(m_BaseExp, m_ExpPerLevel);
+        if(m_Data.DeathSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.DeathSoundAddress);
+        }
+
+        int gold = Mathf.Max(1, (int)(m_Data.BaseGold * DifficultyManager.Instance.GetGoldMultiplier() * m_RewardMultiplier));
+        float exp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseExp, m_Data.ExpPerLevel) * m_RewardMultiplier;
 
         EventBus.Publish(new MonsterDiedEvent
         {
             Gold = gold,
-            Exp = gold * 0.5f,
+            Exp = exp,
             Position = transform.position
         });
 
+        if (m_IsElite)
+        {
+            EventBus.Publish(new EliteDiedEvent { Elite = gameObject, Position = transform.position });
+        }
+
         EnemySpawner.Instance.UnregisterEnemy(gameObject);
+    }
+    public void PlayAddressableSFX(string sfxAddress)
+    {
+        if (string.IsNullOrEmpty(sfxAddress))
+        {
+            return;
+        }
+
+        if (Camera.main != null)
+        {
+            float distance = Vector2.Distance(transform.position, Camera.main.transform.position);
+
+            if (distance > m_MaxHearingDistance)
+            {
+                return;
+            }
+        }
+
+        if (m_AudioSource == null)
+        {
+            m_AudioSource = GetComponent<AudioSource>();
+        }
+
+        AddressableManager.Instance.LoadAssetAsync<AudioClip>(sfxAddress, (clip) =>
+        {
+            if (clip != null)
+            {
+                if (m_AudioSource != null)
+                {
+                    m_AudioSource.PlayOneShot(clip);
+                }
+                else
+                {
+                    Debug.LogWarning($"[사운드 경고] {gameObject.name}에 AudioSource가 없어 소리를 낼 수 없습니다!");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[어드레서블 에러] '{sfxAddress}' 주소로 효과음을 찾을 수 없습니다!");
+            }
+        });
+    }
+
+    public virtual void MakeElite(EliteBuff buff)
+    {
+        m_MaxHp *= buff.HPMultiplier;
+        m_CurrentHp = m_MaxHp;
+        transform.localScale *= buff.ScaleMultiplier;
+        m_RewardMultiplier = buff.RewardMultiplier;  
+        m_IsElite = true;
+
+        if (m_SpriteRenderer == null) m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (m_SpriteRenderer != null) m_SpriteRenderer.color = buff.Tint;
     }
 }

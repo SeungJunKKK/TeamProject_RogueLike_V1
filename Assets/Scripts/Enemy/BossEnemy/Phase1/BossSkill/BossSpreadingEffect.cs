@@ -15,13 +15,13 @@ public class BossSpreadingEffect : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
     }
+
     public void Setup(float damage, int direction, GameObject attacker, bool isBigPillar)
     {
         m_Damage = damage;
         m_Direction = direction;
         m_Attacker = attacker;
 
-        // 방향 전환
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x) * direction;
         transform.localScale = scale;
@@ -43,20 +43,10 @@ public class BossSpreadingEffect : MonoBehaviour
     {
         if (!m_IsInitialized) return;
 
-        IDamageable target = collision.GetComponent<IDamageable>() ?? collision.GetComponentInParent<IDamageable>();
-        if (target != null)
+        PlayerController player = collision.GetComponent<PlayerController>() ?? collision.GetComponentInParent<PlayerController>();
+        if (player != null)
         {
-            DamageInfo info = new DamageInfo
-            {
-                Amount = m_Damage,
-                HitPoint = collision.ClosestPoint(transform.position),
-                HitDirection = new Vector2(m_Direction, 0.5f),
-                KnockbackForce = 12f,
-                Attacker = m_Attacker,
-                IsCrit = false,
-                CanProc = true
-            };
-            target.TakeDamage(info);
+            player.TakeDamage(m_Damage);
             GetComponent<Collider2D>().enabled = false;
         }
     }

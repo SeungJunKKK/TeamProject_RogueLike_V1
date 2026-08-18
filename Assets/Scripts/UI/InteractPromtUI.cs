@@ -16,6 +16,12 @@ public class InteractPromtUI : MonoBehaviour
         EventBus.Subscribe<InteractableOutOfRangeEvent>(OnOutOfRange);
     }
 
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe<InteractableInRangeEvent>(OnInRange);
+        EventBus.Unsubscribe<InteractableOutOfRangeEvent>(OnOutOfRange);
+    }
+
     private void OnDestroy()
     {
         EventBus.Unsubscribe<InteractableInRangeEvent>(OnInRange);
@@ -24,28 +30,35 @@ public class InteractPromtUI : MonoBehaviour
 
     private void OnInRange(InteractableInRangeEvent e)
     {
-        if (string.IsNullOrEmpty(e.PromptText))   // 빈 텍스트면 안 띄움
+        if (string.IsNullOrEmpty(e.PromptText))   
         {
-            m_PromtRoot.SetActive(false);
+            if (m_PromtRoot != null) m_PromtRoot.SetActive(false);
             m_IsShowing = false;
             return;
         }
 
         m_Text.text = e.PromptText;
-        m_TargetWorldPos = e.WorldPosition;   // 월드 위치만 저장 (화면 변환은 매 프레임)
+        m_TargetWorldPos = e.WorldPosition;   
         m_IsShowing = true;
-        m_PromtRoot.SetActive(true);
+
+        if (m_PromtRoot != null)
+        {
+            m_PromtRoot.SetActive(true);
+        }
     }
 
     private void OnOutOfRange(InteractableOutOfRangeEvent e)
     {
         m_IsShowing = false;
-        m_PromtRoot.SetActive(false);
+        if (m_PromtRoot != null)
+        {
+            m_PromtRoot.SetActive(false);
+        }
     }
 
     private void LateUpdate()
     {
-        if (!m_IsShowing)
+        if (!m_IsShowing || m_PromtRoot == null)
         {
             return;
         }

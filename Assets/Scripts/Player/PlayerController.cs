@@ -10,8 +10,12 @@ public enum EDustType
     Jump,
     Recoil
 }
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,IDamageable
 {
+    [Header("Survivor Data")]
+    [SerializeField] private SurvivorData survivorData; // 클래스 내부로 이동
+    public SurvivorData SurvivorData => survivorData;
+
     protected IState m_CurrentState;
     private bool m_IsHitStopping = false;
     private PlayerInventory m_inventory;
@@ -429,6 +433,13 @@ public class PlayerController : MonoBehaviour
             Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth);
 
             Debug.Log($"[Player] 피격! 받은 데미지: {finalDamage:F1} / 남은 체력: {Stats.CurrentHealth:F1} / 최대 체력: {Stats.MaxHealth.Value:F1}");
+
+           
+            EventBus.Publish<PlayerDamagedEvent>(new PlayerDamagedEvent
+            {
+                CurrentHp = Stats.CurrentHealth,
+                MaxHp = Stats.MaxHealth.Value
+            });
 
             if (Stats.CurrentHealth <= 0f)
             {

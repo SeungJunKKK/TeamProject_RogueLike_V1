@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 26d2b5cf672bcc3458d514c5cd797ed5
   m_SerializeEntries:
+  - m_GUID: 0161c3489ef71f849b5df87806f40e25
+    m_Address: SFX_Wisp_Shoot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 041d24a3bef390b4c99c84cd30ccbb3a
     m_Address: SFX_Commando_Shoot3
     m_ReadOnly: 0
@@ -43,6 +48,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22ec779461e68d84bb9f8e87a5620127
+    m_Address: SFX_Lemurian_Shoot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26e7f0581f02a1647af4eddaa7b43bbf
     m_Address: DamageText
     m_ReadOnly: 0
@@ -51,6 +61,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2bd3c5f9b29a3d543982bcc7b68d3750
     m_Address: Crowbar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d7de3c8c9a25f34ca7c51be70b58abd
+    m_Address: SFX_Wisp_Spawn
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -118,17 +133,47 @@ MonoBehaviour:
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 845cafce63fce01488a78c2fab2f1462
+    m_Address: SFX_Golem_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89dbde558fe02f247a27c34a2e237213
+    m_Address: Data_Wisp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c5b810d26c0b4f4c91e95f8f91bf3dc
     m_Address: Jump_Right_Dust
     m_ReadOnly: 0
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d39fe6bded820f429df74471da6b35f
+    m_Address: SFX_Golem_Spawn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a8649d83aef3b947aab18b39c073a00
+    m_Address: SFX_Lemurian_Death
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9b18d901470d5b94292678f4a2b47dfb
     m_Address: SFX_Commando_Shoot1
     m_ReadOnly: 0
     m_SerializedLabels:
     - Shared
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b52ed325616b094daf4872947ad7561
+    m_Address: SFX_Golem_Death
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a190c1614579fd04a871ab9c26a508c1
+    m_Address: SFX_Lemurian_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a48c6f0c5253b2341b685031e3004441
     m_Address: Commando_DoubleTap_Projectile
@@ -142,6 +187,21 @@ MonoBehaviour:
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aeeb0a3e923fc184f8270d8633dbaa0e
+    m_Address: SFX_Wisp_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af0101323d808174d99ecb91fe0512d4
+    m_Address: Data_JellyFish
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af088ba40383e854fbc405fecc889cda
+    m_Address: SFX_Lemurian_Spawn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b9f2bdd0fcb387e4790ee8c16f5a1359
     m_Address: SFX_Enforcer_Shot
     m_ReadOnly: 0
@@ -153,8 +213,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc23fb8a41b33a746ae1a7abaaa21eeb
+    m_Address: SFX_Wisp_Death
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bd9220db6b9b64d449390a916b58d5e5
     m_Address: Ukulele
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf7c65008bcad9741ac4e8d1d22237a5
+    m_Address: Data_Lemurian
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -164,6 +234,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c39da3b5da8b4ca4589c5155cb483249
+    m_Address: SFX_JellyFish_Hit
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c6120c25441abc241b178e7a18f7a3af
     m_Address: SFX_Commando_Shoot2
     m_ReadOnly: 0
@@ -172,6 +247,16 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cf1ac0c8a84b29f4585eea3f3da6331b
     m_Address: Player_Commando
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf93f086acbc1094eaa1e3e11241151a
+    m_Address: SFX_Golem_Shoot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d303e732f5ca8a349bded2fc5e843427
+    m_Address: SFX_JellyFIsh_Death
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

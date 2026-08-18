@@ -6,7 +6,9 @@ public class PlayerClimbState : IState
     private PlayerController m_Player;
     private Collider2D m_LadderCollider;
     private float m_OriginalGravity;
-
+    private int m_PlayerLayer;
+    private int m_OneWayGroundLayer;
+    //private int m_GroundLayer;
 
     public PlayerClimbState(PlayerController player, Collider2D ladderCollider)
     {
@@ -16,11 +18,23 @@ public class PlayerClimbState : IState
 
     public void Enter()
     {
-        m_Player.Rb.bodyType = RigidbodyType2D.Kinematic;
+        m_OriginalGravity = m_Player.Rb.gravityScale;
+        m_Player.Rb.gravityScale = 0f;             
         m_Player.Rb.linearVelocity = Vector2.zero;
 
-        m_Player.Anim.Play("Climb"); 
+        m_PlayerLayer = m_Player.gameObject.layer;
+        m_OneWayGroundLayer = LayerMask.NameToLayer("OneWayGround");
+        //Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, true);
+        
+        if (m_OneWayGroundLayer != -1)
+        {
+            Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, true);
+        }
+
+
+        m_Player.Anim.Play("Climb");
     }
+        
 
     public void Update()
     {
@@ -50,13 +64,25 @@ public class PlayerClimbState : IState
 
         m_Player.Rb.linearVelocity = new Vector2(0f, verticalInput * climbSpeed);
 
-        if (verticalInput != 0f) m_Player.Anim.speed = 1f;
-        else m_Player.Anim.speed = 0f;
+        if (verticalInput != 0f)
+        {
+            m_Player.Anim.speed = 1f;
+        }
+        else
+        {
+            m_Player.Anim.speed = 0f;
+        }
     }
 
     public void Exit()
     {
-        m_Player.Rb.bodyType = RigidbodyType2D.Dynamic;
+        m_Player.Rb.gravityScale = m_OriginalGravity;
+        //Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, false);
+
+        if (m_OneWayGroundLayer != -1)
+        {
+            Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, false);
+        }
         m_Player.Anim.speed = 1f;
     }
 }

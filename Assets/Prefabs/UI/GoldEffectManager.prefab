@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b2542e37d141948a44914e9b88243b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoldEffectUI
-  goldEffectPrefab: {fileID: 0}
+  goldEffectPrefab: {fileID: 4649841126404575683, guid: 35a5a690cb83953418e4d6c767c6e870, type: 3}
   initialPoolSize: 20
   poolParent: {fileID: 0}
   moveDistance: 1.5

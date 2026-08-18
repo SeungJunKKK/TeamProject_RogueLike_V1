@@ -11,41 +11,49 @@ public enum EnemyState
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class BasicEnemyAI : EnemyBase
 {
+    //[Header("Target Setting")]
+    //public Transform Player;
+
+    //[Header("Stats Setting")]
+    //[SerializeField] private float m_BaseDamage = 12f;
+    //protected float m_Damage;
+
+    //[Header("Movement Setting")]
+    //public float MoveSpeed = 3f;
+    //public float Acceleration = 15f;
+    //public float JumpForce = 6f;
+    //public float JumpCooldown = 0.5f;
+    //protected float m_LastJumpTime;
+
+    //[Header("Combat Setting")]
+    //public float AttackRange = 1.5f;
+    //public float AttackWindup = 0.5f;  // 공격 선딜레이
+    //public float AttackCooldown = 2f;  // 공격 쿨타임
+    //[Range(0f, 1f)] public float AttackMoveRatio = 0.3f;
+
+    //[Header("Raycast Sensors (자동 계산)")]
+    //public float GroundRayLength = 1.5f;
+    //public float WallRayLength = 0.2f;
+    //public LayerMask GroundLayer;
+
+    //[Header("Separation Setting")]
+    //public float SeparationRadius = 0.8f;
+    //public float SeparationForce = 2.5f;
+    //public LayerMask EnemyLayer;
+    //private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
+    //private const float k_SeparationThreshold = 0.01f;
+    //private const float k_GroundCheckDistance = 0.1f;
+
     [Header("Target Setting")]
     public Transform Player;
-
-    [Header("Stats Setting")]
-    [SerializeField] private float m_BaseDamage = 12f;
-    protected float m_Damage;
-
-    [Header("Movement Setting")]
-    public float MoveSpeed = 3f;
-    public float Acceleration = 15f;
-    public float JumpForce = 6f;
-    public float JumpCooldown = 0.5f;
-    protected float m_LastJumpTime;
-
-    [Header("Combat Setting")]
-    public float AttackRange = 1.5f;
-    public float AttackWindup = 0.5f;  // 공격 선딜레이
-    public float AttackCooldown = 2f;  // 공격 쿨타임
-    [Range(0f, 1f)] public float AttackMoveRatio = 0.3f;
-
-    [Header("Raycast Sensors (자동 계산)")]
-    public float GroundRayLength = 1.5f;
-    public float WallRayLength = 0.2f;
     public LayerMask GroundLayer;
-
-    [Header("Separation Setting")]
-    public float SeparationRadius = 0.8f;
-    public float SeparationForce = 2.5f;
     public LayerMask EnemyLayer;
-    private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
-    private const float k_SeparationThreshold = 0.01f;
+
+    protected float m_Damage;
+    protected GroundEnemyDataSO m_GroundData;
 
     protected BoxCollider2D m_Collider;
     protected Animator m_Animator;
-
     protected bool m_IsFacingRight = true;
 
     // --- Sensor Data ---
@@ -56,9 +64,11 @@ public class BasicEnemyAI : EnemyBase
     // --- Target Info ---
     protected float m_DistanceToPlayer;
     protected int m_Direction;
+    protected bool m_IsAlignedVertically = false;
 
     // --- Combat Timer ---
     protected float m_AttackCooldownTimer = 0f;
+    protected float m_LastJumpTime;
 
     // --- FSM & Movement ---
     protected EnemyState m_CurrentState = EnemyState.None;
@@ -67,12 +77,17 @@ public class BasicEnemyAI : EnemyBase
     protected bool m_IsSpawnFinished = false;
 
     private const float k_GroundCheckDistance = 0.1f;
+    private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
+    private const float k_SeparationThreshold = 0.01f;
+
 
     protected virtual void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
         m_Collider = GetComponent<BoxCollider2D>();
         m_Animator = GetComponent<Animator>();
+
+        m_GroundData= m_Data as GroundEnemyDataSO;
     }
 
     public override void SetTarget(Transform target)
@@ -83,9 +98,11 @@ public class BasicEnemyAI : EnemyBase
     public override void OnSpawn()
     {
         base.OnSpawn();
-
+        m_GroundData ??= m_Data as GroundEnemyDataSO;
         var difficulty = DifficultyManager.Instance;
-        m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+
+        //m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+         m_Damage= difficulty !=null ? m_GroundData.BaseDamage * difficulty.Coefficient : m_GroundData.BaseDamage;
 
         ResetState();
         ResetPhysics();
@@ -138,7 +155,11 @@ public class BasicEnemyAI : EnemyBase
 
     protected virtual void ChangeState(EnemyState newState)
     {
-        if (m_CurrentState == newState) return;
+        if (m_CurrentState == newState)
+        {
+            return;
+        }
+            
 
         m_CurrentState = newState;
         m_StateTimer = 0f;
@@ -149,7 +170,15 @@ public class BasicEnemyAI : EnemyBase
             case EnemyState.Chase:
                 break;
             case EnemyState.Attack:
-                if (m_Animator != null) m_Animator.SetTrigger("Attack");
+                if (m_Animator != null)
+                {
+                    m_Animator.SetTrigger("Attack");
+                }
+                if (m_GroundData != null && m_GroundData.AttackSoundAddress != null)
+                {
+                    PlayAddressableSFX(m_GroundData.AttackSoundAddress);
+                }
+
                 break;
             default:
                 throw new NotImplementedException($"unhandled: {newState}");
@@ -158,8 +187,10 @@ public class BasicEnemyAI : EnemyBase
 
     private void Update()
     {
-        if (!m_IsSpawnFinished || Player == null || m_CurrentHp <= 0f) return;
-
+        if (!m_IsSpawnFinished || Player == null || m_CurrentHp <= 0f)
+        {
+            return;
+        }
         m_DesiredVelocityX = 0f;
 
         UpdateTargetInfo();
@@ -173,7 +204,18 @@ public class BasicEnemyAI : EnemyBase
     protected virtual void UpdateTargetInfo()
     {
         m_DistanceToPlayer = Vector2.Distance(transform.position, Player.position);
-        m_Direction = Player.position.x > transform.position.x ? 1 : -1;
+
+        float xDiff = Player.position.x - transform.position.x;
+
+        if (Mathf.Abs(xDiff) <= 0.1f)
+        {
+            m_IsAlignedVertically = true;
+        }
+        else
+        {
+            m_IsAlignedVertically = false;
+            m_Direction = xDiff > 0 ? 1 : -1;
+        }
     }
 
     protected virtual void UpdateSensors()
@@ -185,11 +227,13 @@ public class BasicEnemyAI : EnemyBase
         m_IsGrounded = Physics2D.Raycast(bottomCenter, Vector2.down, k_GroundCheckDistance, GroundLayer);
 
         Vector2 cliffCheckPos = new Vector2(checkX, m_Collider.bounds.min.y);
-        m_IsGroundAhead = Physics2D.Raycast(cliffCheckPos, Vector2.down, GroundRayLength, GroundLayer);
+        //m_IsGroundAhead = Physics2D.Raycast(cliffCheckPos, Vector2.down, GroundRayLength, GroundLayer);
+        m_IsGroundAhead = Physics2D.Raycast(cliffCheckPos, Vector2.down, m_GroundData.GroundRayLength, GroundLayer);
 
         Vector2 wallCheckPos = new Vector2(checkX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
         Vector2 wallDir = m_Direction == 1 ? Vector2.right : Vector2.left;
-        m_IsWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, WallRayLength, GroundLayer);
+        //m_IsWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, WallRayLength, GroundLayer);
+        m_IsWallAhead = Physics2D.Raycast(wallCheckPos, wallDir, m_GroundData.WallRayLength, GroundLayer);
 
         if (m_Animator != null)
         {
@@ -215,7 +259,9 @@ public class BasicEnemyAI : EnemyBase
 
     protected virtual bool CanAttack()
     {
-        return m_DistanceToPlayer <= AttackRange && m_AttackCooldownTimer <= 0f && m_IsGrounded;
+        //return m_DistanceToPlayer <= AttackRange && m_AttackCooldownTimer <= 0f && m_IsGrounded;
+
+        return m_DistanceToPlayer <= m_GroundData.AttackRange && m_AttackCooldownTimer <= 0f && m_IsGrounded;
     }
 
     // ==========================================
@@ -223,9 +269,17 @@ public class BasicEnemyAI : EnemyBase
     // ==========================================
     protected virtual void StateMachine()
     {
-        if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+        //{
+        //    Flip();
+        //}
+
+        if (m_CurrentState != EnemyState.Attack)
         {
-            Flip();
+            if ((m_Direction == 1 && !m_IsFacingRight) || (m_Direction == -1 && m_IsFacingRight))
+            {
+                Flip();
+            }
         }
 
         switch (m_CurrentState)
@@ -251,9 +305,16 @@ public class BasicEnemyAI : EnemyBase
             return;
         }
 
+        if (m_IsAlignedVertically)
+        {
+            m_DesiredVelocityX = 0f;
+            return;
+        }
+
         if (!m_IsGrounded)
         {
-            m_DesiredVelocityX = m_Direction * MoveSpeed;
+            //m_DesiredVelocityX = m_Direction * MoveSpeed;
+            m_DesiredVelocityX = m_Direction * m_GroundData.MoveSpeed;
             return;
         }
 
@@ -263,7 +324,8 @@ public class BasicEnemyAI : EnemyBase
         }
         else
         {
-            m_DesiredVelocityX = m_Direction * MoveSpeed;
+            //m_DesiredVelocityX = m_Direction * MoveSpeed;
+            m_DesiredVelocityX = m_Direction * m_GroundData.MoveSpeed;
         }
     }
 
@@ -271,22 +333,19 @@ public class BasicEnemyAI : EnemyBase
     {
         m_StateTimer += Time.deltaTime;
 
-        if (m_DistanceToPlayer > AttackRange)
-        {
-            ChangeState(EnemyState.Chase);
-            return;
-        }
+        //if (m_DistanceToPlayer > AttackRange)
+        //{
+        //    ChangeState(EnemyState.Chase);
+        //    return;
+        //}
     }
+
 
     public void TriggerAttack()
     {
-        if (Player != null && m_DistanceToPlayer <= AttackRange)
+        if (Player != null && m_DistanceToPlayer <= m_GroundData.AttackRange)
         {
-            if (Player.TryGetComponent(out PlayerController playerController))
-            {
-                playerController.TakeDamage(m_Damage);
-            }
-            else if (Player.TryGetComponent(out IDamageable targetDamageable))
+            if (Player.TryGetComponent(out IDamageable targetDamageable))
             {
                 DamageInfo info = new DamageInfo
                 {
@@ -302,35 +361,41 @@ public class BasicEnemyAI : EnemyBase
             }
         }
     }
+            
+
 
     public void FinishAttack()
     {
-        m_AttackCooldownTimer = AttackCooldown;
+        m_AttackCooldownTimer = m_GroundData.AttackCooldown;
         ChangeState(EnemyState.Chase);
     }
 
     protected virtual void JumpIfNeeded()
     {
-        if (Time.time - m_LastJumpTime >= JumpCooldown)
+        if (Time.time - m_LastJumpTime >= m_GroundData.JumpCooldown)
         {
             m_LastJumpTime = Time.time;
             m_IsGrounded = false;
             if (m_Animator != null) m_Animator.SetTrigger("Jump");
 
             m_Rigidbody.linearVelocity = new Vector2(m_Rigidbody.linearVelocity.x, 0f);
-            m_Rigidbody.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            m_Rigidbody.AddForce(Vector2.up * m_GroundData.JumpForce, ForceMode2D.Impulse);
         }
     }
 
+    /// <summary>
+    /// 최대 낙하 속도 -20f를 적용하고, 목표 속도와 현재 속도를 기반으로 가속도를 적용하여 이동을 처리합니다.
+    /// </summary>
     protected virtual void ApplyMovement()
     {
         float separationX = CalculateSeparation();
         float finalTargetVelocityX = m_DesiredVelocityX + separationX;
 
         float currentVelocityX = m_Rigidbody.linearVelocity.x;
-        float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, Acceleration * Time.deltaTime);
+        float smoothedVelocityX = Mathf.MoveTowards(currentVelocityX, finalTargetVelocityX, m_GroundData.Acceleration * Time.deltaTime);
 
-        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, m_Rigidbody.linearVelocity.y);
+        float clampedFallY = Mathf.Max(m_Rigidbody.linearVelocity.y, -20f);
+        m_Rigidbody.linearVelocity = new Vector2(smoothedVelocityX, clampedFallY);
     }
 
     protected virtual float CalculateSeparation()
@@ -339,7 +404,7 @@ public class BasicEnemyAI : EnemyBase
         ContactFilter2D filter = new ContactFilter2D();
         filter.useLayerMask = true;
         filter.layerMask = EnemyLayer;
-        int count = Physics2D.OverlapCircle(transform.position, SeparationRadius, filter, m_NearbyEnemies);
+        int count = Physics2D.OverlapCircle(transform.position, m_GroundData.SeparationRadius, filter, m_NearbyEnemies);
 
         for (int i = 0; i < count; i++)
         {
@@ -358,15 +423,15 @@ public class BasicEnemyAI : EnemyBase
                 distance = diff.magnitude;
             }
 
-            float ratio = 1f - (distance / SeparationRadius);
+            float ratio = 1f - (distance / m_GroundData.SeparationRadius);
             ratio = Mathf.Clamp01(ratio);
 
-            float pushForce = SeparationForce * (ratio * ratio);
+            float pushForce = m_GroundData.SeparationForce * (ratio * ratio);
             Vector2 pushVector = (diff / distance) * pushForce;
             separationForceX += pushVector.x;
         }
 
-        return Mathf.Clamp(separationForceX, -MoveSpeed * 1.5f, MoveSpeed * 1.5f);
+        return Mathf.Clamp(separationForceX, -m_GroundData.MoveSpeed * 1.5f, m_GroundData.MoveSpeed * 1.5f);
     }
 
     protected virtual void Flip()
@@ -413,10 +478,14 @@ public class BasicEnemyAI : EnemyBase
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (m_Collider == null) m_Collider = GetComponent<BoxCollider2D>();
         if (m_Collider == null) return;
+
+        GroundEnemyDataSO gizmoData = m_GroundData != null ? m_GroundData : (m_Data as GroundEnemyDataSO);
+        if (gizmoData == null) return;
 
         int gizmoDir = Application.isPlaying ? m_Direction : (m_IsFacingRight ? 1 : -1);
         if (gizmoDir == 0) gizmoDir = 1;
@@ -426,14 +495,17 @@ public class BasicEnemyAI : EnemyBase
 
         Vector2 cliffCheckPos = new Vector2(checkX, m_Collider.bounds.min.y);
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(cliffCheckPos, cliffCheckPos + Vector2.down * GroundRayLength);
+        Gizmos.DrawLine(cliffCheckPos, cliffCheckPos + Vector2.down * gizmoData.GroundRayLength);
 
         Vector2 wallCheckPos = new Vector2(checkX, m_Collider.bounds.center.y - (m_Collider.bounds.extents.y * 0.5f));
         Vector2 wallDir = gizmoDir == 1 ? Vector2.right : Vector2.left;
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(wallCheckPos, wallCheckPos + wallDir * WallRayLength);
+        Gizmos.DrawLine(wallCheckPos, wallCheckPos + wallDir * gizmoData.WallRayLength);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SeparationRadius);
+        Gizmos.DrawWireSphere(transform.position, gizmoData.SeparationRadius);
     }
+#endif
+
+
 }

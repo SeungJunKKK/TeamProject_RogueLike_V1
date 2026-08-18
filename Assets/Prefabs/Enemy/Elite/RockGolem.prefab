@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 5843563289062349866}
   - component: {fileID: 2016049240816571302}
   - component: {fileID: 3189653814624214216}
+  - component: {fileID: -4967977637588585275}
   m_Layer: 0
   m_Name: RockGolem
   m_TagString: Untagged
@@ -66,6 +67,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3614119596547283869}
+  - {fileID: 6915869657169434441}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1355762757525270222
@@ -117,12 +119,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 226105505343071863, guid: 299a713083b356e44bcb0fc6546a73bb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 299a713083b356e44bcb0fc6546a73bb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.29}
+  m_Size: {x: 0.625, y: 0.90625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -151,9 +153,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &5843563289062349866
 BoxCollider2D:
@@ -189,17 +191,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00013168156, y: 0.00073079765}
+  m_Offset: {x: 0, y: 0.32}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.2, y: 0.29}
-    newSize: {x: 0.2, y: 0.29}
+    pivot: {x: 0.5, y: 0.15}
+    oldSize: {x: 0.625, y: 0.90625}
+    newSize: {x: 0.625, y: 0.90625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.20561108, y: 0.29503474}
+  m_Size: {x: 0.65, y: 0.9}
   m_EdgeRadius: 0
 --- !u!114 &2016049240816571302
 MonoBehaviour:
@@ -213,23 +215,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ee68f29ff694e4c8d813b75314c483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockGolemAI
-  m_BaseHp: 80
-  m_HpPerLevel: 24
-  m_BaseGold: 2
-  m_BaseDamage: 34
-  m_MoveSpeed: 1.8
-  m_Acceleration: 6
-  m_AttackStartRange: 2
-  m_AttackCooldown: 3.5
+  m_Data: {fileID: 11400000, guid: 50378d2b606abae4ba9b6a433f33cab8, type: 2}
+  m_AudioSource: {fileID: -4967977637588585275}
+  m_MaxHearingDistance: 15
   m_ShockwaveSpawnPos: {fileID: 3614119596547283869}
   m_ShockwavePrefab: {fileID: 8505469617465925257, guid: 323faceb321c2c24ab20e1232bdd1111, type: 3}
-  m_CliffRayLength: 1.5
-  m_WallRayLength: 0.3
   m_GroundLayer:
     serializedVersion: 2
     m_Bits: 16392
-  m_SeparationRadius: 1.2
-  m_SeparationForce: 1
   m_EnemyLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -255,3 +248,100 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &-4967977637588585275
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807211743726025604}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -3267015809663851630, guid: 03d638c2a2d56fb449f34f9230bea2cb, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: aeeb0a3e923fc184f8270d8633dbaa0e, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 40
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

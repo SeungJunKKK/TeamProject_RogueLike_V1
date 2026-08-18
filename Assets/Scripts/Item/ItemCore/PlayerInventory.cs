@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     // 아이템 데이터를 키(Key)로, 획득한 개수를 값(Value)으로 저장 딕셔너리
-    public Dictionary<ItemData, int> passiveItems = new Dictionary<ItemData, int>(); //[cite: 7]
+    public Dictionary<ItemData, int> passiveItems { get; private set; } = new Dictionary<ItemData, int>(); //[cite: 7]
 
     [Header("Active Item Slot")]
     public ItemData currentActiveItem;
@@ -20,6 +20,8 @@ public class PlayerInventory : MonoBehaviour
     {
         player = GetComponent<PlayerController>();
         stats = GetComponent<PlayerStats>();
+
+        useItemSlotUI = UnityEngine.Object.FindAnyObjectByType<UseItemSlotUI>();
     }
 
     private void Update()
@@ -55,24 +57,27 @@ public class PlayerInventory : MonoBehaviour
             }
 
             Debug.Log($"[Inventory] 액티브 아이템 장착: {newItem.itemName}");
-            return;
+
+        }
+        else 
+        {
+            if (passiveItems.ContainsKey(newItem))
+            {
+                if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
+                {
+                    passiveItems[newItem]++;
+                }
+            }
+            else
+            {
+                passiveItems.Add(newItem, 1);
+                Debug.Log($"[Inventory] {newItem.itemName} 획득!");
+            }
+
+            UpdatePassiveStats();
         }
 
-        if (passiveItems.ContainsKey(newItem))
-        {
-            if (newItem.maxStack == 0 || passiveItems[newItem] < newItem.maxStack)
-            {
-                passiveItems[newItem]++;
-                //Debug.Log($"[Inventory] {newItem.itemName} 중첩  현재 개수: {passiveItems[newItem]}");
-            }
-        }
-        else
-        {
-            passiveItems.Add(newItem, 1);
-            Debug.Log($"[Inventory] {newItem.itemName} 획득!");
-        }
         EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
-        UpdatePassiveStats();
     }
 
     /// <summary>
