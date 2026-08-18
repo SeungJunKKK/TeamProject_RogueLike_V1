@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 {
+    public Action<float, float> OnHealthChanged;
+    public Action OnDied;
+
     [Header("적 데이터 (SO)")]
     [SerializeField] protected EnemyDataSO m_Data;
 
@@ -52,6 +56,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     /// </summary>
     public virtual void OnSpawn()
     {
+        OnHealthChanged = null;
+        OnDied = null;
+
         // 원본 스케일/색 1회 캐싱
         if (!m_BaseCached)
         {
@@ -107,25 +114,23 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
     public void TakeDamage(DamageInfo info)
     {
-        // 이미 죽은 몬스터 재타격 방어
-        if (m_CurrentHp <= 0f)
-        {
-            return;
-        }
+        if (m_CurrentHp <= 0f) return;
 
         m_CurrentHp -= info.Amount;
 
-        // 피격 시 HP바 업데이트
+        // 월드 HP 바 업데이트
         if (m_HpBar != null)
         {
             m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
         }
 
+        // 외부(BossHPBarUI 등)로 체력 변경 알림
+        OnHealthChanged?.Invoke(m_CurrentHp, m_MaxHp);
+
         if (CanReceiveKnockback && m_Rigidbody != null)
         {
             m_Rigidbody.AddForce(info.HitDirection * info.KnockbackForce, ForceMode2D.Impulse);
         }
-
 
         EventBus.Publish(new MonsterDamagedEvent
         {
@@ -134,11 +139,10 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
             IsCrit = info.IsCrit
         });
 
-        if(m_Data.HitSoundAddress != null)
+        if (m_Data.HitSoundAddress != null)
         {
             PlayAddressableSFX(m_Data.HitSoundAddress);
         }
-
 
         if (m_CurrentHp <= 0f)
         {
@@ -149,9 +153,11 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     // ===== 사망 처리: 보스는 override 해서 페이즈/BossDiedEvent 추가 =====
     protected virtual void Die()
     {
+        OnDied?.Invoke();
+
         //int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
         //float exp = DifficultyManager.Instance.GetScaledStat(m_BaseExp, m_ExpPerLevel);
-        if(m_Data.DeathSoundAddress != null)
+        if (m_Data.DeathSoundAddress != null)
         {
             PlayAddressableSFX(m_Data.DeathSoundAddress);
         }
@@ -225,5 +231,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
         if (m_SpriteRenderer == null) m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (m_SpriteRenderer != null) m_SpriteRenderer.color = buff.Tint;
+
+        // 엘리트 스케일링 후 HP바 및 외부 UI 갱신
+        if (m_HpBar != null)
+        {
+            m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
+        }
+        OnHealthChanged?.Invoke(m_CurrentHp, m_MaxHp);
     }
 }

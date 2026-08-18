@@ -27,6 +27,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Elite 설정")]
     [SerializeField] private GameObject m_ElitePrefab;
+    [SerializeField] private BossHPBarUI m_BossHPBarUI;
     [SerializeField]
     private EliteBuff m_EliteBuff = new EliteBuff
     {
@@ -52,6 +53,7 @@ public class EnemySpawner : MonoBehaviour
     private bool m_SpawningEnabled = true;
 
     private bool m_EliteSpawned;
+    private EnemyBase m_CurrentEliteEnemy;
 
     public int ActiveEnemyCount => m_ActiveEnemies.Count;
 
@@ -75,10 +77,18 @@ public class EnemySpawner : MonoBehaviour
             Instance = null;
             EventBus.Unsubscribe<TeleporterStateChangedEvent>(OnTeleporterState);
         }
+
+        UnsubscribeEliteHealthEvents();
     }
 
     private void Start()
     {
+        // 시작 시 보스 HP바 숨김
+        if (m_BossHPBarUI != null)
+        {
+            m_BossHPBarUI.gameObject.SetActive(false);
+        }
+
         if (m_SpawnTilemaps == null ||
             m_SpawnTilemaps.Length == 0 ||
             EnemyPrefabs == null ||
@@ -191,6 +201,12 @@ public class EnemySpawner : MonoBehaviour
     public void UnregisterEnemy(GameObject enemy)
     {
         m_ActiveEnemies.Remove(enemy);
+
+        // 만약 죽은 몬스터가 현재 엘리트 몬스터라면 UI 숨김 처리
+        if (m_CurrentEliteEnemy != null && enemy == m_CurrentEliteEnemy.gameObject)
+        {
+            HideBossHPBar();
+        }
     }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -532,6 +548,62 @@ public class EnemySpawner : MonoBehaviour
         if (eb != null)
         {
             eb.MakeElite(m_EliteBuff);
+            SetupEliteBossHPBar(eb);
+        }
+    }
+
+    // ==========================================
+    // [Module: Boss HP Bar Management]
+    // ==========================================
+
+    private void SetupEliteBossHPBar(EnemyBase elite)
+    {
+        if (m_BossHPBarUI == null) return;
+
+        // 기존 구독 이벤트 해제
+        UnsubscribeEliteHealthEvents();
+
+        m_CurrentEliteEnemy = elite;
+
+        // BossHPBar 활성화 및 초기화
+        m_BossHPBarUI.gameObject.SetActive(true);
+        m_BossHPBarUI.InitHPBar(m_CurrentEliteEnemy.MaxHp);
+
+        // 체력 변경 및 사망 이벤트 구독
+        m_CurrentEliteEnemy.OnHealthChanged += OnEliteHealthChanged;
+        m_CurrentEliteEnemy.OnDied += OnEliteDied;
+    }
+
+    private void OnEliteHealthChanged(float currentHp, float maxHp)
+    {
+        if (m_BossHPBarUI != null)
+        {
+            m_BossHPBarUI.UpdateHPBar(currentHp);
+        }
+    }
+
+    private void OnEliteDied()
+    {
+        HideBossHPBar();
+    }
+
+    private void HideBossHPBar()
+    {
+        UnsubscribeEliteHealthEvents();
+
+        if (m_BossHPBarUI != null && m_BossHPBarUI.gameObject.activeInHierarchy)
+        {
+            m_BossHPBarUI.gameObject.SetActive(false);
+        }
+    }
+
+    private void UnsubscribeEliteHealthEvents()
+    {
+        if (m_CurrentEliteEnemy != null)
+        {
+            m_CurrentEliteEnemy.OnHealthChanged -= OnEliteHealthChanged;
+            m_CurrentEliteEnemy.OnDied -= OnEliteDied;
+            m_CurrentEliteEnemy = null;
         }
     }
 }
