@@ -82,12 +82,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3092483492171673783, guid: 463558cf30d3d5848b26875a05236b2e, type: 3}
+  m_Sprite: {fileID: -4793264802416557471, guid: 38eff68ab7b7bdd44a34fa7718aee538, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.34, y: 0.34}
+  m_Size: {x: 0.09, y: 0.09}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -105,4 +105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9574bc9e1b143408ab88852bf3f4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetCrosshair
+  m_TrackingDuration: 1.5
+  m_LockDuration: 0.5
   m_RotationSpeed: 120

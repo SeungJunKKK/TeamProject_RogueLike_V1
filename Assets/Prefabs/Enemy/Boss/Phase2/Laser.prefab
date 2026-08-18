@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Laser
   m_Duration: 2
-  m_BeamDamage: 10
+  m_BeamDamage: 0.1
   m_DamageInterval: 0.08
   m_LaserRange: 3
   m_TargetLayer:

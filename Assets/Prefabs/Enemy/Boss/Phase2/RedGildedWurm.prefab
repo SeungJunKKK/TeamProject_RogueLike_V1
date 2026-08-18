@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1061252867806192472}
   - component: {fileID: 5932121449262201240}
   - component: {fileID: 6551540652157523436}
+  - component: {fileID: 1845513831304886140}
   m_Layer: 17
   m_Name: Laser
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 284954387835544697}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.75, y: 0.021, z: 0}
+  m_LocalPosition: {x: 2.04, y: 0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146,7 +147,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -162,6 +163,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.31, y: 1.53}
   m_EdgeRadius: 0
+--- !u!114 &1845513831304886140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 284954387835544697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c9ba6dcf00b2c4ca002d5b70dc796a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LaserCollision
+  m_BeamDamage: 0.1
+  m_DamageInterval: 0.3
 --- !u!1 &301669580966554557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1570,9 +1585,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490f98ba295c89c42945b6c2f3db427c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RedGildedWurm
-  m_BaseHp: 5000
-  m_HpPerLevel: 24
-  m_BaseGold: 2
+  m_Data: {fileID: 11400000, guid: 6bbb73f0caf55d04980039b7253b58e9, type: 2}
+  m_AudioSource: {fileID: 0}
+  m_MaxHearingDistance: 40
+  m_HpBar: {fileID: 0}
   m_Player: {fileID: 0}
   m_MaxSpeed: 10
   m_TurnSpeed: 50
@@ -1582,19 +1598,14 @@ MonoBehaviour:
   m_LaserObject: {fileID: 284954387835544697}
   m_MouthPoint: {fileID: 1926874601594687706}
   m_LaserSpriteRotationOffset: 90
-  m_LaserRotationSpeed: 180
-  m_BeamDamage: 15
-  m_DamageInterval: 0.08
-  m_TargetLayer:
-    serializedVersion: 2
-    m_Bits: 64
+  m_LaserRotationSpeed: 100
   m_LaserRange: 20
-  m_FacingThreshold: 0.85
+  m_FacingThreshold: 0.9148426
   m_AttackChance: 0.4
   m_AttackDuration: 1.5
   m_AttackCooldown: 3
-  m_AttackSpeedMultiplier: 0.938
-  m_AttackTurnMultiplier: 0.955
+  m_AttackSpeedMultiplier: 0.502
+  m_AttackTurnMultiplier: 0.694
 --- !u!120 &6366651447479113552
 LineRenderer:
   serializedVersion: 3

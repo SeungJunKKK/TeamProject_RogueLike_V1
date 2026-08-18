@@ -4,46 +4,49 @@ using System.Collections;
 public class RedGildedWurm : GildedWurmBase
 {
     [Header("Laser Animation Settings")]
-    [Tooltip("애니메이션이 적용된 레이저 오브젝트")]
+    [Tooltip("화면에 표시될 레이저 이펙트(애니메이션이 포함된) 오브젝트")]
     [SerializeField] private GameObject m_LaserObject;
 
-    [Tooltip("레이저가 발사될 입 위치")]
+    [Tooltip("레이저가 뿜어져 나오는 웜의 입 위치 (기준점)")]
     [SerializeField] private Transform m_MouthPoint;
 
-    [Tooltip("레이저 스프라이트의 기본 방향 보정값")]
+    [Tooltip("레이저 스프라이트 이미지의 기본 방향을 맞추기 위한 회전 보정값")]
     [SerializeField] private float m_LaserSpriteRotationOffset = -90f;
 
-    [Tooltip("레이저가 플레이어를 추적하며 회전하는 속도")]
+    [Tooltip("레이저가 플레이어의 위치를 부드럽게 따라가며 회전하는 속도")]
     [SerializeField] private float m_LaserRotationSpeed = 180f;
 
     [Header("Laser Damage Settings")]
-    [SerializeField] private float m_BeamDamage = 15f;
-    [SerializeField] private float m_DamageInterval = 0.08f;
-    [SerializeField] private LayerMask m_TargetLayer;
+    [Tooltip("레이저 최대 사거리 (이 거리 안에서만 공격 조건 만족)")]
     [SerializeField] private float m_LaserRange = 20f;
 
     [Header("Attack Conditions")]
     [Range(0.5f, 1.0f)]
+    [Tooltip("웜이 이동하는 방향과 플레이어 방향이 일치해야 공격하는 임계값")]
     [SerializeField] private float m_FacingThreshold = 0.94f;
 
     [Range(0f, 1f)]
+    [Tooltip("공격 조건을 만족했을 때 실제로 레이저를 쏠 확률")]
     [SerializeField] private float m_AttackChance = 0.4f;
 
+    [Tooltip("한 번 레이저를 발사하고 유지하는 총 지속 시간 (초)")]
     [SerializeField] private float m_AttackDuration = 3.0f;
+
+    [Tooltip("레이저 공격이 끝난 후 다음 공격까지 대기하는 쿨타임 (초)")]
     [SerializeField] private float m_AttackCooldown = 3.0f;
 
     [Header("Attack Movement Settings")]
     [Range(0.1f, 1.0f)]
+    [Tooltip("레이저 발사 중일 때 이동 속도가 평소의 몇 배로 줄어드는지 비율")]
     [SerializeField] private float m_AttackSpeedMultiplier = 0.5f;
 
     [Range(0.1f, 1.0f)]
+    [Tooltip("레이저 발사 중일 때 몸체가 회전하는 속도가 평소의 몇 배로 느려지는지 비율")]
     [SerializeField] private float m_AttackTurnMultiplier = 0.6f;
 
     private bool m_IsAttacking = false;
 
     private float m_CurrentCooldown = 2.0f;
-    private float m_DamageTimer = 0f;
-
     private float m_OriginalMaxSpeed;
     private float m_OriginalTurnSpeed;
 
@@ -64,7 +67,6 @@ public class RedGildedWurm : GildedWurmBase
 
         m_IsAttacking = false;
         m_CurrentCooldown = 2.0f;
-        m_DamageTimer = 0f;
 
         if (m_LaserObject != null)
         {
@@ -147,7 +149,6 @@ public class RedGildedWurm : GildedWurmBase
         Vector2 toPlayer = m_Player.position - transform.position;
         float distance = toPlayer.magnitude;
 
-        // 레이저 최대 사거리 밖이면 공격하지 않음
         if (distance > m_LaserRange)
             return;
 
@@ -165,13 +166,11 @@ public class RedGildedWurm : GildedWurmBase
             playerDirection
         );
 
-        // 현재 이동 방향이 플레이어 방향과 어느 정도 일치하는지 확인
         if (dotProduct > m_FacingThreshold)
         {
             if (Random.value <= m_AttackChance)
             {
                 Debug.Log("🔴 빨간 웜: 레이저 공격 시작!");
-
                 StartCoroutine(AttackRoutine());
             }
             else
@@ -189,42 +188,25 @@ public class RedGildedWurm : GildedWurmBase
     private IEnumerator AttackRoutine()
     {
         m_IsAttacking = true;
-        m_DamageTimer = 0f;
 
         if (m_LaserObject != null && m_MouthPoint != null)
         {
-            // 💡 1. 자식 Laser 오브젝트에 있는 Animator를 가져와 isAttacking을 true로 설정
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
                 laserAnimator.SetBool("isAttacking", true);
             }
 
-            // 💡 2. 레이저 오브젝트 켜기
             m_LaserObject.SetActive(true);
 
             Vector2 startPos = m_MouthPoint.position;
+            Vector2 initialDirection = ((Vector2)m_Player.position - startPos).normalized;
 
-            Vector2 initialDirection =
-                ((Vector2)m_Player.position - startPos).normalized;
-
-            float initialAngle =
-                Mathf.Atan2(
-                    initialDirection.y,
-                    initialDirection.x
-                ) * Mathf.Rad2Deg;
-
-            m_CurrentLaserAngle =
-                initialAngle + m_LaserSpriteRotationOffset;
+            float initialAngle = Mathf.Atan2(initialDirection.y, initialDirection.x) * Mathf.Rad2Deg;
+            m_CurrentLaserAngle = initialAngle + m_LaserSpriteRotationOffset;
 
             m_LaserObject.transform.position = startPos;
-
-            m_LaserObject.transform.rotation =
-                Quaternion.Euler(
-                    0f,
-                    0f,
-                    m_CurrentLaserAngle
-                );
+            m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
         }
 
         float elapsed = 0f;
@@ -234,14 +216,12 @@ public class RedGildedWurm : GildedWurmBase
             if (m_Player == null)
                 break;
 
-            UpdateLaserLogic();
-
+            UpdateLaserTracking();
             elapsed += Time.deltaTime;
 
             yield return null;
         }
 
-        // 💡 3. 공격 종료 시 Animator의 isAttacking을 false로 설정하고 레이저 끄기
         if (m_LaserObject != null)
         {
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
@@ -254,7 +234,6 @@ public class RedGildedWurm : GildedWurmBase
         }
 
         m_IsAttacking = false;
-        m_DamageTimer = 0f;
         m_CurrentCooldown = m_AttackCooldown;
 
         Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
@@ -262,54 +241,26 @@ public class RedGildedWurm : GildedWurmBase
 
 
     // =========================================================
-    // Laser Logic
+    // Laser Tracking (위치 및 회전 추적 전용)
     // =========================================================
 
-    private void UpdateLaserLogic()
+    private void UpdateLaserTracking()
     {
-        if (m_Player == null ||
-            m_MouthPoint == null ||
-            m_LaserObject == null)
+        if (m_Player == null || m_MouthPoint == null || m_LaserObject == null)
         {
             return;
         }
 
-        // -----------------------------------------------------
-        // 1. 레이저 시작점
-        // -----------------------------------------------------
-
         Vector2 startPos = m_MouthPoint.position;
-
         m_LaserObject.transform.position = startPos;
 
-
-        // -----------------------------------------------------
-        // 2. 플레이어 방향 계산
-        // -----------------------------------------------------
-
-        Vector2 directionToPlayer =
-            ((Vector2)m_Player.position - startPos).normalized;
+        Vector2 directionToPlayer = ((Vector2)m_Player.position - startPos).normalized;
 
         if (directionToPlayer.sqrMagnitude <= 0.001f)
             return;
 
-
-        // -----------------------------------------------------
-        // 3. 목표 각도 계산
-        // -----------------------------------------------------
-
-        float targetAngle =
-            Mathf.Atan2(
-                directionToPlayer.y,
-                directionToPlayer.x
-            ) * Mathf.Rad2Deg;
-
+        float targetAngle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
         targetAngle += m_LaserSpriteRotationOffset;
-
-
-        // -----------------------------------------------------
-        // 4. 현재 레이저 각도를 목표 각도로 천천히 회전
-        // -----------------------------------------------------
 
         m_CurrentLaserAngle = Mathf.MoveTowardsAngle(
             m_CurrentLaserAngle,
@@ -317,78 +268,12 @@ public class RedGildedWurm : GildedWurmBase
             m_LaserRotationSpeed * Time.deltaTime
         );
 
-
-        // -----------------------------------------------------
-        // 5. 화면에 보이는 레이저 회전
-        // -----------------------------------------------------
-
-        m_LaserObject.transform.rotation =
-            Quaternion.Euler(
-                0f,
-                0f,
-                m_CurrentLaserAngle
-            );
-
-
-        // -----------------------------------------------------
-        // 6. 실제 공격 방향 계산
-        // -----------------------------------------------------
-        //
-        // Sprite Rotation Offset은 이미지 방향 보정용이므로
-        // 실제 Raycast 방향에서는 다시 제거한다.
-        //
-
-        float actualAngle =
-            m_CurrentLaserAngle -
-            m_LaserSpriteRotationOffset;
-
-        Vector2 laserDirection =
-            new Vector2(
-                Mathf.Cos(actualAngle * Mathf.Deg2Rad),
-                Mathf.Sin(actualAngle * Mathf.Deg2Rad)
-            ).normalized;
-
-
-        // -----------------------------------------------------
-        // 7. 레이저 Raycast
-        // -----------------------------------------------------
-
-        RaycastHit2D hit = Physics2D.Raycast(
-            startPos,
-            laserDirection,
-            m_LaserRange,
-            m_TargetLayer
-        );
-
-
-        // -----------------------------------------------------
-        // 8. 플레이어 피격
-        // -----------------------------------------------------
-
-        if(hit.collider != null &&
-            hit.collider.CompareTag("Player"))
-        {
-            m_DamageTimer += Time.deltaTime;
-
-            if (m_DamageTimer >= m_DamageInterval)
-            {
-                m_DamageTimer = 0f;
-
-                if (hit.collider.TryGetComponent(out PlayerController player))
-                {
-                    player.TakeDamage(m_BeamDamage);
-                }
-            }
-        }
-        else
-        {
-            m_DamageTimer = 0f;
-        }
+        m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
     }
 
 
     // =========================================================
-    // Debug
+    // Debug (Gizmos)
     // =========================================================
 
     private void OnDrawGizmosSelected()
@@ -397,36 +282,18 @@ public class RedGildedWurm : GildedWurmBase
             return;
 
         Gizmos.color = Color.red;
-
         Vector3 start = m_MouthPoint.position;
-
         Vector2 direction;
 
-        if (Application.isPlaying)
+        if (Application.isPlaying && m_Player != null)
         {
-            float actualAngle =
-                m_CurrentLaserAngle -
-                m_LaserSpriteRotationOffset;
-
-            direction = new Vector2(
-                Mathf.Cos(actualAngle * Mathf.Deg2Rad),
-                Mathf.Sin(actualAngle * Mathf.Deg2Rad)
-            );
-        }
-        else if (m_Player != null)
-        {
-            direction =
-                ((Vector2)m_Player.position -
-                 (Vector2)start).normalized;
+            direction = ((Vector2)m_Player.position - (Vector2)start).normalized;
         }
         else
         {
             direction = Vector2.right;
         }
 
-        Gizmos.DrawLine(
-            start,
-            start + (Vector3)direction * m_LaserRange
-        );
+        Gizmos.DrawLine(start, start + (Vector3)direction * m_LaserRange);
     }
 }

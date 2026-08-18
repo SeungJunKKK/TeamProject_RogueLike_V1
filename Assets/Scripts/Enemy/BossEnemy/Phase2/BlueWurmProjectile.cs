@@ -1,50 +1,117 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
+[RequireComponent(typeof(Collider2D))]
 public class BlueWurmProjectile : MonoBehaviour
 {
-    private float m_Damage;
-    private Vector2 m_Direction;
-    private float m_Speed;
-    private bool m_IsInitialized = false;
+    [Header("Projectile Settings")]
+    [SerializeField] private float m_Damage = 10f;
+    [SerializeField] private float m_Speed = 12f;
+    [SerializeField] private float m_Lifetime = 3f;
 
-    public void Setup(float damage, Vector2 direction, float speed, float lifetime)
+    [Header("Collision Settings")]
+    [SerializeField] private LayerMask m_PlayerLayer;
+
+    private Vector2 m_Direction;
+    private Collider2D m_Collider;
+    private bool m_IsInitialized;
+
+    private readonly Collider2D[] m_OverlapResults = new Collider2D[8];
+
+    public void Setup(
+        float damage,
+        Vector2 direction,
+        float speed,
+        float lifetime)
     {
         m_Damage = damage;
         m_Direction = direction.normalized;
         m_Speed = speed;
+        m_Lifetime = lifetime;
+
         m_IsInitialized = true;
 
-        // 회전값 조정 (날아가는 방향을 바라보도록)
-        float angle = Mathf.Atan2(m_Direction.y, m_Direction.x) * Mathf.Rad2Deg;
+        float angle =
+            Mathf.Atan2(m_Direction.y, m_Direction.x) * Mathf.Rad2Deg;
+
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, m_Lifetime);
+    }
+
+    private void Awake()
+    {
+        m_Collider = GetComponent<Collider2D>();
     }
 
     private void Update()
     {
-        if (!m_IsInitialized) return;
-        transform.position += (Vector3)(m_Direction * m_Speed * Time.deltaTime);
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!m_IsInitialized) return;
-
-        // 플레이어 피격 처리
-        PlayerController player = collision.GetComponent<PlayerController>() ?? collision.GetComponentInParent<PlayerController>();
-        if (player != null)
+        if (!m_IsInitialized)
         {
-            player.TakeDamage(m_Damage);
-            Destroy(gameObject);
             return;
         }
 
-        // 지형(Ground)에 부딪히면 소멸
-        if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Ground")) != 0)
+        MoveProjectile();
+        CheckPlayerOverlap();
+    }
+
+    private void MoveProjectile()
+    {
+        transform.position +=
+            (Vector3)(m_Direction * m_Speed * Time.deltaTime);
+    }
+
+    private void CheckPlayerOverlap()
+    {
+        Physics2D.SyncTransforms();
+
+        ContactFilter2D filter = new ContactFilter2D
         {
+            useLayerMask = true,
+            layerMask = m_PlayerLayer,
+            useTriggers = true
+        };
+
+        int hitCount = Physics2D.OverlapCollider(
+            m_Collider,
+            filter,
+            m_OverlapResults
+        );
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider2D hitCollider = m_OverlapResults[i];
+
+            if (hitCollider == null)
+            {
+                continue;
+            }
+
+            IDamageable target = hitCollider.GetComponent<IDamageable>();
+
+            if (target == null)
+            {
+                target = hitCollider.GetComponentInParent<IDamageable>();
+            }
+
+            if (target == null)
+            {
+                continue;
+            }
+
+            DamageInfo info = new DamageInfo
+            {
+                Amount = m_Damage,
+                Attacker = gameObject,
+                HitPoint = hitCollider.ClosestPoint(transform.position),
+                HitDirection = m_Direction,
+                IsUnblockable = false
+            };
+
+            target.TakeDamage(info);
+
             Destroy(gameObject);
+            return;
         }
     }
 }

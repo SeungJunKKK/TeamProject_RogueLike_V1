@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 463558cf30d3d5848b26875a05236b2e
+guid: 38eff68ab7b7bdd44a34fa7718aee538
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3092483492171673783
-    second: sLightningRing_0_0
+      213: -4793264802416557471
+    second: sEfCrosshair_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sLightningRing_0_0
+      name: sEfCrosshair_0_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 34
-        height: 34
+        x: 1
+        y: 3
+        width: 9
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94f095706aa4515d0800000000000000
-      internalID: -3092483492171673783
+      spriteID: 1620499de07ea7db0800000000000000
+      internalID: -4793264802416557471
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sLightningRing_0_0: -3092483492171673783
+      sEfCrosshair_0_0: -4793264802416557471
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

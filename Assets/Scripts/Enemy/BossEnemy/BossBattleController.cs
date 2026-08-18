@@ -105,12 +105,26 @@ public class BossBattleController : MonoBehaviour
     private void TransitionToPhase2()
     {
         m_CurrentPhase = EBossPhase.Phase2_Wurms;
-        Debug.Log("<color=orange>[BossBattleController] 페이즈 2 진입 - 프로비던스 퇴장 및 웜 자동 소환</color>");
+        Debug.Log("<color=orange>[BossBattleController] 페이즈 2 진입 - 프로비던스 사망 연출 시작</color>");
+
+        // 💡 페이즈 전환 흐름을 코루틴으로 제어
+        StartCoroutine(CoTransitionToPhase2Routine());
+    }
+
+    private IEnumerator CoTransitionToPhase2Routine()
+    {
+        // 1. 프로비던스 퇴장 상태 진입 및 사망 모션 재생
         m_ProvidenceBoss.ExitArenaForPhase2();
 
-        m_AliveWurmCount = 2;
+        yield return new WaitForSeconds(2.0f);
 
-        // 중심 위치 기준으로 좌우 자동 계산
+        // 3. 연출이 끝나면 프로비던스 오브젝트 숨기기
+        m_ProvidenceBoss.gameObject.SetActive(false);
+
+        Debug.Log("<color=orange>[BossBattleController] 프로비던스 퇴장 완료. 웜 소환 시작!</color>");
+
+        // 4. 웜 2마리 소환 로직 실행
+        m_AliveWurmCount = 2;
         Vector3 centerPos = m_ProvidenceBoss != null ? m_ProvidenceBoss.transform.position : transform.position;
         Vector3 leftPos = centerPos + new Vector3(-7f, 0f, 0f);
         Vector3 rightPos = centerPos + new Vector3(7f, 0f, 0f);
@@ -118,7 +132,7 @@ public class BossBattleController : MonoBehaviour
         SpawnWurmAt(m_RedWurmPrefab, leftPos);
         SpawnWurmAt(m_BlueWurmPrefab, rightPos);
 
-        // 페이즈 2 크로스헤어 독립 스케줄러 시작
+        // 5. 페이즈 2 크로스헤어 독립 스케줄러 시작
         if (m_CrosshairSchedulerRoutine != null) StopCoroutine(m_CrosshairSchedulerRoutine);
         m_CrosshairSchedulerRoutine = StartCoroutine(CrosshairAttackScheduler());
     }

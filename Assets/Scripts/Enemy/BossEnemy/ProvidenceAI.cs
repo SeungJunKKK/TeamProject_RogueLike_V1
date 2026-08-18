@@ -109,8 +109,11 @@ public class ProvidenceAI : EnemyBase
         m_Rigidbody.linearVelocity = Vector2.zero;
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
         ChangeState(EProvidenceState.PhaseTransition);
+
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
-        gameObject.SetActive(false);
+
+        // 💡 즉시 숨기지 않고 사망("Death") 애니메이션 재생
+        if (m_Animator != null) m_Animator.Play("Death");
     }
 
     public void ReturnToArenaForPhase3()

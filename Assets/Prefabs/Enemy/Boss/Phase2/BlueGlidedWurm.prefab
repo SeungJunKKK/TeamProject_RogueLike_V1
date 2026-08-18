@@ -1176,17 +1176,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9178ca4a20dd57c4cbe63fc344cd1f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlueGildedWurm
-  m_BaseHp: 80
-  m_HpPerLevel: 24
-  m_BaseGold: 2
+  m_Data: {fileID: 11400000, guid: 6b7582f825946c1408d0d7c74203ce30, type: 2}
+  m_AudioSource: {fileID: 0}
+  m_MaxHearingDistance: 40
+  m_HpBar: {fileID: 0}
   m_Player: {fileID: 0}
   m_MaxSpeed: 10
   m_TurnSpeed: 90
   m_OvershootDistance: 8
   m_SegmentSpacing: 0.8
   m_MaxPathPoints: 500
-  m_ProjectilePrefab: {fileID: 219212974794728016, guid: 127dc6bd5702d8447a9973e5c0afb323, type: 3}
-  m_ProjectileSpawnPoint: {fileID: 0}
+  m_ProjectilePrefab: {fileID: 2709551731928718241, guid: 127dc6bd5702d8447a9973e5c0afb323, type: 3}
+  m_ProjectileSpawnPoint: {fileID: 4472016054658601675}
   m_BaseDamage: 15
   m_SpreadAngle: 55
   m_BulletsPerBurst: 5
