@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5bfc6304b7f1b047b1bb839cd70ce9a, type: 3}
+  m_Name: Wisp
+  m_EditorClassIdentifier: Assembly-CSharp::GroundEnemyDataSO
+  EnemyName: Wisp
+  BaseHp: 60
+  HpPerLevel: 14
+  BaseDamage: 5
+  BaseGold: 10
+  BaseExp: 6
+  ExpPerLevel: 3
+  SpawnSoundAddress: SFX_Wisp_Spawn
+  AttackSoundAddress: SFX_Wisp_Shoot
+  HitSoundAddress: SFX_Wisp_Hit
+  DeathSoundAddress: SFX_Wisp_Death
+  MoveSpeed: 4
+  Acceleration: 15
+  JumpForce: 8
+  JumpCooldown: 1
+  AttackRange: 1.5
+  AttackWindup: 0.5
+  AttackCooldown: 2
+  AttackMoveRatio: 0.3
+  GroundRayLength: 1.5
+  WallRayLength: 0.2
+  SeparationRadius: 0.8
+  SeparationForce: 2.5
