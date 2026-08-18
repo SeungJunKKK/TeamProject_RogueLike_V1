@@ -2,13 +2,20 @@ using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 {
-    [Header("Stats (레벨 1 기준)")]
-    [SerializeField] protected float m_BaseHp = 80f;
-    [SerializeField] protected float m_HpPerLevel = 24f;
-    [SerializeField] protected int m_BaseGold = 2;
+    [Header("적 데이터 (SO)")]
+    [SerializeField] protected EnemyDataSO m_Data;
 
-    [SerializeField] protected float m_BaseExp = 12f;
-    [SerializeField] protected float m_ExpPerLevel = 3f;
+    [Header("사운드 최적화 (Audio Culling)")]
+    [SerializeField] protected AudioSource m_AudioSource;
+    [SerializeField] protected float m_MaxHearingDistance = 40f;
+
+    //[Header("Stats (레벨 1 기준)")]
+    //[SerializeField] protected float m_BaseHp = 80f;
+    //[SerializeField] protected float m_HpPerLevel = 24f;
+    //[SerializeField] protected int m_BaseGold = 2;
+
+    //[SerializeField] protected float m_BaseExp = 12f;
+    //[SerializeField] protected float m_ExpPerLevel = 3f;
 
     protected float m_MaxHp;
     protected float m_CurrentHp;
@@ -37,16 +44,25 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
         {
             // 스폰 시점의 난이도로 최대 HP 결정
             //m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
-            m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            //m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
+            m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseHp, m_Data.HpPerLevel);
         }
         else
         {
-            m_MaxHp = m_BaseHp;
+            //m_MaxHp = m_BaseHp;
+            m_MaxHp = m_Data.BaseHp;
         }
 
         m_CurrentHp = m_MaxHp;
         // m_Rigidbody가 null일 때만 GetComponent 실행
         m_Rigidbody ??= GetComponent<Rigidbody2D>();
+
+        if(m_Data.SpawnSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.SpawnSoundAddress);
+        }
+
+        // if(m_Data.SpawnSound != null) SoundManager.Play(m_Data.SpawnSound);
     }
 
     public virtual void OnDespawn()
@@ -77,6 +93,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
             IsCrit = info.IsCrit
         });
 
+        if(m_Data.HitSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.HitSoundAddress);
+        }
+
+
         if (m_CurrentHp <= 0f)
         {
             Die();
@@ -86,8 +108,15 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     // ===== 사망 처리: 보스는 override 해서 페이즈/BossDiedEvent 추가 =====
     protected virtual void Die()
     {
-        int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
-        float exp = DifficultyManager.Instance.GetScaledStat(m_BaseExp, m_ExpPerLevel);
+        //int gold = Mathf.Max(1, (int)(m_BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
+        //float exp = DifficultyManager.Instance.GetScaledStat(m_BaseExp, m_ExpPerLevel);
+        if(m_Data.DeathSoundAddress != null)
+        {
+            PlayAddressableSFX(m_Data.DeathSoundAddress);
+        }
+
+        int gold = Mathf.Max(1, (int)(m_Data.BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
+        float exp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseExp, m_Data.ExpPerLevel);
 
         EventBus.Publish(new MonsterDiedEvent
         {
@@ -98,4 +127,46 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
         EnemySpawner.Instance.UnregisterEnemy(gameObject);
     }
+    public void PlayAddressableSFX(string sfxAddress)
+    {
+        if (string.IsNullOrEmpty(sfxAddress))
+        {
+            return;
+        }
+
+        if (Camera.main != null)
+        {
+            float distance = Vector2.Distance(transform.position, Camera.main.transform.position);
+
+            if (distance > m_MaxHearingDistance)
+            {
+                return;
+            }
+        }
+
+        if (m_AudioSource == null)
+        {
+            m_AudioSource = GetComponent<AudioSource>();
+        }
+
+        AddressableManager.Instance.LoadAssetAsync<AudioClip>(sfxAddress, (clip) =>
+        {
+            if (clip != null)
+            {
+                if (m_AudioSource != null)
+                {
+                    m_AudioSource.PlayOneShot(clip);
+                }
+                else
+                {
+                    Debug.LogWarning($"[사운드 경고] {gameObject.name}에 AudioSource가 없어 소리를 낼 수 없습니다!");
+                }
+            }
+            else
+            {
+                Debug.LogError($"[어드레서블 에러] '{sfxAddress}' 주소로 효과음을 찾을 수 없습니다!");
+            }
+        });
+    }
+
 }
