@@ -1650,12 +1650,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
+      propertyPath: m_ElitePrefab
+      value: 
+      objectReference: {fileID: 2807211743726025604, guid: fe2f411a2da5d8c4591fafa5de117212, type: 3}
+    - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: m_EliteScaleMultiplier
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: m_EliteBuff.ScaleMultiplier
-      value: 10
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: 'm_SpawnTilemaps.Array.data[0]'

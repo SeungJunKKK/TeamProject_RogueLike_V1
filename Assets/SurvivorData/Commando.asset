@@ -59,7 +59,7 @@ MonoBehaviour:
   BaseHealthRegen: 0.6
   BaseDamage: 12
   BaseArmor: 0
-  BaseMoveSpeed: 4
+  BaseMoveSpeed: 5
   BaseAttackSpeed: 1.5
   BaseCritChance: 0.1
   BaseCritDamage: 2

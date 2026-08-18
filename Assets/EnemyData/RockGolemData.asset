@@ -27,7 +27,7 @@ MonoBehaviour:
   Acceleration: 5
   JumpForce: 7
   JumpCooldown: 2
-  AttackRange: 3
+  AttackRange: 5
   AttackWindup: 0.5
   AttackCooldown: 5
   AttackMoveRatio: 0.3

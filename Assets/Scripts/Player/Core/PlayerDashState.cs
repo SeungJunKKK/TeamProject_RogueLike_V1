@@ -13,6 +13,7 @@ public class PlayerDashState : IState
 
     public void Enter()
     {
+
         m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Dash);
         m_Player.Anim.Play("Dash");
         m_Player.PlayAddressableSFX(m_Player.Dash_SFXAddress);
