@@ -16,6 +16,7 @@ public class CharacterSelectManager : MonoBehaviour
     public Image[] SkillIcons;
     public TextMeshProUGUI[] SkillNames;
     public TextMeshProUGUI[] SkillDescs;
+    public SkillSlotUI[] SkillSlots;
 
     [Header("Difficulty UI")]
     public Image[] DifficultyImages;           // 0: 이슬비, 1: 폭풍우, 2: 몬순 버튼의 Image 컴포넌트
@@ -87,9 +88,26 @@ public class CharacterSelectManager : MonoBehaviour
 
     private void UpdateSkillUI(int index, SkillInfo info)
     {
-        SkillIcons[index].sprite = info.SkillIcon;
-        SkillNames[index].text = info.SkillName;
-        SkillDescs[index].text = info.SkillDescription;
+        if (SkillIcons != null && index < SkillIcons.Length && SkillIcons[index] != null)
+        {
+            SkillIcons[index].sprite = info.SkillIcon;
+            SkillIcons[index].enabled = (info.SkillIcon != null);
+        }
+
+        if (SkillNames != null && index < SkillNames.Length && SkillNames[index] != null)
+        {
+            SkillNames[index].text = info.SkillName;
+        }
+
+        if (SkillDescs != null && index < SkillDescs.Length && SkillDescs[index] != null)
+        {
+            SkillDescs[index].text = info.SkillDescription;
+        }
+
+        if (SkillSlots != null && index < SkillSlots.Length && SkillSlots[index] != null)
+        {
+            SkillSlots[index].SetSkill(info);
+        }
     }
 
     public void OnStartButtonClicked()
