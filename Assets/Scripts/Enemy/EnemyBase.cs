@@ -68,9 +68,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
         if (DifficultyManager.Instance != null)
         {
-            // 스폰 시점의 난이도로 최대 HP 결정
-            //m_CurrentHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
-            //m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_BaseHp, m_HpPerLevel);
             m_MaxHp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseHp, m_Data.HpPerLevel);
         }
         else

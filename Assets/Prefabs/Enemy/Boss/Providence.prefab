@@ -203,9 +203,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2a86e0c137d8545a98532513fa2dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProvidenceAI
-  m_BaseHp: 80
-  m_HpPerLevel: 24
-  m_BaseGold: 2
+  m_Data: {fileID: 11400000, guid: 4cd52fd3095eaa542a040bc001c7d404, type: 2}
+  m_AudioSource: {fileID: 0}
+  m_MaxHearingDistance: 40
+  m_HpBar: {fileID: 0}
   Player: {fileID: 0}
   m_BaseDamage: 20
   m_MoveSpeed: 4
