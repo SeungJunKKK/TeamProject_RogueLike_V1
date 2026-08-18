@@ -43,9 +43,23 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    private List<ItemData> m_Items = new List<ItemData>();
     // 아이템 획득 시 호출될 함수 (상자에서 아이템을 먹었을 때 실행됨)
     public void AddItem(ItemData newItem)
     {
+        if (newItem == null)
+        {
+            Debug.LogWarning("[PlayerInventory] 추가하려는 ItemData가 null입니다!");
+            return;
+        }
+
+        if (m_Items == null)
+        {
+            m_Items = new List<ItemData>();
+        }
+
+        m_Items.Add(newItem);
+
         if (newItem.tier == ItemTier.Use)
         {
             currentActiveItem = newItem;

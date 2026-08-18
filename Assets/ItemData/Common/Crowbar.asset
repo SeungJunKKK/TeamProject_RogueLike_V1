@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Crowbar
   m_EditorClassIdentifier: Assembly-CSharp::Item_Crowbar
   itemName: Crowbar
-  description: "Deal +50% (+50% per stack) damage to enemies \nabove 80% health."
+  description: Deal +50% (+50% per stack) damage to enemies above 80% health.
   itemIcon: {fileID: 33228322273969332, guid: 67043c266bde17f4fae67169f69abdaa, type: 3}
   tier: 0
   isStackable: 1
   maxStack: 0
+  cooldown: 0
   hpThreshold: 0.8
   bonusDamageRatio: 0.5
