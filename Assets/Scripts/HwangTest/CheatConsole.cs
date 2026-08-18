@@ -273,6 +273,32 @@ public class CheatConsole : MonoBehaviour
             }
         }
 
+        if (Keyboard.current.digit5Key.wasPressedThisFrame)
+        {
+            if (EnemySpawner.Instance != null)
+            {
+                Debug.Log($"<color=red>[Cheat] 숫자 5 pressed: 전 몬스터 처치</color>");
+                EnemySpawner.Instance.KillAllEnemies();
+            }
+            else
+            {
+                Debug.LogWarning($"[Cheat] 숫자 5: 씬에 EnemySpawner가 없습니다.");
+            }
+        }
+
+        if (Keyboard.current.digit6Key.wasPressedThisFrame)
+        {
+            if (EnemySpawner.Instance != null)
+            {
+                Debug.Log($"<color=red>[Cheat] 숫자 6 pressed: 엘리트 몬스터 처치</color>");
+                EnemySpawner.Instance.KillElite();
+            }
+            else
+            {
+                Debug.LogWarning($"[Cheat] 숫자 6: 씬에 EnemySpawner가 없습니다.");
+            }
+        }
+
 
     }
 };

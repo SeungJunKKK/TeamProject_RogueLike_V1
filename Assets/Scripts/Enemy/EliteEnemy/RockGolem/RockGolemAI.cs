@@ -379,6 +379,12 @@ public class RockGolemAI : EnemyBase
         ChangeState(ERockGolemState.Chase);
     }
 
+    public override void MakeElite(EliteBuff buff)
+    {
+        base.MakeElite(buff);
+        m_Damage *= buff.DamageMultiplier;
+    }
+
     private void ApplyMovement()
     {
         float separationX = 0f;

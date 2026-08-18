@@ -187,6 +187,12 @@ public class FlyingEnemyAI : EnemyBase
         ChangeState(EFlyingEnemyState.Chase);
     }
 
+    public override void MakeElite(EliteBuff buff)
+    {
+        base.MakeElite(buff);
+        m_Damage *= buff.DamageMultiplier;
+    }
+
     // ==========================================
     // [Module: Main Update Flow]
     // ==========================================
