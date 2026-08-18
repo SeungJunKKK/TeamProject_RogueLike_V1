@@ -15,6 +15,9 @@ public class RockGolemAI : EnemyBase
     [SerializeField] private Transform m_ShockwaveSpawnPos;
     [SerializeField] private GameObject m_ShockwavePrefab;
 
+    [SerializeField] private GameObject m_EliteShockwavePrefab;
+
+
     [Header("Layer Setting")]
     [SerializeField] private LayerMask m_GroundLayer;
     [SerializeField] private LayerMask m_EnemyLayer;
@@ -69,10 +72,11 @@ public class RockGolemAI : EnemyBase
         base.OnSpawn();
         m_GroundData ??= m_Data as GroundEnemyDataSO;
 
+
         var difficulty = DifficultyManager.Instance;
-        //m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
         m_Damage = difficulty != null ? m_GroundData.BaseDamage * difficulty.Coefficient : m_GroundData.BaseDamage;
         
+
         ResetState();
         ResetPhysics();
 
@@ -334,42 +338,73 @@ public class RockGolemAI : EnemyBase
         //}
     }
 
+
     public void SpawnShockwave()
     {
         if (!m_IsSpawnFinished || m_CurrentState != ERockGolemState.Attack || m_CurrentHp <= 0f) return;
 
-        if (m_ShockwavePrefab == null)
+        // 💡 3. 승준 학생이 만들어둔 부모의 'IsElite'를 바로 꺼내서 검사합니다!
+        GameObject prefabToFire = (IsElite && m_EliteShockwavePrefab != null) ? m_EliteShockwavePrefab : m_ShockwavePrefab;
+
+        if (prefabToFire == null)
         {
-           // Debug.LogError("[RockGolemAI] 충격파 프리팹이 연결되지 않았습니다.");
             return;
         }
 
-        if (PoolManager.Instance == null)
-        {
-            //Debug.LogError("[RockGolemAI] PoolManager.Instance가 없습니다.");
-            return;
-        }
+        if (PoolManager.Instance == null) return;
 
         Vector2 spawnPos = m_ShockwaveSpawnPos != null ? (Vector2)m_ShockwaveSpawnPos.position : (Vector2)transform.position;
         Vector2 attackDir = m_LockedAttackDirection == 1 ? Vector2.right : Vector2.left;
 
-        GameObject shockwaveObj = PoolManager.Instance.Get(m_ShockwavePrefab, spawnPos, Quaternion.identity);
+        GameObject shockwaveObj = PoolManager.Instance.Get(prefabToFire, spawnPos, Quaternion.identity);
 
-        if (shockwaveObj == null)
-        {
-            Debug.LogError("[RockGolemAI] 충격파 생성에 실패했습니다.");
-            return;
-        }
+        if (shockwaveObj == null) return;
 
         if (shockwaveObj.TryGetComponent(out RockShockwave shockwave))
         {
-            shockwave.Init(m_Damage, attackDir, gameObject);
-        }
-        else
-        {
-            //Debug.LogError("[RockGolemAI] 생성된 충격파에 RockShockwave가 없습니다.");
+            shockwave.Init(m_Damage, attackDir, gameObject, IsElite);
         }
     }
+
+    //public void SpawnShockwave()
+    //{
+    //    if (!m_IsSpawnFinished || m_CurrentState != ERockGolemState.Attack || m_CurrentHp <= 0f) return;
+
+
+    //    GameObject prefabToFire = (IsElite && m_EliteShockwavePrefab != null) ? m_EliteShockwavePrefab : m_ShockwavePrefab;
+
+    //    if (m_ShockwavePrefab == null)
+    //    {
+    //       // Debug.LogError("[RockGolemAI] 충격파 프리팹이 연결되지 않았습니다.");
+    //        return;
+    //    }
+
+    //    if (PoolManager.Instance == null)
+    //    {
+    //        //Debug.LogError("[RockGolemAI] PoolManager.Instance가 없습니다.");
+    //        return;
+    //    }
+
+    //    Vector2 spawnPos = m_ShockwaveSpawnPos != null ? (Vector2)m_ShockwaveSpawnPos.position : (Vector2)transform.position;
+    //    Vector2 attackDir = m_LockedAttackDirection == 1 ? Vector2.right : Vector2.left;
+
+    //    GameObject shockwaveObj = PoolManager.Instance.Get(m_ShockwavePrefab, spawnPos, Quaternion.identity);
+
+    //    if (shockwaveObj == null)
+    //    {
+    //        Debug.LogError("[RockGolemAI] 충격파 생성에 실패했습니다.");
+    //        return;
+    //    }
+
+    //    if (shockwaveObj.TryGetComponent(out RockShockwave shockwave))
+    //    {
+    //        shockwave.Init(m_Damage, attackDir, gameObject);
+    //    }
+    //    else
+    //    {
+    //        //Debug.LogError("[RockGolemAI] 생성된 충격파에 RockShockwave가 없습니다.");
+    //    }
+    //}
 
     public void EndAttack()
     {

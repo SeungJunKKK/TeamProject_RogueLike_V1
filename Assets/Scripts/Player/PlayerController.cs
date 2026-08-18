@@ -390,7 +390,7 @@ public class PlayerController : MonoBehaviour,IDamageable
     /// </summary>
     public void TakeDamage(DamageInfo info)
     {
-        if (m_CurrentState is PlayerDeathState)
+        if (m_CurrentState is PlayerDeathState || IsInvincible)
         {
             return;
         }

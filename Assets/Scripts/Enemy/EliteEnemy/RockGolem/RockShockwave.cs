@@ -11,6 +11,10 @@ public class RockShockwave : MonoBehaviour
     [Header("Collision Setting")]
     [SerializeField] private LayerMask m_GroundLayer;    // 지형 레이어
 
+    [Header("Terrain Follow Settings")]
+    [Tooltip("파동이 평지에서도 공중에 떠 있다면 이 값을 조절하세요!")]
+    [SerializeField] private float m_HeightOffset = 0f;
+
     private float m_Damage;
     private Vector2 m_Direction;
     private GameObject m_Attacker;
@@ -18,17 +22,19 @@ public class RockShockwave : MonoBehaviour
 
     private Rigidbody2D m_Rigidbody;
     private BoxCollider2D m_Collider;
+    private SpriteRenderer m_SpriteRenderer;
 
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
         m_Collider = GetComponent<BoxCollider2D>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         m_Collider.isTrigger = true;
         m_Rigidbody.isKinematic = true;
     }
 
-    public void Init(float damage, Vector2 direction, GameObject attacker)
+    public void Init(float damage, Vector2 direction, GameObject attacker, bool isElite)
     {
         m_Damage = damage;
         m_Direction = direction.normalized;
@@ -36,6 +42,11 @@ public class RockShockwave : MonoBehaviour
         m_LifeTimer = 0f;
 
         transform.localScale = new Vector3(Mathf.Sign(direction.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
+        if (m_SpriteRenderer != null)
+        {
+            m_SpriteRenderer.color = isElite ?  Color.red : Color.white;
+        }
     }
 
     private void Update()
@@ -48,33 +59,48 @@ public class RockShockwave : MonoBehaviour
             return;
         }
 
-        // 등속도 전진
-        m_Rigidbody.linearVelocity = m_Direction * m_Speed;
-    }
+        Vector2 currentPos = transform.position;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log(
-       $"[RockShockwave] 충돌: {collision.name} / " +
-       $"Layer: {LayerMask.LayerToName(collision.gameObject.layer)} / " +
-       $"IDamageable: {collision.GetComponent<IDamageable>() != null}"
-   );
+        Vector2 forwardRayOrigin = currentPos + Vector2.up * 0.5f;
+        int wallLayer = LayerMask.GetMask("Wall", "Default");
+        RaycastHit2D wallHit = Physics2D.Raycast(forwardRayOrigin, m_Direction, 0.5f, wallLayer);
 
-        if (((1 << collision.gameObject.layer) & m_GroundLayer) != 0)
+        if (wallHit.collider != null)
         {
             ReturnToPool();
             return;
         }
 
-        if (collision.gameObject == m_Attacker || collision.gameObject.layer == LayerMask.NameToLayer("Enemy")) return;
+        Vector2 nextPos = currentPos + (m_Direction * m_Speed * Time.deltaTime);
+        Vector2 downRayOrigin = nextPos + Vector2.up * 1.5f;
+        int groundLayer = LayerMask.GetMask("Ground", "OneWayGround");
+        RaycastHit2D groundHit = Physics2D.Raycast(downRayOrigin, Vector2.down, 3f, groundLayer);
 
+        if (groundHit.collider != null)
+        {
+            nextPos.y = groundHit.point.y + m_HeightOffset;
+            transform.up = groundHit.normal;
+        }
+        else
+        {
+            ReturnToPool();
+            return;
+        }
 
-        //if (collision.TryGetComponent(out PlayerController player))
-        //{
-        //    player.TakeDamage(m_Damage);
-        //    ReturnToPool();
-        //    return;
-        //}
+        transform.position = nextPos;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        int hitLayer = collision.gameObject.layer;
+
+        if (hitLayer == LayerMask.NameToLayer("Wall") || hitLayer == LayerMask.NameToLayer("Default"))
+        {
+            ReturnToPool();
+            return;
+        }
+
+        if (collision.gameObject == m_Attacker || hitLayer == LayerMask.NameToLayer("Enemy")) return;
 
         if (collision.TryGetComponent(out IDamageable target))
         {
@@ -90,7 +116,8 @@ public class RockShockwave : MonoBehaviour
             };
 
             target.TakeDamage(info);
-            ReturnToPool();
+
+            //ReturnToPool();
         }
     }
 

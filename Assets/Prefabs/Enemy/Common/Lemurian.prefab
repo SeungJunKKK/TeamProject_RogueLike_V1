@@ -209,6 +209,7 @@ MonoBehaviour:
   m_Data: {fileID: 11400000, guid: bf7c65008bcad9741ac4e8d1d22237a5, type: 2}
   m_AudioSource: {fileID: -1481470395279990193}
   m_MaxHearingDistance: 30
+  m_HpBar: {fileID: 0}
   Player: {fileID: 0}
   GroundLayer:
     serializedVersion: 2
@@ -333,6 +334,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2659843209743882261}
     m_Modifications:
+    - target: {fileID: 4180762797675489525, guid: 15295f74cd409a040ad0f45dfa09110f, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5000289518854099816, guid: 15295f74cd409a040ad0f45dfa09110f, type: 3}
       propertyPath: m_Name
       value: UI_EnemyCanvas
