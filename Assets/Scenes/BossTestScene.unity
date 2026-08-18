@@ -1905,6 +1905,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5621272933626498261, guid: 500124d511c90ac48804f06cab02bf5d, type: 3}
+      propertyPath: 'levelUpSprites.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8777614983204712666, guid: bae297bc58f4bf24bb9d69dcce54886a, type: 3}
+    - target: {fileID: 5621272933626498261, guid: 500124d511c90ac48804f06cab02bf5d, type: 3}
+      propertyPath: 'levelUpSprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: -1275535628949736052, guid: f375617e0f7a5004494a9eb7656723e0, type: 3}
+    - target: {fileID: 5621272933626498261, guid: 500124d511c90ac48804f06cab02bf5d, type: 3}
+      propertyPath: 'levelUpSprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: 467036462329119587, guid: ea15039e51dcdeb45a017728b8e3de7c, type: 3}
     - target: {fileID: 6916486069666313263, guid: 500124d511c90ac48804f06cab02bf5d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

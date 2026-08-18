@@ -107,9 +107,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelUpEffect
   spriteRenderer: {fileID: 6481165716341073009}
   levelUpSprites:
-  - {fileID: -5001998145502498361, guid: 587702ea106135d4ebb8ea7b26a679d1, type: 3}
-  - {fileID: 4653647174715963860, guid: 044bb80e1bc2af843aa648f66504fd4d, type: 3}
-  - {fileID: 5528246485781575253, guid: cd5be88426f9bfb4fa549fe3d4bad160, type: 3}
+  - {fileID: 8777614983204712666, guid: bae297bc58f4bf24bb9d69dcce54886a, type: 3}
+  - {fileID: -1275535628949736052, guid: f375617e0f7a5004494a9eb7656723e0, type: 3}
+  - {fileID: 467036462329119587, guid: ea15039e51dcdeb45a017728b8e3de7c, type: 3}
   frameRate: 0.1
   moveUpSpeed: 1
   fadeDuration: 0.5
+  levelUpSound: {fileID: 0}

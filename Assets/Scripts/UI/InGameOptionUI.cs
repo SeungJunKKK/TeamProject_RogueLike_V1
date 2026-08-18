@@ -82,6 +82,9 @@ public class InGameOptionUI : MonoBehaviour
     {
         if (pauseMenuPanel != null) pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ResumeGame()

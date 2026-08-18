@@ -34,7 +34,7 @@ public class BossHPBarUI : MonoBehaviour
     {
         if (hpText != null)
         {
-            hpText.text = $"{Mathf.Max(0f, current):F0} / {max:F0}";
+            hpText.text = $"{Mathf.Max(0f, current):F0}/{max:F0}";
         }
     }
 }
