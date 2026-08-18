@@ -148,7 +148,7 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
                     Amount = m_Damage,
                     HitPoint = hit.transform.position,
                     HitDirection = (hit.transform.position - transform.position).normalized,
-                    KnockbackForce = 3.0f,
+                    KnockbackForce = 1.5f,
                     Attacker = gameObject,
                     IsCrit = false,
                     CanProc = true
