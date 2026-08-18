@@ -34,7 +34,9 @@ public class ProvidenceAI : EnemyBase
     [SerializeField] private float m_ExplosionStepDelay = 0.06f;
 
     [Header("Combat: Pattern Counter")]
+    [SerializeField] private int m_SlashCount = 0;
     [SerializeField] private int m_X1Count = 0;
+    private const int k_MaxSlashBeforeX1 = 3;
     private const int k_MaxX1BeforeC1 = 2;
 
     [Header("Combat: C1 Purple Circle Setting")]
@@ -179,6 +181,12 @@ public class ProvidenceAI : EnemyBase
     {
         if (m_SlashCooldownTimer > 0f) return;
 
+        if (m_SlashCount >= k_MaxSlashBeforeX1)
+        {
+            ExecuteX1Attack();
+            return;
+        }
+
         if (m_DistanceXToPlayer < m_MeleeRangeLimit)
         {
             ExecuteNearRangePattern(); // 근접: Z1 / Z2 / X1 랜덤
@@ -191,43 +199,26 @@ public class ProvidenceAI : EnemyBase
 
     private void ExecuteNearRangePattern()
     {
+        // 💡 랜덤 풀에서 X1을 제거하고 Z1(일반 베기), Z2(순간이동 베기)만 남김
         float weightZ1 = (m_LastAttackName == "ShootZ1") ? 20f : 60f;
         float weightZ2 = (m_LastAttackName == "ShootZ2") ? 20f : 40f;
-        float weightX1 = (m_LastAttackName == "ShootX1") ? 20f : 40f;
 
-        float total = weightZ1 + weightZ2 + weightX1;
+        float total = weightZ1 + weightZ2;
         float roll = UnityEngine.Random.Range(0f, total);
 
         if (roll < weightZ1)
         {
             ExecuteNormalSlash();
         }
-        else if (roll < weightZ1 + weightZ2)
-        {
-            ExecuteTeleportSlash();
-        }
         else
         {
-            ExecuteX1Attack();
+            ExecuteTeleportSlash();
         }
     }
 
     private void ExecuteFarRangePattern()
     {
-        float weightZ2 = (m_LastAttackName == "ShootZ2") ? 20f : 60f;
-        float weightX1 = (m_LastAttackName == "ShootX1") ? 20f : 50f;
-
-        float total = weightZ2 + weightX1;
-        float roll = UnityEngine.Random.Range(0f, total);
-
-        if (roll < weightZ2)
-        {
             ExecuteTeleportSlash();
-        }
-        else
-        {
-            ExecuteX1Attack();
-        }
     }
 
     // ==========================================
@@ -236,6 +227,7 @@ public class ProvidenceAI : EnemyBase
     private void ExecuteNormalSlash()
     {
         m_LastAttackName = "ShootZ1";
+        m_SlashCount++;
         StartAction("ShootZ1");
     }
 
@@ -243,6 +235,7 @@ public class ProvidenceAI : EnemyBase
     {
         m_LastAttackName = "ShootX1";
         m_X1Count++;
+        m_SlashCount = 0;
         StartAction("ShootX1");
     }
 
@@ -255,6 +248,7 @@ public class ProvidenceAI : EnemyBase
     private void ExecuteTeleportSlash()
     {
         m_LastAttackName = "ShootZ2";
+        m_SlashCount++;
         StartCoroutine(CoTeleportDownwardSlashRoutine());
     }
 
@@ -270,13 +264,12 @@ public class ProvidenceAI : EnemyBase
     private IEnumerator CoCascadingExplosionRoutine(float waveDirection)
     {
         float currentX = transform.position.x + (waveDirection * 1.5f);
-        bool isHitPlayer = false;
         bool isHitWall = false;
 
         int maxSteps = 20;
         int currentStep = 0;
 
-        while (!isHitPlayer && !isHitWall && currentStep < maxSteps)
+        while (!isHitWall && currentStep < maxSteps)
         {
             float groundY = transform.position.y;
             RaycastHit2D groundHit = Physics2D.Raycast(new Vector2(currentX, transform.position.y + 1f), Vector2.down, 5f, m_GroundLayer);
@@ -293,13 +286,14 @@ public class ProvidenceAI : EnemyBase
             Vector2 checkSize = new Vector2(m_ExplosionStep, 3f);
             Collider2D playerHit = Physics2D.OverlapBox(checkCenter, checkSize, 0f, m_TargetLayer);
 
+            // 💡 초기 기획대로 플레이어를 만나면 BigWave(큰 기둥)를 생성하고 루프를 즉시 종료
             if (playerHit != null)
             {
-                isHitPlayer = true;
                 SpawnExplosionEffect(currentX, groundY, waveDirection, true);
                 break;
             }
 
+            // 플레이어를 못 만났으면 평소대로 SmallWave 생성 후 전진 계속
             SpawnExplosionEffect(currentX, groundY, waveDirection, false);
 
             currentX += waveDirection * m_ExplosionStep;
@@ -331,7 +325,7 @@ public class ProvidenceAI : EnemyBase
 
         if (m_Animator != null)
         {
-            m_Animator.Play("ShootC1_1");
+            m_Animator.Play("ShootC1");
         }
         yield return new WaitForSeconds(1.0f);
 
@@ -401,27 +395,21 @@ public class ProvidenceAI : EnemyBase
 
     public void PerformSlash()
     {
+        Debug.Log("베기 판정");
         Vector2 hitCenter = (Vector2)transform.position + new Vector2(m_Direction * m_SlashHitboxOffset.x, m_SlashHitboxOffset.y);
         int hitCount = Physics2D.OverlapBoxNonAlloc(hitCenter, m_SlashHitboxSize, 0f, m_HitBuffer, m_TargetLayer);
 
         for (int i = 0; i < hitCount; i++)
         {
             Collider2D col = m_HitBuffer[i];
-            IDamageable targetDamageable = col.GetComponent<IDamageable>() ?? col.GetComponentInParent<IDamageable>();
 
-            if (targetDamageable != null)
+            // 💡 IDamageable 대신 PlayerController를 찾도록 수정
+            PlayerController player = col.GetComponent<PlayerController>() ?? col.GetComponentInParent<PlayerController>();
+
+            if (player != null)
             {
-                DamageInfo info = new DamageInfo
-                {
-                    Amount = m_Damage,
-                    HitPoint = col.ClosestPoint(hitCenter),
-                    HitDirection = new Vector2(m_Direction, 0f),
-                    KnockbackForce = 10f,
-                    Attacker = gameObject,
-                    IsCrit = false,
-                    CanProc = true
-                };
-                targetDamageable.TakeDamage(info);
+                // 💡 PlayerController에 직접 m_Damage(숫자) 전달
+                player.TakeDamage(m_Damage);
                 break;
             }
         }

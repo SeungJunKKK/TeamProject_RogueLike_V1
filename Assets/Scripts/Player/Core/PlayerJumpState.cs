@@ -30,17 +30,24 @@ public class PlayerJumpState : IState
             return;
         }
 
-        if (m_Player.Rb.linearVelocity.y <= 0.01f && m_Player.Rb.linearVelocity.y >= -0.01f)
+        //바닥 체크 
+        int groundLayer = LayerMask.GetMask("Default", "Ground", "OneWayGround", "Wall");
+
+        bool isGrounded = Physics2D.Raycast(m_Player.FeetPos.position, Vector2.down, 0.15f, groundLayer);
+        if (isGrounded && m_Player.Rb.linearVelocity.y <= 0.01f)
         {
-            if(m_Player.MovementInput.x != 0) 
+            if (m_Player.MovementInput.x != 0)
             {
-             m_Player.ChangeState(new PlayerWalkState(m_Player));
+                m_Player.ChangeState(new PlayerWalkState(m_Player));
             }
             else
             {
-             m_Player.ChangeState(new PlayerIdleState(m_Player));
+                m_Player.ChangeState(new PlayerIdleState(m_Player));
             }
+            return;
         }
+
+
 
         // Z 스킬 (평타)
         if (Input.GetKeyDown(KeyCode.Z) && m_Player.CooldownManager.IsSkillReady(SkillType.Primary_Z))

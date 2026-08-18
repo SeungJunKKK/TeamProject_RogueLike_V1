@@ -33,32 +33,37 @@ public class EnforcerShotgunState : IState
 
     public void FireShotgun()
     {
-
-        // 1. 발사 방향 및 반동 먼지 이펙트 생성
         Vector2 shootDirection = m_Player.IsFacingRight ? Vector2.right : Vector2.left;
         bool isShootingRight = shootDirection.x > 0;
-
         m_Player.SpawnDustEffect(isShootingRight, EDustType.Recoil);
 
-        // 총구 위치 셋업 (MuzzlePos 활용)
         Vector2 shootOrigin = m_Player.MuzzlePos != null
                               ? (Vector2)m_Player.MuzzlePos.position
                               : (Vector2)m_Player.transform.position + new Vector2(shootDirection.x * 0.5f, 0.2f);
 
-        // 2. 산탄총 광역 판정 (BoxCastAll)
         Vector2 boxSize = new Vector2(3f, 2.5f);
         float attackRange = 1.5f;
-        int enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
-        RaycastHit2D[] hits = Physics2D.BoxCastAll(shootOrigin, boxSize, 0f, shootDirection, attackRange, enemyLayer);
+
+        int hitLayerMask = LayerMask.GetMask("Enemy", "FlyingEnemy", "Ground", "OneWayGround", "Wall", "Default");
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(shootOrigin, boxSize, 0f, shootDirection, attackRange, hitLayerMask);
+
+        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
         bool hitSomething = false;
         bool isCrit = m_Player.Stats.RollCriticalHit();
-
         float baseDamage = m_Player.Stats.Damage.Value * 1.6f;
         float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
         foreach (RaycastHit2D hit in hits)
         {
+            int hitLayer = hit.collider.gameObject.layer;
+
+            if (hitLayer == LayerMask.NameToLayer("Ground") || hitLayer == LayerMask.NameToLayer("Wall") ||
+                hitLayer == LayerMask.NameToLayer("Default") || hitLayer == LayerMask.NameToLayer("OneWayGround"))
+            {
+                break;
+            }
+
             IDamageable damageable = hit.collider.GetComponent<IDamageable>();
             if (damageable != null)
             {
@@ -67,7 +72,7 @@ public class EnforcerShotgunState : IState
                     Amount = finalDamage,
                     HitPoint = hit.point != Vector2.zero ? hit.point : (Vector2)hit.collider.transform.position,
                     HitDirection = shootDirection,
-                    KnockbackForce = 0.2f, 
+                    KnockbackForce = 0.5f,
                     Attacker = m_Player.gameObject,
                     IsCrit = isCrit,
                     CanProc = true
@@ -75,22 +80,21 @@ public class EnforcerShotgunState : IState
 
                 damageable.TakeDamage(info);
                 hitSomething = true;
-
                 if (info.CanProc)
                 {
                     m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
                 }
             }
         }
-        m_Player.PlayAddressableSFX(m_Player.Z_SFXAddress); 
 
+        m_Player.PlayAddressableSFX(m_Player.Z_SFXAddress);
         if (hitSomething)
         {
             m_Player.TriggerHitFeedback(shootDirection, 0.01f, 0f);
         }
         else
         {
-            m_Player.TriggerHitFeedback(shootDirection, 0.005f, 0f);
+         m_Player.TriggerHitFeedback(shootDirection, 0.005f, 0f);
         }
     }
 

@@ -111,7 +111,7 @@ public class ShieldSlamState : IState
 
                 if (hit.TryGetComponent<Rigidbody2D>(out var enemyRb))
                 {
-                    Vector2 knockbackVector = new Vector2(slamDirection.x * 12f, 5f);
+                    Vector2 knockbackVector = new Vector2(slamDirection.x * 1f, 5f);
                     enemyRb.linearVelocity = knockbackVector;
                 }
             }
