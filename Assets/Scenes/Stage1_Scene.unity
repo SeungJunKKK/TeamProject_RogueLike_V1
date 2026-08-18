@@ -1652,7 +1652,7 @@ PrefabInstance:
     - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: m_ElitePrefab
       value: 
-      objectReference: {fileID: 2807211743726025604, guid: fe2f411a2da5d8c4591fafa5de117212, type: 3}
+      objectReference: {fileID: 5093403589806644815, guid: b8518763ea202bd49b6294f6b6b5795e, type: 3}
     - target: {fileID: 2013672709518922762, guid: baf40b1b8a720264daf5ccceeac6b0eb, type: 3}
       propertyPath: m_EliteScaleMultiplier
       value: 10
