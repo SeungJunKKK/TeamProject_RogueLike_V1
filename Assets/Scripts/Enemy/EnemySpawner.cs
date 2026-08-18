@@ -156,9 +156,10 @@ public class EnemySpawner : MonoBehaviour
                     // 해당 위치를 지상 몬스터 스폰 후보로 등록
                     if (!tilemap.HasTile(aboveCell))
                     {
-                        tempPoints.Add(
-                            tilemap.GetCellCenterWorld(aboveCell)
-                        );
+                        Vector2 spawnPos = tilemap.GetCellCenterWorld(aboveCell);
+                        spawnPos.y += 3.0f; 
+
+                        tempPoints.Add(spawnPos);
                     }
                 }
             }

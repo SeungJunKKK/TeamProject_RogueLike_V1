@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: afc300639691e8c4b8a93c523d658b24, type: 3}
-  m_Name: JellyFIsh
+  m_Name: JellyFIshData
   m_EditorClassIdentifier: Assembly-CSharp::FlyingEnemyDataSO
   EnemyName: JellyFIsh
   BaseHp: 80

@@ -10,7 +10,7 @@ public enum EDustType
     Jump,
     Recoil
 }
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,IDamageable
 {
     protected IState m_CurrentState;
     private bool m_IsHitStopping = false;

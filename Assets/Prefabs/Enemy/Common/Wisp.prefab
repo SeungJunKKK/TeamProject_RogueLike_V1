@@ -121,7 +121,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemyAI
   m_Data: {fileID: 11400000, guid: 89dbde558fe02f247a27c34a2e237213, type: 2}
   m_AudioSource: {fileID: -8742736783376876209}
-  m_MaxHearingDistance: 15
+  m_MaxHearingDistance: 30
   Player: {fileID: 0}
   GroundLayer:
     serializedVersion: 2
@@ -249,7 +249,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 50
+  MaxDistance: 40
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0

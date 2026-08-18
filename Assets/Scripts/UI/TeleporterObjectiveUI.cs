@@ -59,7 +59,7 @@ public class TeleporterObjectiveUI : MonoBehaviour
 
             case ETeleporterState.WaitingForClear:
                 string bossStatus = e.IsBossDead ? "<color=#00FF00>Defeated</color>" : "<color=#FF0000>Alive</color>";
-                m_ObjectiveText.text = $"<color=#FFA500>Objective: Eliminate Remaining</color>\n<size=80%>Enemies Left: {e.RemainingEnemies} | Boss: {bossStatus}</size>";
+                m_ObjectiveText.text = $"<color=#FFA500>Eliminate Remaining</color>\n<size=80%>Enemies Left: {e.RemainingEnemies} | Boss: {bossStatus}</size>";
                 break;
 
             case ETeleporterState.Cleared:
