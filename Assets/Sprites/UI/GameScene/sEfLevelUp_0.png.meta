@@ -1,10 +1,43 @@
 fileFormatVersion: 2
-guid: d2af65759da70e3428cc820ab955a75a
+guid: bae297bc58f4bf24bb9d69dcce54886a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6351736027083796051
-    second: sDifficulty_kr_0_0
+      213: 8777614983204712666
+    second: sEfLevelUp_0_0
+  - first:
+      213: 8661262602886401848
+    second: sEfLevelUp_0_1
+  - first:
+      213: 8754795877191583929
+    second: sEfLevelUp_0_2
+  - first:
+      213: -244232665230678335
+    second: sEfLevelUp_0_3
+  - first:
+      213: -5360066630120301942
+    second: sEfLevelUp_0_4
+  - first:
+      213: 9110987453115025604
+    second: sEfLevelUp_0_5
+  - first:
+      213: 8084088569977909738
+    second: sEfLevelUp_0_6
+  - first:
+      213: -1085235257992759623
+    second: sEfLevelUp_0_7
+  - first:
+      213: 635813131883407885
+    second: sEfLevelUp_0_8
+  - first:
+      213: 5461160968991242112
+    second: sEfLevelUp_0_9
+  - first:
+      213: 4756354587130257563
+    second: sEfLevelUp_0_10
+  - first:
+      213: 5644125581991642502
+    second: sEfLevelUp_0_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,36 +133,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sDifficulty_kr_0_0
+      name: sEfLevelUp_0_0
       rect:
         serializedVersion: 2
-        x: 20
+        x: 0
         y: 0
-        width: 53
-        height: 102
+        width: 284
+        height: 27
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline:
-      - - {x: -26.5, y: 30}
-        - {x: 26.5, y: 30}
-        - {x: 26.5, y: 51}
-        - {x: -26.5, y: 51}
-      - - {x: 14.5, y: -34}
-        - {x: 14.5, y: -51}
-        - {x: 26.5, y: -51}
-        - {x: 26.5, y: 30}
-        - {x: 13.5, y: 30}
-      - - {x: 6.5, y: -51}
-        - {x: 14.5, y: -51}
-        - {x: 14.5, y: -34}
-        - {x: 6.5, y: -34}
+      outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 35e61618346e52850800000000000000
-      internalID: 6351736027083796051
+      spriteID: ad03019425a50d970800000000000000
+      internalID: 8777614983204712666
       vertices: []
       indices: 
       edges: []
@@ -138,7 +158,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d476c6935727a3646aed63a2197ebf1d
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,9 +168,18 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sDifficulty_kr_0_0: 6351736027083796051
-      sDifficulty_kr_0_1: 905981288
-      sDifficulty_kr_0_2: 593200631
+      sEfLevelUp_0_0: 8777614983204712666
+      sEfLevelUp_0_1: 8661262602886401848
+      sEfLevelUp_0_10: 4756354587130257563
+      sEfLevelUp_0_11: 5644125581991642502
+      sEfLevelUp_0_2: 8754795877191583929
+      sEfLevelUp_0_3: -244232665230678335
+      sEfLevelUp_0_4: -5360066630120301942
+      sEfLevelUp_0_5: 9110987453115025604
+      sEfLevelUp_0_6: 8084088569977909738
+      sEfLevelUp_0_7: -1085235257992759623
+      sEfLevelUp_0_8: 635813131883407885
+      sEfLevelUp_0_9: 5461160968991242112
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

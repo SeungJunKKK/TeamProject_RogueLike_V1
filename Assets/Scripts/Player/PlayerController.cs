@@ -12,6 +12,10 @@ public enum EDustType
 }
 public class PlayerController : MonoBehaviour,IDamageable
 {
+    [Header("Survivor Data")]
+    [SerializeField] private SurvivorData survivorData; // 클래스 내부로 이동
+    public SurvivorData SurvivorData => survivorData;
+
     protected IState m_CurrentState;
     private bool m_IsHitStopping = false;
     private PlayerInventory m_inventory;
