@@ -98,14 +98,14 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        Debug.Log(
-    $"[EnemySpawner] 스폰 시스템 시작 | " +
-    $"PoolManager=OK | " +
-    $"SpawnPoints={m_ValidSpawnPoints.Length} | " +
-    $"MaxEnemyCount={MaxEnemyCount} | " +
-    $"SpawnInterval={SpawnInterval}"
-);
-
+    //Debug.Log(
+    //$"[EnemySpawner] 스폰 시스템 시작 | " +
+    //$"PoolManager=OK | " +
+    //$"SpawnPoints={m_ValidSpawnPoints.Length} | " +
+    //$"MaxEnemyCount={MaxEnemyCount} | " +
+    //$"SpawnInterval={SpawnInterval}"
+    //        );
+                    
         StartCoroutine(SpawnRoutine());
     }
 
@@ -145,9 +145,9 @@ public class EnemySpawner : MonoBehaviour
                         continue;
                     }
 
-                    Debug.Log(
-            $"[EnemySpawner] 연결된 Tilemap: {tilemap.name}"
-        );
+                    //Debug.Log(
+                    //    $"[EnemySpawner] 연결된 Tilemap: {tilemap.name}"
+                    //);
 
                     Vector3Int aboveCell =
                         new Vector3Int(x, y + 1, 0);
@@ -166,10 +166,10 @@ public class EnemySpawner : MonoBehaviour
 
         m_ValidSpawnPoints = tempPoints.ToArray();
 
-        Debug.Log(
-            $"[EnemySpawner] 총 {m_ValidSpawnPoints.Length}개의 " +
-            $"지상 스폰 포인트가 스캔되었습니다."
-        );
+        //Debug.Log(
+        //    $"[EnemySpawner] 총 {m_ValidSpawnPoints.Length}개의 " +
+        //    $"지상 스폰 포인트가 스캔되었습니다."
+        //);
     }
 
     // ==========================================
@@ -187,7 +187,7 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
-        Debug.Log("[EnemySpawner] SpawnRoutine 시작");
+        //Debug.Log("[EnemySpawner] SpawnRoutine 시작");
 
         while (true)
         {
@@ -199,11 +199,11 @@ public class EnemySpawner : MonoBehaviour
                     Player =
                         GameManager.Instance.CurrentPlayer.transform;
 
-                    Debug.Log(
-                        "<color=green>" +
-                        "[EnemySpawner] 타겟 플레이어 확인 완료!" +
-                        "</color>"
-                    );
+                    //Debug.Log(
+                    //    "<color=green>" +
+                    //    "[EnemySpawner] 타겟 플레이어 확인 완료!" +
+                    //    "</color>"
+                    //);
                 }
                 else
                 {
@@ -214,16 +214,16 @@ public class EnemySpawner : MonoBehaviour
 
             yield return new WaitForSeconds(SpawnInterval);
 
-            Debug.Log(
-                $"[EnemySpawner] Spawn 검사 | " +
-                $"Enabled={m_SpawningEnabled} | " +
-                $"Active={m_ActiveEnemies.Count} / {MaxEnemyCount}"
-            );
+            //Debug.Log(
+            //    $"[EnemySpawner] Spawn 검사 | " +
+            //    $"Enabled={m_SpawningEnabled} | " +
+            //    $"Active={m_ActiveEnemies.Count} / {MaxEnemyCount}"
+            //);
 
             if (m_SpawningEnabled &&
                 m_ActiveEnemies.Count < MaxEnemyCount)
             {
-                Debug.Log("[EnemySpawner] SpawnEnemy 실행");
+               // Debug.Log("[EnemySpawner] SpawnEnemy 실행");
                 SpawnEnemy();
             }
         }
@@ -235,7 +235,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        Debug.Log("[EnemySpawner] SpawnEnemy 호출");
+        //Debug.Log("[EnemySpawner] SpawnEnemy 호출");
         if (Player == null ||
             EnemyPrefabs == null ||
             EnemyPrefabs.Length == 0)
@@ -399,10 +399,10 @@ public class EnemySpawner : MonoBehaviour
             (e.State == ETeleporterState.Idle) ||
             (e.State == ETeleporterState.Charging);
 
-        Debug.Log(
-            $"[EnemySpawner] Teleporter 상태 변경 | " +
-            $"State={e.State} | " +
-            $"SpawningEnabled={m_SpawningEnabled}"
-        );
+        //Debug.Log(
+        //    $"[EnemySpawner] Teleporter 상태 변경 | " +
+        //    $"State={e.State} | " +
+        //    $"SpawningEnabled={m_SpawningEnabled}"
+        //);
     }
 }

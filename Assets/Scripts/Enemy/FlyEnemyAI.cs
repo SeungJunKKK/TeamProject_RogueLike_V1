@@ -13,25 +13,56 @@ public enum EFlyingEnemyState
 public class FlyingEnemyAI : EnemyBase
 {
     // --- Configurable Settings ---
-    [Header("Stats Setting")]
-    [SerializeField] private float m_BaseDamage = 12f;
+    //[Header("Stats Setting")]
+    //[SerializeField] private float m_BaseDamage = 12f;
 
-    [Header("Movement Setting")]
-    [SerializeField] private float m_MoveSpeed = 3f; // 이동속도
-    [SerializeField] private float m_Acceleration = 5f; // 가속도
-    [SerializeField] private float m_DashRange = 6f; // 감지범위
-    [SerializeField] private float m_DashSpeed = 8f; // 대쉬 이동속도
-    [SerializeField] private float m_DashAcceleration = 15f; // 대쉬 가속도
+    //[Header("Movement Setting")]
+    //[SerializeField] private float m_MoveSpeed = 3f; // 이동속도
+    //[SerializeField] private float m_Acceleration = 5f; // 가속도
+    //[SerializeField] private float m_DashRange = 6f; // 감지범위
+    //[SerializeField] private float m_DashSpeed = 8f; // 대쉬 이동속도
+    //[SerializeField] private float m_DashAcceleration = 15f; // 대쉬 가속도
 
-    [Header("Combat Setting")]
-    [SerializeField] private float m_AttackRange = 1.5f;
-    [SerializeField] private float m_AttackCooldown = 2f;
-    [SerializeField] private float m_AttackWindup = 0.5f;
+    //[Header("Combat Setting")]
+    //[SerializeField] private float m_AttackRange = 1.5f;
+    //[SerializeField] private float m_AttackCooldown = 2f;
+    //[SerializeField] private float m_AttackWindup = 0.5f;
 
-    [Header("Separation Setting")]
-    [SerializeField] private float m_SeparationRadius = 1f;
-    [SerializeField] private float m_SeparationStrength = 2f;
+    //[Header("Separation Setting")]
+    //[SerializeField] private float m_SeparationRadius = 1f;
+    //[SerializeField] private float m_SeparationStrength = 2f;
+    //[SerializeField] private LayerMask m_EnemyLayer;
+
+    //// --- Components & State ---
+    //private BoxCollider2D m_Collider;
+    //private Animator m_Animator;
+
+    //[Header("Effect Setting")]
+    //[SerializeField] private Animator m_EffectAnimator;
+
+    //private Transform m_Target;
+
+    //private bool m_IsFacingRight = true;
+    //private bool m_IsSpawnFinished = false;
+
+    //private float m_Damage;
+    //private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
+    //private const float k_SeparationThreshold = 0.01f;
+
+    //// --- Target Info (2D) ---
+    //private float m_DistanceToTarget;
+    //private Vector2 m_DirectionToTarget;
+
+    //// --- Timers & Velocity ---
+    //private float m_AttackCooldownTimer = 0f;
+    //private float m_StateTimer = 0f;
+    //private EFlyingEnemyState m_CurrentState = EFlyingEnemyState.None;
+    //private Vector2 m_DesiredVelocity = Vector2.zero;
+   
+    [Header("Layer Setting")]
     [SerializeField] private LayerMask m_EnemyLayer;
+
+    protected FlyingEnemyDataSO m_FlyingData;
 
     // --- Components & State ---
     private BoxCollider2D m_Collider;
@@ -41,7 +72,6 @@ public class FlyingEnemyAI : EnemyBase
     [SerializeField] private Animator m_EffectAnimator;
 
     private Transform m_Target;
-
     private bool m_IsFacingRight = true;
     private bool m_IsSpawnFinished = false;
 
@@ -59,11 +89,14 @@ public class FlyingEnemyAI : EnemyBase
     private EFlyingEnemyState m_CurrentState = EFlyingEnemyState.None;
     private Vector2 m_DesiredVelocity = Vector2.zero;
 
+
     private void Awake()
     {
         m_Rigidbody = GetComponent<Rigidbody2D>();
         m_Collider = GetComponent<BoxCollider2D>();
         m_Animator = GetComponent<Animator>();
+
+        m_FlyingData = m_Data as FlyingEnemyDataSO;
     }
 
     public override void SetTarget(Transform target)
@@ -77,16 +110,20 @@ public class FlyingEnemyAI : EnemyBase
     public override void OnSpawn()
     {
         base.OnSpawn();
-
+        m_FlyingData ??= m_Data as FlyingEnemyDataSO;
         DifficultyManager difficulty = DifficultyManager.Instance;
-        m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+
+
+        //m_Damage = difficulty != null ? m_BaseDamage * difficulty.Coefficient : m_BaseDamage;
+        m_Damage = difficulty != null ? m_Data.BaseDamage * difficulty.Coefficient : m_Data.BaseDamage;
+
 
         ResetState();
         ResetPhysics();
 
         if (m_Animator != null)
         {
-            m_Animator.Play("Spawn", -1, 0f);
+            //m_Animator.Play("Spawn", -1, 0f);
             Invoke("SpawnComplete", 0.5f);
         }
         else
@@ -159,6 +196,8 @@ public class FlyingEnemyAI : EnemyBase
 
         m_DesiredVelocity = Vector2.zero;
 
+        m_StateTimer += Time.deltaTime;
+
         UpdateTargetInfo();
         UpdateCombat();
 
@@ -207,8 +246,14 @@ public class FlyingEnemyAI : EnemyBase
             case EFlyingEnemyState.Dash:
                 break;
             case EFlyingEnemyState.Attack:
-                if (m_EffectAnimator != null) m_EffectAnimator.SetTrigger("Attack");
-                break;
+                if (m_Animator != null)
+                {
+                    m_Animator.SetTrigger("Attack");
+                    PlayAddressableSFX(m_FlyingData.AttackSoundAddress);
+                }
+                    break;
+                //if (m_EffectAnimator != null) m_EffectAnimator.SetTrigger("Attack");
+                //break;
             default:
                 throw new NotImplementedException($"unhandled: {newState}");
         }
@@ -241,43 +286,55 @@ public class FlyingEnemyAI : EnemyBase
 
     private void UpdateChase()
     {
-        if (m_DistanceToTarget <= m_DashRange)
+        if (m_DistanceToTarget <= m_FlyingData.DashRange && m_AttackCooldownTimer <= 0f)
         {
             ChangeState(EFlyingEnemyState.Dash);
             return;
         }
-
-        m_DesiredVelocity = m_DirectionToTarget * m_MoveSpeed;
+        m_DesiredVelocity = m_DirectionToTarget * m_FlyingData.MoveSpeed;
     }
 
     private void UpdateDash()
     {
+        if (m_StateTimer >= 2f)
+        {
+            FinishAttack();
+            //ChangeState(EFlyingEnemyState.Chase);
+            return;
+        }
+
         // 만약 플레이어가 도망가서 돌진 사거리 밖으로 벗어나면 다시 평범한 Chase로 복귀
-        if (m_DistanceToTarget > m_DashRange)
+        if (m_DistanceToTarget > m_FlyingData.DashRange)
         {
             ChangeState(EFlyingEnemyState.Chase);
             return;
         }
 
         // 돌진 중에 공격 사거리에 닿으면 공격 상태로 진입
-        if (m_DistanceToTarget <= m_AttackRange && m_AttackCooldownTimer <= 0f)
+        if (m_DistanceToTarget <= m_FlyingData.AttackRange && m_AttackCooldownTimer <= 0f)
         {
             ChangeState(EFlyingEnemyState.Attack);
             return;
         }
 
-        m_DesiredVelocity = m_DirectionToTarget * m_DashSpeed;
+        m_DesiredVelocity = m_DirectionToTarget * m_FlyingData.DashSpeed;
     }
 
 
     private void UpdateAttack()
     {
+        if (m_StateTimer >= 1f)
+        {
+            FinishAttack();
+            return;
+        }
 
+        m_DesiredVelocity = m_DirectionToTarget * (m_FlyingData.MoveSpeed * 0.5f);
     }
 
     public void TriggerAttack()
     {
-        if (m_Target != null && m_DistanceToTarget <= m_AttackRange)
+        if (m_Target != null && m_DistanceToTarget <= m_FlyingData.AttackRange)
         {
             if (m_Target.TryGetComponent(out PlayerController playerController))
             {
@@ -303,7 +360,7 @@ public class FlyingEnemyAI : EnemyBase
     // 💡 애니메이션 이벤트 2: 공격 애니메이션 마지막 프레임에 호출!
     public void FinishAttack()
     {
-        m_AttackCooldownTimer = m_AttackCooldown;
+        m_AttackCooldownTimer = m_FlyingData.AttackCooldown;
         ChangeState(EFlyingEnemyState.Chase);
     }
 
@@ -317,7 +374,7 @@ public class FlyingEnemyAI : EnemyBase
 
         // 상태에 따라 사용할 가속도를 다르게 설정
         float speedDifference = Vector2.Distance(m_Rigidbody.linearVelocity, finalDesiredVelocity);
-        float currentAcceleration = (m_CurrentState == EFlyingEnemyState.Dash) ? m_DashAcceleration : m_Acceleration;
+        float currentAcceleration = (m_CurrentState == EFlyingEnemyState.Dash) ? m_FlyingData.DashAcceleration : m_FlyingData.Acceleration;
 
         if (speedDifference > 5f) currentAcceleration *= 0.5f;
 
@@ -331,8 +388,13 @@ public class FlyingEnemyAI : EnemyBase
     private Vector2 CalculateSeparation()
     {
         Vector2 totalSeparation = Vector2.zero;
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useLayerMask = true;
+        filter.layerMask = m_EnemyLayer;
 
-        int count = Physics2D.OverlapCircleNonAlloc(transform.position, m_SeparationRadius, m_NearbyEnemies, m_EnemyLayer);
+        //int count = Physics2D.OverlapCircleNonAlloc(transform.position, m_SeparationRadius, m_NearbyEnemies, m_EnemyLayer);
+        //int count = Physics2D.OverlapCircleNonAlloc(transform.position, m_FlyingData.SeparationRadius, m_NearbyEnemies, m_EnemyLayer);
+        int count = Physics2D.OverlapCircle(transform.position, m_FlyingData.SeparationRadius, filter, m_NearbyEnemies);
 
         for (int i = 0; i < count; i++)
         {
@@ -354,15 +416,15 @@ public class FlyingEnemyAI : EnemyBase
                 distance = diff.magnitude;
             }
 
-            float ratio = 1f - (distance / m_SeparationRadius);
+            float ratio = 1f - (distance / m_FlyingData.SeparationRadius);
             ratio = Mathf.Clamp01(ratio);
-            float strength = m_SeparationStrength * (ratio * ratio);
+            float strength = m_FlyingData.SeparationStrength * (ratio * ratio);
 
             Vector2 pushVector = (diff / distance) * strength;
             totalSeparation += pushVector;
         }
 
-        return Vector2.ClampMagnitude(totalSeparation, m_MoveSpeed * 1.5f);
+        return Vector2.ClampMagnitude(totalSeparation, m_FlyingData.MoveSpeed * 1.5f);
     }
 
     private void Flip()
@@ -409,4 +471,44 @@ public class FlyingEnemyAI : EnemyBase
             Destroy(gameObject);
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        // 게임이 실행 중일 때만 텍스트를 그립니다.
+        if (!Application.isPlaying) return;
+
+        // 글씨체, 색상, 크기 세팅
+        GUIStyle style = new GUIStyle();
+        style.normal.textColor = Color.yellow; // 눈에 잘 띄는 노란색
+        style.fontSize = 14;
+        style.alignment = TextAnchor.LowerCenter;
+        style.fontStyle = FontStyle.Bold;
+
+        // 1. 현재 상태 출력 (Walking 상태는 코딩상 Chase로 표시됩니다)
+        string debugText = $"[State: {m_CurrentState}]\n";
+
+        // 2. 대쉬(Dash) 상태일 때 남은 시간 카운트다운 (1초 기준)
+        if (m_CurrentState == EFlyingEnemyState.Dash)
+        {
+            float dashTimeLeft = 1f - m_StateTimer; // 승준 학생이 수정한 1초 타임아웃 기준
+            debugText += $"Dash Timeout: {Mathf.Max(0, dashTimeLeft):F2}s\n";
+        }
+
+        // 3. 공격 쿨타임 표시
+        if (m_AttackCooldownTimer > 0f)
+        {
+            debugText += $"Attack CD: {m_AttackCooldownTimer:F2}s";
+        }
+        else
+        {
+            debugText += $"Attack READY!";
+        }
+
+        // 몬스터의 위치에서 위쪽으로 1.5만큼 떨어진 곳에 텍스트를 띄웁니다.
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 1.5f, debugText, style);
+    }
+#endif
+
+
 }

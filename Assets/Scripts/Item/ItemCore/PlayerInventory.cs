@@ -79,6 +79,7 @@ public class PlayerInventory : MonoBehaviour
 
         EventBus.Publish(new ItemPickedUpEvent { ItemName = newItem.itemName });
     }
+
     /// <summary>
     ///액티브 아이템 사용 실행 함수 
     /// </summary>
