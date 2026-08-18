@@ -24,8 +24,17 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;
     protected virtual bool CanReceiveKnockback => true;
+    protected bool m_IsElite;
+
     public float MaxHp => m_MaxHp;
     public float CurrentHp => m_CurrentHp;
+    public bool IsElite => m_IsElite;
+
+    protected float m_RewardMultiplier = 1f;
+    private Vector3 m_BaseScale;
+    private Color m_BaseColor = Color.white;
+    private bool m_BaseCached;
+    private SpriteRenderer m_SpriteRenderer;
 
 
     public float GetHpRatio()
@@ -43,6 +52,20 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     /// </summary>
     public virtual void OnSpawn()
     {
+        // 원본 스케일/색 1회 캐싱
+        if (!m_BaseCached)
+        {
+            m_BaseScale = transform.localScale;
+            m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (m_SpriteRenderer != null) m_BaseColor = m_SpriteRenderer.color;
+            m_BaseCached = true;
+        }
+        // 엘리트 상태 리셋
+        m_IsElite = false;
+        m_RewardMultiplier = 1f;
+        transform.localScale = m_BaseScale;
+        if (m_SpriteRenderer != null) m_SpriteRenderer.color = m_BaseColor;
+
         if (DifficultyManager.Instance != null)
         {
             // 스폰 시점의 난이도로 최대 HP 결정
@@ -136,8 +159,8 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
             PlayAddressableSFX(m_Data.DeathSoundAddress);
         }
 
-        int gold = Mathf.Max(1, (int)(m_Data.BaseGold * DifficultyManager.Instance.GetGoldMultiplier()));
-        float exp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseExp, m_Data.ExpPerLevel);
+        int gold = Mathf.Max(1, (int)(m_Data.BaseGold * DifficultyManager.Instance.GetGoldMultiplier() * m_RewardMultiplier));
+        float exp = DifficultyManager.Instance.GetScaledStat(m_Data.BaseExp, m_Data.ExpPerLevel) * m_RewardMultiplier;
 
         EventBus.Publish(new MonsterDiedEvent
         {
@@ -145,6 +168,11 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
             Exp = exp,
             Position = transform.position
         });
+
+        if (m_IsElite)
+        {
+            EventBus.Publish(new EliteDiedEvent { Elite = gameObject, Position = transform.position });
+        }
 
         EnemySpawner.Instance.UnregisterEnemy(gameObject);
     }
@@ -190,4 +218,15 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
         });
     }
 
+    public virtual void MakeElite(EliteBuff buff)
+    {
+        m_MaxHp *= buff.HPMultiplier;
+        m_CurrentHp = m_MaxHp;
+        transform.localScale *= buff.ScaleMultiplier;
+        m_RewardMultiplier = buff.RewardMultiplier;  
+        m_IsElite = true;
+
+        if (m_SpriteRenderer == null) m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (m_SpriteRenderer != null) m_SpriteRenderer.color = buff.Tint;
+    }
 }

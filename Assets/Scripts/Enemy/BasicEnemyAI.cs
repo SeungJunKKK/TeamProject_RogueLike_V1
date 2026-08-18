@@ -345,11 +345,7 @@ public class BasicEnemyAI : EnemyBase
     {
         if (Player != null && m_DistanceToPlayer <= m_GroundData.AttackRange)
         {
-            if (Player.TryGetComponent(out PlayerController playerController))
-            {
-                playerController.TakeDamage(m_Damage);
-            }
-            else if (Player.TryGetComponent(out IDamageable targetDamageable))
+            if (Player.TryGetComponent(out IDamageable targetDamageable))
             {
                 DamageInfo info = new DamageInfo
                 {

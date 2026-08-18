@@ -10,7 +10,7 @@ public enum EDustType
     Jump,
     Recoil
 }
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,IDamageable
 {
     [Header("Survivor Data")]
     [SerializeField] private SurvivorData survivorData; // 클래스 내부로 이동

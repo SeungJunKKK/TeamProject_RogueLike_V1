@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 
 public enum EBossPhase
@@ -143,5 +144,11 @@ public class BossBattleController : MonoBehaviour
     public void OnBossDead()
     {
         m_CurrentPhase = EBossPhase.Dead;
+
+        EventBus.Publish(new BossDiedEvent
+        {
+            Boss = m_ProvidenceBoss != null ? m_ProvidenceBoss.gameObject : null,
+            Position = m_ProvidenceBoss != null ? (Vector2)m_ProvidenceBoss.transform.position : Vector2.zero
+        });
     }
 }

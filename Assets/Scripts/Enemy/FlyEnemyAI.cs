@@ -187,6 +187,12 @@ public class FlyingEnemyAI : EnemyBase
         ChangeState(EFlyingEnemyState.Chase);
     }
 
+    public override void MakeElite(EliteBuff buff)
+    {
+        base.MakeElite(buff);
+        m_Damage *= buff.DamageMultiplier;
+    }
+
     // ==========================================
     // [Module: Main Update Flow]
     // ==========================================
@@ -249,7 +255,7 @@ public class FlyingEnemyAI : EnemyBase
                 if (m_Animator != null)
                 {
                     m_Animator.SetTrigger("Attack");
-                    PlayAddressableSFX(m_FlyingData.AttackSoundAddress);
+                    
                 }
                     break;
                 //if (m_EffectAnimator != null) m_EffectAnimator.SetTrigger("Attack");
@@ -336,11 +342,7 @@ public class FlyingEnemyAI : EnemyBase
     {
         if (m_Target != null && m_DistanceToTarget <= m_FlyingData.AttackRange)
         {
-            if (m_Target.TryGetComponent(out PlayerController playerController))
-            {
-                playerController.TakeDamage(m_Damage);
-            }
-            else if (m_Target.TryGetComponent(out IDamageable targetDamageable))
+             if (m_Target.TryGetComponent(out IDamageable targetDamageable))
             {
                 DamageInfo info = new DamageInfo
                 {

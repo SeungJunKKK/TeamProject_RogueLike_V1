@@ -47,9 +47,9 @@ public class EnforcerShotgunState : IState
 
         // 2. 산탄총 광역 판정 (BoxCastAll)
         Vector2 boxSize = new Vector2(3f, 2.5f);
-        float attackRange = 1.5f; 
-
-        RaycastHit2D[] hits = Physics2D.BoxCastAll(shootOrigin, boxSize, 0f, shootDirection, attackRange, LayerMask.GetMask("Enemy"));
+        float attackRange = 1.5f;
+        int enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(shootOrigin, boxSize, 0f, shootDirection, attackRange, enemyLayer);
 
         bool hitSomething = false;
         bool isCrit = m_Player.Stats.RollCriticalHit();

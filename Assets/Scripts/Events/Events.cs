@@ -134,3 +134,9 @@ public struct TeleporterUpdateEvent
     public int RemainingEnemies;  // 남은 적 수
     public bool IsBossDead;       // 보스 처치 여부
 }
+
+public struct EliteDiedEvent
+{
+    public GameObject Elite;
+    public Vector2 Position;
+}
