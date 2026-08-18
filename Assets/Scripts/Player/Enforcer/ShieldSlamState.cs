@@ -71,7 +71,7 @@ public class ShieldSlamState : IState
         Vector2 center = (Vector2)m_Player.transform.position + m_HitboxOffset;
         Vector2 boxSize = new Vector2(2.5f, 2.0f);
 
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
         Collider2D[] hits = Physics2D.OverlapBoxAll(center, boxSize, 0f, enemyLayer);
 
         bool hitSomething = false;

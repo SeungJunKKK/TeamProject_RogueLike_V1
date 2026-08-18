@@ -68,6 +68,7 @@ public class SoundManager : Singleton<SoundManager>
         EventBus.Subscribe<GameStateChangedEvent>(OnGameStateChanged);
         EventBus.Subscribe<TeleporterStateChangedEvent>(OnTeleporterStateChanged);
         EventBus.Subscribe<DifficultyChangedEvent>(OnDifficultyChanged);
+        EventBus.Subscribe<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
     }
 
     private void OnDestroy()
@@ -76,6 +77,7 @@ public class SoundManager : Singleton<SoundManager>
         EventBus.Unsubscribe<GameStateChangedEvent>(OnGameStateChanged);
         EventBus.Unsubscribe<TeleporterStateChangedEvent>(OnTeleporterStateChanged);
         EventBus.Unsubscribe<DifficultyChangedEvent>(OnDifficultyChanged);
+        EventBus.Unsubscribe<SceneLoadCompletedEvent>(OnSceneLoadCompleted);
     }
 
     /// <summary>
@@ -148,6 +150,7 @@ public class SoundManager : Singleton<SoundManager>
             currentIndex = (currentIndex + 1) % playlist.Length;
         }
     }
+
     private void OnGameStateChanged(GameStateChangedEvent e)
     {
         if (e.Current == EGameState.Playing && e.Previous == EGameState.Ready)
@@ -155,6 +158,14 @@ public class SoundManager : Singleton<SoundManager>
             PlayBGMList(MainStagePlaylist);
         }
     }
+    private void OnSceneLoadCompleted(SceneLoadCompletedEvent e)
+    {
+        if (MainStagePlaylist != null && MainStagePlaylist.Length > 0)
+        {
+            PlayBGMList(MainStagePlaylist);
+        }
+    }
+
     private void OnTeleporterStateChanged(TeleporterStateChangedEvent e)
     {
         if (e.State == ETeleporterState.Charging)

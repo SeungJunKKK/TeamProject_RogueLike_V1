@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5bfc6304b7f1b047b1bb839cd70ce9a, type: 3}
-  m_Name: Wisp
+  m_Name: LemurianData
   m_EditorClassIdentifier: Assembly-CSharp::GroundEnemyDataSO
-  EnemyName: Wisp
-  BaseHp: 60
-  HpPerLevel: 14
-  BaseDamage: 5
-  BaseGold: 10
-  BaseExp: 6
-  ExpPerLevel: 3
-  SpawnSoundAddress: SFX_Wisp_Spawn
-  AttackSoundAddress: SFX_Wisp_Shoot
-  HitSoundAddress: SFX_Wisp_Hit
-  DeathSoundAddress: SFX_Wisp_Death
-  MoveSpeed: 4
+  EnemyName: Lemurian
+  BaseHp: 70
+  HpPerLevel: 24
+  BaseDamage: 3
+  BaseGold: 5
+  BaseExp: 4
+  ExpPerLevel: 2
+  SpawnSoundAddress: SFX_Lemurian_Spawn
+  AttackSoundAddress: SFX_Lemurian_Shoot
+  HitSoundAddress: SFX_Lemurian_Hit
+  DeathSoundAddress: SFX_Lemurian_Death
+  MoveSpeed: 3
   Acceleration: 15
   JumpForce: 8
   JumpCooldown: 1

@@ -99,7 +99,8 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
                 m_Rb.linearVelocity = new Vector2(currentDirX * 15f, 5.5f);
             }
         }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") ||
+                  collision.gameObject.layer == LayerMask.NameToLayer("FlyingEnemy"))
         {
             // 적에게 직격 시 즉시 폭발
             StartCoroutine(ExplodeRoutine());
@@ -117,7 +118,6 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
             m_Anim.Play("Grenade_Explosion");
         }
 
-        // 💡 인스펙터에 등록된 주소를 그대로 사용해서 사운드를 재생합니다.
         if (!string.IsNullOrEmpty(m_ExplosionSFXAddress))
         {
             AddressableManager.Instance.LoadAssetAsync<AudioClip>(m_ExplosionSFXAddress, (clip) =>
@@ -134,7 +134,9 @@ public class EnforcerGrenadeProjectile : MonoBehaviour, IPoolable
         }
 
         float explosionRadius = 2.5f;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Enemy"));
+
+        int enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayer);
 
         foreach (var hit in hits)
         {
