@@ -20,7 +20,10 @@ namespace Player.Commando
 
             float attackRange = 30f;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
+            int hitLayerMask = LayerMask.GetMask("Enemy", "FlyingEnemy", "Ground", "OneWayGround", "Wall", "Default");
+            RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange, hitLayerMask);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
 
             bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
@@ -29,6 +32,14 @@ namespace Player.Commando
 
             foreach (RaycastHit2D hit in hits)
             {
+                int hitLayer = hit.collider.gameObject.layer;
+
+                if (hitLayer == LayerMask.NameToLayer("Ground") || hitLayer == LayerMask.NameToLayer("Wall") ||
+                    hitLayer == LayerMask.NameToLayer("Default") || hitLayer == LayerMask.NameToLayer("OneWayGround"))
+                {
+                    break;
+                }
+
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
