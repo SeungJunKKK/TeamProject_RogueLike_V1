@@ -60,6 +60,9 @@ MonoBehaviour:
   m_AirSpawnMinHeight: 3
   m_AirSpawnMaxHeight: 7
   m_AirSpawnHorizontalRange: 12
+  m_ElitePrefab: {fileID: 5093403589806644815, guid: b8518763ea202bd49b6294f6b6b5795e, type: 3}
+  m_EliteHPMultiplier: 4
+  m_EliteScaleMultiplier: 1.6
   SpawnClearanceRadius: 1
   EnemyLayer:
     serializedVersion: 2

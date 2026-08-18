@@ -1691,22 +1691,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stage2
       objectReference: {fileID: 0}
-    - target: {fileID: 1173388273150564448, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_Size.x
-      value: 1.65625
-      objectReference: {fileID: 0}
-    - target: {fileID: 1173388273150564448, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_Size.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1173388273150564448, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 709ff3425c6ae554894cfc70774c45a3, type: 3}
-    - target: {fileID: 1173388273150564448, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3440448853187978401, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
       propertyPath: cam
       value: 
@@ -1750,26 +1734,6 @@ PrefabInstance:
     - target: {fileID: 5296242546392083584, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7489236829908626144, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_InfiniteChestPrefab
-      value: 
-      objectReference: {fileID: 1126612667150315620, guid: 3ec106ed94edbdd4c96527342ec39c17, type: 3}
-    - target: {fileID: 7826894772789651037, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 4.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7826894772789651037, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 8527866640402704399, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8527866640402704399, guid: 2d63da14bb0f8234c8bd73b21c62f219, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

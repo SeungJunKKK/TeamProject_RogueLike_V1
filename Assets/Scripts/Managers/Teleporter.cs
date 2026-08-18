@@ -55,11 +55,13 @@ public class Teleporter : MonoBehaviour, IInteractable
     private void Awake()
     {
         EventBus.Subscribe<BossDiedEvent>(OnBossDied);
+        EventBus.Subscribe<EliteDiedEvent>(OnEliteDied);
     }
 
     private void OnDestroy()
     {
         EventBus.Unsubscribe<BossDiedEvent>(OnBossDied);
+        EventBus.Unsubscribe<EliteDiedEvent>(OnEliteDied);
     }
 
     private void Update()
@@ -165,6 +167,11 @@ public class Teleporter : MonoBehaviour, IInteractable
     }
 
     private void OnBossDied(BossDiedEvent e)
+    {
+        m_IsBossDead = true;
+    }
+
+    private void OnEliteDied(EliteDiedEvent e)
     {
         m_IsBossDead = true;
     }
