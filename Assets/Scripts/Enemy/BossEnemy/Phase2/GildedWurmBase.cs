@@ -8,8 +8,8 @@ public abstract class GildedWurmBase : EnemyBase
 
     [Header("Movement (Steering)")]
     [SerializeField] protected float m_MaxSpeed = 10f;
-    [SerializeField] protected float m_TurnSpeed = 90f; // 초당 회전 각도 (낮을수록 선회 반경이 커짐)
-    [SerializeField] protected float m_OvershootDistance = 8f; // 플레이어를 스쳐 지나갈 때, 돌진을 유지할 거리
+    [SerializeField] protected float m_TurnSpeed = 90f;
+    [SerializeField] protected float m_OvershootDistance = 8f;
 
     [Header("Body Tracking")]
     [SerializeField] private float m_SegmentSpacing = 0.8f;
@@ -18,18 +18,42 @@ public abstract class GildedWurmBase : EnemyBase
     protected Vector2 m_Velocity;
     protected bool m_IsActive = false;
 
-    // AI 이동 상태
     protected enum EMoveState { Cruising, Overshooting }
     protected EMoveState m_CurrentMoveState = EMoveState.Cruising;
 
     private readonly List<Vector2> m_Path = new List<Vector2>();
 
+    // 💡 [추가] 부모를 떠날 몸통들을 영구적으로 기억해둘 배열
+    protected WurmSegmentMover[] m_CachedMovers;
+
     public float SegmentSpacing => m_SegmentSpacing;
-    public bool IsActive => m_IsActive; // 외부(몸통)에서 접근할 상태 프로퍼티
+    public bool IsActive => m_IsActive;
 
     public override void SetTarget(Transform target)
     {
         m_Player = target;
+    }
+
+    public override void OnSpawn()
+    {
+        base.OnSpawn();
+        ResetPath();
+
+        // 💡 [수정] 1. 자식들이 독립하기 '전'에 모든 컴포넌트를 미리 찾아 저장합니다.
+        m_CachedMovers = GetComponentsInChildren<WurmSegmentMover>(true);
+        WurmSegment[] segments = GetComponentsInChildren<WurmSegment>(true);
+
+        // 💡 [수정] 2. 피격 판정(WurmSegment)을 먼저 초기화합니다.
+        foreach (WurmSegment segment in segments)
+        {
+            segment.Init(this);
+        }
+
+        // 💡 [수정] 3. 가장 마지막에 Mover를 초기화하며 부모 관계를 끊습니다.
+        for (int i = 0; i < m_CachedMovers.Length; i++)
+        {
+            m_CachedMovers[i].Init(this, i + 1);
+        }
     }
 
     public virtual void Setup(Transform player)
@@ -37,7 +61,10 @@ public abstract class GildedWurmBase : EnemyBase
         m_Player = player;
         m_IsActive = true;
 
-        // 스폰 즉시 플레이어 방향으로 초기 속도 부여
+        // 1. 머리를 화면 밖 랜덤 위치로 순간이동
+        transform.position = GetRandomOffScreenPosition();
+
+        // 2. 방향 결정
         if (m_Player != null)
         {
             Vector2 toPlayer = (m_Player.position - transform.position).normalized;
@@ -47,24 +74,40 @@ public abstract class GildedWurmBase : EnemyBase
         {
             m_Velocity = Vector2.left * m_MaxSpeed;
         }
-    }
 
-    public override void OnSpawn()
-    {
-        base.OnSpawn();
+        // 3. 쫙 펴진 상태의 경로 초기화
         ResetPath();
 
-        WurmSegmentMover[] movers = GetComponentsInChildren<WurmSegmentMover>(true);
-        for (int i = 0; i < movers.Length; i++)
+        // 💡 [수정] 4. 머리가 이동한 즉시, 저장해둔 배열을 꺼내 몸통들도 다 같이 머리 위치로 강제 소환!
+        if (m_CachedMovers != null)
         {
-            movers[i].Init(this, i + 1);
+            for (int i = 0; i < m_CachedMovers.Length; i++)
+            {
+                m_CachedMovers[i].transform.position = transform.position;
+            }
+        }
+    }
+
+    protected Vector2 GetRandomOffScreenPosition()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return transform.position;
+
+        float randomX = 0f;
+        float randomY = 0f;
+        float offset = 1.0f;
+
+        int edge = Random.Range(0, 4);
+        switch (edge)
+        {
+            case 0: randomX = Random.Range(-0.2f, 1.2f); randomY = 1f + offset; break;
+            case 1: randomX = Random.Range(-0.2f, 1.2f); randomY = 0f - offset; break;
+            case 2: randomX = 0f - offset; randomY = Random.Range(-0.2f, 1.2f); break;
+            case 3: randomX = 1f + offset; randomY = Random.Range(-0.2f, 1.2f); break;
         }
 
-        WurmSegment[] segments = GetComponentsInChildren<WurmSegment>(true);
-        foreach (WurmSegment segment in segments)
-        {
-            segment.Init(this);
-        }
+        Vector3 worldPos = cam.ViewportToWorldPoint(new Vector3(randomX, randomY, Mathf.Abs(cam.transform.position.z)));
+        return new Vector2(worldPos.x, worldPos.y);
     }
 
     protected virtual void Update()
@@ -79,9 +122,6 @@ public abstract class GildedWurmBase : EnemyBase
         RecordHeadPosition(transform.position);
     }
 
-    // =========================================================
-    // Steering AI Logic
-    // =========================================================
     protected virtual void UpdateMovement()
     {
         Vector2 toPlayer = (Vector2)m_Player.position - (Vector2)transform.position;
@@ -89,10 +129,8 @@ public abstract class GildedWurmBase : EnemyBase
 
         if (m_CurrentMoveState == EMoveState.Cruising)
         {
-            // 플레이어를 향해 서서히 기수를 돌림
             SteerTowards(toPlayer.normalized);
 
-            // 플레이어와 충분히 가까워지면 조향을 멈추고 관성으로 지나침 (Overshoot)
             if (distanceToPlayer < 2.5f)
             {
                 m_CurrentMoveState = EMoveState.Overshooting;
@@ -100,15 +138,12 @@ public abstract class GildedWurmBase : EnemyBase
         }
         else if (m_CurrentMoveState == EMoveState.Overshooting)
         {
-            // 방향을 틀지 않고 현재 속도(m_Velocity) 방향 그대로 직진
-            // 플레이어로부터 일정 거리 이상 멀어지면 다시 선회 시작
             if (distanceToPlayer > m_OvershootDistance)
             {
                 m_CurrentMoveState = EMoveState.Cruising;
             }
         }
 
-        // 최종 이동 적용
         transform.position += (Vector3)(m_Velocity * Time.deltaTime);
         UpdateVisualDirection();
     }
@@ -130,17 +165,22 @@ public abstract class GildedWurmBase : EnemyBase
             return;
 
         float angle = Mathf.Atan2(m_Velocity.y, m_Velocity.x) * Mathf.Rad2Deg;
-
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
-    // =========================================================
-    // Path Recording (이전 기획의 완벽한 거리 추적 로직 승계)
-    // =========================================================
+
     private void ResetPath()
     {
         m_Path.Clear();
-        Vector2 startPosition = transform.position;
-        for (int i = 0; i < 30; i++) m_Path.Add(startPosition);
+        Vector2 headPos = transform.position;
+        Vector2 backwardDir = m_Velocity.sqrMagnitude > 0 ? -m_Velocity.normalized : Vector2.right;
+
+        float pointSpacing = 0.05f;
+        int preSpawnPointsCount = 60;
+
+        for (int i = preSpawnPointsCount - 1; i >= 0; i--)
+        {
+            m_Path.Add(headPos + backwardDir * (i * pointSpacing));
+        }
     }
 
     private void RecordHeadPosition(Vector2 newPosition)
