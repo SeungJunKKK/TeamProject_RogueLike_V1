@@ -9,6 +9,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
     [SerializeField] protected AudioSource m_AudioSource;
     [SerializeField] protected float m_MaxHearingDistance = 40f;
 
+    [Header("적 UI (World Space HP Bar)")]
+    [SerializeField] protected EnemyHPBar m_HpBar;
+
     //[Header("Stats (레벨 1 기준)")]
     //[SerializeField] protected float m_BaseHp = 80f;
     //[SerializeField] protected float m_HpPerLevel = 24f;
@@ -57,7 +60,19 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
         // m_Rigidbody가 null일 때만 GetComponent 실행
         m_Rigidbody ??= GetComponent<Rigidbody2D>();
 
-        if(m_Data.SpawnSoundAddress != null)
+        // HP바 초기화
+        if (m_HpBar == null)
+        {
+            m_HpBar = GetComponentInChildren<EnemyHPBar>(true);
+        }
+
+        if (m_HpBar != null)
+        {
+            m_HpBar.gameObject.SetActive(true);
+            m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
+        }
+
+        if (m_Data.SpawnSoundAddress != null)
         {
             PlayAddressableSFX(m_Data.SpawnSoundAddress);
         }
@@ -79,6 +94,12 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
         }
 
         m_CurrentHp -= info.Amount;
+
+        // 피격 시 HP바 업데이트
+        if (m_HpBar != null)
+        {
+            m_HpBar.UpdateHPBar(m_CurrentHp, m_MaxHp);
+        }
 
         if (CanReceiveKnockback && m_Rigidbody != null)
         {

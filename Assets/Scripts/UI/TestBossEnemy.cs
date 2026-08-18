@@ -16,7 +16,7 @@ public class TestBossEnemy : MonoBehaviour, IDamageable
         // Scene 내의 BossHPBar를 자동으로 찾거나 인스펙터 연결
         if (bossHPBar == null)
         {
-            bossHPBar = FindObjectOfType<BossHPBarUI>();
+            bossHPBar = FindAnyObjectByType<BossHPBarUI>();
         }
 
         if (bossHPBar != null)
