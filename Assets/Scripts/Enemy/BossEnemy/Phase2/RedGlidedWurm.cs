@@ -199,13 +199,18 @@ public class RedGildedWurm : GildedWurmBase
 
             m_LaserObject.SetActive(true);
 
+            // 💡 1. 빔의 회전각 계산
             Vector2 startPos = m_MouthPoint.position;
             Vector2 initialDirection = ((Vector2)m_Player.position - startPos).normalized;
 
             float initialAngle = Mathf.Atan2(initialDirection.y, initialDirection.x) * Mathf.Rad2Deg;
             m_CurrentLaserAngle = initialAngle + m_LaserSpriteRotationOffset;
 
-            m_LaserObject.transform.position = startPos;
+            // 💡 2. 빔의 길이(Scale Y) 절반만큼 빔이 바라보는 방향의 '반대쪽'으로 밀어주어 입 위치가 머리가 되게 보정
+            float beamLength = m_LaserObject.transform.localScale.y; // 스케일 Y값 기준
+            Vector3 offset = (Quaternion.Euler(0f, 0f, initialAngle) * Vector3.right) * (beamLength * 0.5f);
+
+            m_LaserObject.transform.position = startPos - (Vector2)offset;
             m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
         }
 
@@ -239,7 +244,6 @@ public class RedGildedWurm : GildedWurmBase
         Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
     }
 
-
     // =========================================================
     // Laser Tracking (위치 및 회전 추적 전용)
     // =========================================================
@@ -252,8 +256,6 @@ public class RedGildedWurm : GildedWurmBase
         }
 
         Vector2 startPos = m_MouthPoint.position;
-        m_LaserObject.transform.position = startPos;
-
         Vector2 directionToPlayer = ((Vector2)m_Player.position - startPos).normalized;
 
         if (directionToPlayer.sqrMagnitude <= 0.001f)
@@ -268,6 +270,12 @@ public class RedGildedWurm : GildedWurmBase
             m_LaserRotationSpeed * Time.deltaTime
         );
 
+        // 💡 회전각에 맞춰 빔의 중심 위치를 입 위치에서 뒤로 반칸 밀어줌 (머리가 입에 딱 고정되도록)
+        float currentRealAngle = m_CurrentLaserAngle - m_LaserSpriteRotationOffset;
+        float beamLength = m_LaserObject.transform.localScale.y;
+        Vector3 offset = (Quaternion.Euler(0f, 0f, currentRealAngle) * Vector3.right) * (beamLength * 0.5f);
+
+        m_LaserObject.transform.position = startPos - (Vector2)offset;
         m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
     }
 

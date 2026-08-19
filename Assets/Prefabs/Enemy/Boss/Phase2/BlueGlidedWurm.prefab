@@ -1188,7 +1188,7 @@ MonoBehaviour:
   m_MaxPathPoints: 500
   m_ProjectilePrefab: {fileID: 2709551731928718241, guid: 127dc6bd5702d8447a9973e5c0afb323, type: 3}
   m_ProjectileSpawnPoint: {fileID: 4472016054658601675}
-  m_BaseDamage: 15
+  m_BaseDamage: 10
   m_SpreadAngle: 55
   m_BulletsPerBurst: 5
   m_BurstCount: 3

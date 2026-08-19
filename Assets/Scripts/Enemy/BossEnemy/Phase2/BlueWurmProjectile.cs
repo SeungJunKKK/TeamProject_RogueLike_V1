@@ -87,28 +87,19 @@ public class BlueWurmProjectile : MonoBehaviour
                 continue;
             }
 
-            IDamageable target = hitCollider.GetComponent<IDamageable>();
+            PlayerController player = hitCollider.GetComponent<PlayerController>();
 
-            if (target == null)
+            if (player == null)
             {
-                target = hitCollider.GetComponentInParent<IDamageable>();
+                player = hitCollider.GetComponentInParent<PlayerController>();
             }
 
-            if (target == null)
+            if (player == null)
             {
                 continue;
             }
 
-            DamageInfo info = new DamageInfo
-            {
-                Amount = m_Damage,
-                Attacker = gameObject,
-                HitPoint = hitCollider.ClosestPoint(transform.position),
-                HitDirection = m_Direction,
-                IsUnblockable = false
-            };
-
-            target.TakeDamage(info);
+            player.TakeDamage(m_Damage);
 
             Destroy(gameObject);
             return;
