@@ -133,6 +133,14 @@ public struct PlayerBlockSuccessEvent
     public float BlockedAmount; // 막아낸 데미지 양 (숫자를 띄우고 싶을 때 대비)
     public Vector2 HitPoint;    // 텍스트를 띄울 위치
 }
+public struct PlayerKnockbackEvent
+{
+    public Vector2 HitDirection;   // 공격이 날아가는 방향 
+    public float KnockbackForce;   // 밀려나는 힘
+
+    // 수직으로 맞았을 때 '뒤쪽'이 어디인지 알기 위해 
+    public float AttackerPosX;
+}
 
 public struct TeleporterUpdateEvent
 {
@@ -148,3 +156,4 @@ public struct EliteDiedEvent
     public GameObject Elite;
     public Vector2 Position;
 }
+

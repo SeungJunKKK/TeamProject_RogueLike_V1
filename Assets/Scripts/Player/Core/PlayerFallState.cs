@@ -31,8 +31,8 @@ public class PlayerFallState : IState
         int groundLayer = LayerMask.GetMask("Default", "Ground", "OneWayGround", "Wall");
         //bool isGrounded = Physics2D.Raycast(m_Player.FeetPos.position, Vector2.down, 0.15f, groundLayer);
 
-        Vector2 boxSize = new Vector2(0.3f, 0.05f);
-        RaycastHit2D groundHit = Physics2D.BoxCast(m_Player.FeetPos.position, boxSize, 0f, Vector2.down, 0.1f, groundLayer);
+        Vector2 boxSize = new Vector2(0.4f, 0.1f);
+        RaycastHit2D groundHit = Physics2D.BoxCast(m_Player.FeetPos.position, boxSize, 0f, Vector2.down, 0.2f, groundLayer);
         bool isGrounded = groundHit.collider != null;
 
         
