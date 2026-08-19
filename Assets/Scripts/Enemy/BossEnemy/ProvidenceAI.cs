@@ -162,27 +162,25 @@ public class ProvidenceAI : EnemyBase
         }
         m_SpawnedGuards.Clear();
 
-        // 좌우 2~3칸 정도의 오프셋 거리 (원하시는 간격으로 조절 가능)
+        // 좌우 2~3칸 정도의 오프셋 거리
         float[] offsets = { -3f, 3f };
         var difficulty = DifficultyManager.Instance;
         float coeff = difficulty != null ? difficulty.Coefficient : 1f;
 
         foreach (float offset in offsets)
         {
-            // 💡 1. 보스 X 위치 기준 좌우, Y는 보스보다 살짝 위(하늘)에서 아래로 레이캐스트 발사
             Vector2 rayStartPos = new Vector2(transform.position.x + offset, transform.position.y + 2f);
 
-            // m_GroundLayer는 본체나 수호자가 쓰는 지면 레이어와 동일해야 합니다.
             RaycastHit2D hit = Physics2D.Raycast(rayStartPos, Vector2.down, 25f, m_GroundLayer);
 
-            Vector3 spawnPos = rayStartPos; // 혹시 레이가 안 닿을 경우를 대비한 기본값
+            Vector3 spawnPos = new Vector3(rayStartPos.x, transform.position.y, transform.position.z);
+
             if (hit.collider != null)
             {
-                // 💡 2. 레이가 바닥에 닿았다면, 그 바닥 좌표(hit.point.y)를 정확한 스폰 Y로 지정
                 spawnPos = new Vector3(rayStartPos.x, hit.point.y, transform.position.z);
             }
 
-            // 3. 계산된 정확한 바닥 위치에 수호자 생성
+            // 계산된 정확한 바닥 위치에 수호자 생성
             GameObject guardObj = Instantiate(m_SanctuaryGuardPrefab, spawnPos, Quaternion.identity);
 
             if (guardObj.TryGetComponent(out SanctuaryGuardAI guardAI))

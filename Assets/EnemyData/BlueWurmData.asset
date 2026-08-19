@@ -9,29 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5bfc6304b7f1b047b1bb839cd70ce9a, type: 3}
+  m_Script: {fileID: 11500000, guid: 81cd05d46f2f6cb40ab6a2657f60a5f2, type: 3}
   m_Name: BlueWurmData
-  m_EditorClassIdentifier: Assembly-CSharp::GroundEnemyDataSO
-  EnemyName: BlueWurm
-  BaseHp: 1000
-  HpPerLevel: 14
-  BaseDamage: 1
-  BaseGold: 10
-  BaseExp: 6
+  m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
+  EnemyName: BlueWurmData
+  BaseHp: 2000
+  HpPerLevel: 200
+  BaseDamage: 20
+  BaseGold: 2
+  BaseExp: 12
   ExpPerLevel: 3
   SpawnSoundAddress: 
-  AttackSoundAddress: 
+  AttackSoundAddress: SFX_BlueWurmAttack
   HitSoundAddress: 
-  DeathSoundAddress: 
-  MoveSpeed: 4
-  Acceleration: 15
-  JumpForce: 8
-  JumpCooldown: 1
-  AttackRange: 1.5
-  AttackWindup: 0.5
-  AttackCooldown: 2
-  AttackMoveRatio: 0.3
-  GroundRayLength: 1.5
-  WallRayLength: 0.2
-  SeparationRadius: 0.8
-  SeparationForce: 2.5
+  DeathSoundAddress: SFX_WurmDeath
+  BossName: BlueWurm
+  Sound1Address: 
+  Sound2Address: 
+  Sound3Address: 
+  Sound4Address: 

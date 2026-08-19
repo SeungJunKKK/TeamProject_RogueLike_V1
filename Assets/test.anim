@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Beam
+  m_Name: test
   serializedVersion: 8
   m_Legacy: 0
   m_Compressed: 0
@@ -26,6 +26,8 @@ AnimationClip:
       value: {fileID: -3165398873116401786, guid: f10182c8f57700645804b3b887db3392, type: 3}
     - time: 0.16666667
       value: {fileID: 8480184905149402926, guid: 2a9906f19d8677440a4b61964f4a279a, type: 3}
+    - time: 0.25
+      value: {fileID: -661020932132401467, guid: 936bf9e7adab55646b6e439d64557dbd, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -52,12 +54,13 @@ AnimationClip:
     - {fileID: 6421119737153836027, guid: 2c9c320af45bc724cb521e40cbe7197d, type: 3}
     - {fileID: -3165398873116401786, guid: f10182c8f57700645804b3b887db3392, type: 3}
     - {fileID: 8480184905149402926, guid: 2a9906f19d8677440a4b61964f4a279a, type: 3}
+    - {fileID: -661020932132401467, guid: 936bf9e7adab55646b6e439d64557dbd, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.25
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

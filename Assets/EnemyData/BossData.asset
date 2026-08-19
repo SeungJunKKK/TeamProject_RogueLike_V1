@@ -19,10 +19,10 @@ MonoBehaviour:
   BaseGold: 10
   BaseExp: 6
   ExpPerLevel: 3
-  SpawnSoundAddress: SFX_Wisp_Spawn
-  AttackSoundAddress: SFX_Wisp_Shoot
-  HitSoundAddress: SFX_Wisp_Hit
-  DeathSoundAddress: SFX_Wisp_Death
+  SpawnSoundAddress: 
+  AttackSoundAddress: 
+  HitSoundAddress: 
+  DeathSoundAddress: 
   MoveSpeed: 4
   Acceleration: 15
   JumpForce: 8

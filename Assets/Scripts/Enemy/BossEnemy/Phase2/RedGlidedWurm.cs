@@ -45,12 +45,10 @@ public class RedGildedWurm : GildedWurmBase
     [SerializeField] private float m_AttackTurnMultiplier = 0.6f;
 
     private bool m_IsAttacking = false;
-
+    private float m_LastHitSoundTime = 0f;
     private float m_CurrentCooldown = 2.0f;
     private float m_OriginalMaxSpeed;
     private float m_OriginalTurnSpeed;
-
-    // 현재 레이저의 실제 회전 각도
     private float m_CurrentLaserAngle;
 
 
@@ -71,6 +69,29 @@ public class RedGildedWurm : GildedWurmBase
         if (m_LaserObject != null)
         {
             m_LaserObject.SetActive(false);
+            LaserCollision laserCol = m_LaserObject.GetComponentInChildren<LaserCollision>(true);
+            if (laserCol != null)
+            {
+                laserCol.OnDamageTick -= PlayLaserHitSound;
+                laserCol.OnDamageTick += PlayLaserHitSound;
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ 레이저 오브젝트에서 LaserCollision 스크립트를 찾을 수 없습니다!");
+            }
+        }
+    }
+
+
+    // =========================================================
+    // 사운드 재생 전용 함수 (레이저가 때릴 때마다 호출됨)
+    // =========================================================
+
+    private void PlayLaserHitSound()
+    {
+        if (m_Data != null && m_IsActive) // 웜이 살아있고 데이터가 있을 때만 소리 냄
+        {
+            PlayAddressableSFX(m_Data.AttackSoundAddress);
         }
     }
 
@@ -194,24 +215,43 @@ public class RedGildedWurm : GildedWurmBase
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
-                laserAnimator.SetBool("isAttacking", true);
+                // 💡 [수정됨] Animator에 'isAttacking' 파라미터가 진짜로 있는지 꼼꼼하게 검사 후 실행 (빨간 줄 에러 완벽 차단!)
+                bool hasParameter = false;
+                foreach (AnimatorControllerParameter param in laserAnimator.parameters)
+                {
+                    if (param.name == "isAttacking")
+                    {
+                        hasParameter = true;
+                        break;
+                    }
+                }
+
+                if (hasParameter)
+                {
+                    laserAnimator.SetBool("isAttacking", true);
+                }
             }
 
             m_LaserObject.SetActive(true);
 
-            // 💡 1. 빔의 회전각 계산
+            // 빔의 최초 각도 계산
             Vector2 startPos = m_MouthPoint.position;
             Vector2 initialDirection = ((Vector2)m_Player.position - startPos).normalized;
 
             float initialAngle = Mathf.Atan2(initialDirection.y, initialDirection.x) * Mathf.Rad2Deg;
             m_CurrentLaserAngle = initialAngle + m_LaserSpriteRotationOffset;
 
-            // 💡 2. 빔의 길이(Scale Y) 절반만큼 빔이 바라보는 방향의 '반대쪽'으로 밀어주어 입 위치가 머리가 되게 보정
-            float beamLength = m_LaserObject.transform.localScale.y; // 스케일 Y값 기준
-            Vector3 offset = (Quaternion.Euler(0f, 0f, initialAngle) * Vector3.right) * (beamLength * 0.5f);
-
-            m_LaserObject.transform.position = startPos - (Vector2)offset;
             m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
+
+            // 발사 순간 길이 조절
+            float distToPlayer = Vector2.Distance(startPos, m_Player.position);
+            float beamLength = Mathf.Min(distToPlayer, m_LaserRange);
+
+            Vector3 scale = m_LaserObject.transform.localScale;
+            scale.y = beamLength;
+            m_LaserObject.transform.localScale = scale;
+
+            m_LaserObject.transform.position = startPos + (Vector2)(m_LaserObject.transform.up * (beamLength * 0.5f));
         }
 
         float elapsed = 0f;
@@ -232,7 +272,13 @@ public class RedGildedWurm : GildedWurmBase
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
-                laserAnimator.SetBool("isAttacking", false);
+                // 💡 끌 때도 파라미터 검사
+                bool hasParameter = false;
+                foreach (AnimatorControllerParameter param in laserAnimator.parameters)
+                {
+                    if (param.name == "isAttacking") { hasParameter = true; break; }
+                }
+                if (hasParameter) { laserAnimator.SetBool("isAttacking", false); }
             }
 
             m_LaserObject.SetActive(false);
@@ -244,8 +290,9 @@ public class RedGildedWurm : GildedWurmBase
         Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
     }
 
+
     // =========================================================
-    // Laser Tracking (위치 및 회전 추적 전용)
+    // Laser Tracking
     // =========================================================
 
     private void UpdateLaserTracking()
@@ -269,14 +316,15 @@ public class RedGildedWurm : GildedWurmBase
             targetAngle,
             m_LaserRotationSpeed * Time.deltaTime
         );
-
-        // 💡 회전각에 맞춰 빔의 중심 위치를 입 위치에서 뒤로 반칸 밀어줌 (머리가 입에 딱 고정되도록)
-        float currentRealAngle = m_CurrentLaserAngle - m_LaserSpriteRotationOffset;
-        float beamLength = m_LaserObject.transform.localScale.y;
-        Vector3 offset = (Quaternion.Euler(0f, 0f, currentRealAngle) * Vector3.right) * (beamLength * 0.5f);
-
-        m_LaserObject.transform.position = startPos - (Vector2)offset;
         m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
+        float distToPlayer = Vector2.Distance(startPos, m_Player.position);
+        float beamLength = Mathf.Min(distToPlayer, m_LaserRange); // 거리 제한
+
+        Vector3 scale = m_LaserObject.transform.localScale;
+        scale.y = beamLength;
+        m_LaserObject.transform.localScale = scale;
+
+        m_LaserObject.transform.position = startPos + (Vector2)(m_LaserObject.transform.up * (beamLength * 0.5f));
     }
 
 

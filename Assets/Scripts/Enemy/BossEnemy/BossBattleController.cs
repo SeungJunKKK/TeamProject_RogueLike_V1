@@ -60,7 +60,6 @@ public class BossBattleController : MonoBehaviour
 
     private void Start()
     {
-        // 💡 [핵심 추가] 인스펙터에 플레이어가 할당되지 않았다면 GameManager에서 자동으로 탐색
         if (m_Player == null && GameManager.Instance != null && GameManager.Instance.CurrentPlayer != null)
         {
             m_Player = GameManager.Instance.CurrentPlayer.transform;
@@ -99,7 +98,6 @@ public class BossBattleController : MonoBehaviour
                 {
                     Debug.Log("<color=cyan>[BossBattleController] 디버그: Y키 입력으로 페이즈 3 강제 진입</color>");
 
-                    // 💡 맵에 남아있는 웜들을 찾아서 강제로 파괴 (난장판 방지)
                     GildedWurmBase[] activeWurms = FindObjectsByType<GildedWurmBase>(FindObjectsSortMode.None);
                     foreach (var wurm in activeWurms)
                     {
