@@ -308,6 +308,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoreManagers
       objectReference: {fileID: 0}
+    - target: {fileID: 5089951427398221287, guid: 8cb562e4d77042f49a9294cfa993a8d0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 598733212669329812, guid: c6df56c0812b0d2429bb4aca13f22dcc, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

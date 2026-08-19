@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 463558cf30d3d5848b26875a05236b2e
+guid: ead6657c9326c42459420a15e28e9c18
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3092483492171673783
-    second: sLightningRing_0_0
+      213: -2454316187567358727
+    second: sGeyserMagma_0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sLightningRing_0_0
+      name: sGeyserMagma_0_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 34
-        height: 34
+        width: 27
+        height: 61
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 94f095706aa4515d0800000000000000
-      internalID: -3092483492171673783
+      spriteID: 9fc7e815e6480fdd0800000000000000
+      internalID: -2454316187567358727
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sLightningRing_0_0: -3092483492171673783
+      sGeyserMagma_0_0: -2454316187567358727
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -90,13 +90,22 @@ public class PlayerController : MonoBehaviour,IDamageable
         Stats = GetComponent<PlayerStats>();
         m_inventory = GetComponent<PlayerInventory>();
 
-        //if (DifficultyManager.Instance.SelectedDifficulty == EGameDifficulty.Drizzle)
-        //{
-        //    // 이슬비 난이도일 경우 체력 50% 증가, 초당 재생량 증가
-        //    Stats.MaxHealth.AddModifier(new StatModifier(0.5f, StatModType.PercentAdd, "DrizzleBuff"));
-        //    Stats.HealthRegen.AddModifier(new StatModifier(2.0f, StatModType.Flat, "DrizzleBuff"));
-        //}
+        if (DifficultyManager.Instance.SelectedDifficulty == EGameDifficulty.Drizzle)
+        {
+            // 이슬비 난이도일 경우 체력 50% 증가, 초당 재생량 증가
+            Stats.MaxHealth.AddModifier(new StatModifier(0.5f, StatModType.PercentAdd, "DrizzleBuff"));
+            Stats.HealthRegen.AddModifier(new StatModifier(2.0f, StatModType.Flat, "DrizzleBuff"));
+        }
+    }
 
+    private void OnEnable()
+    {
+        EventBus.Subscribe<PlayerKnockbackEvent>(OnPlayerKnockback);
+    }
+
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe<PlayerKnockbackEvent>(OnPlayerKnockback);
     }
 
     private void Start()
@@ -122,6 +131,45 @@ public class PlayerController : MonoBehaviour,IDamageable
             //Debug.Log($"<color=yellow>[사다리 탐지기]</color> 위쪽 사다리 감지 결과: {(hit != null ? hit.name : "찾을 수 없음 (Null)")}");
         }
     }
+
+    // ==========================================
+    //  넉백 이벤트 발생 시 실행 로직
+    // ==========================================
+    private void OnPlayerKnockback(PlayerKnockbackEvent e)
+    {
+        if (IsInvincible) return;
+
+        Vector2 finalKnockback = Vector2.zero;
+
+        if (Mathf.Abs(e.HitDirection.x) > Mathf.Abs(e.HitDirection.y))
+        {
+            // 좌/우 타격 
+            float pushDirX = Mathf.Sign(e.HitDirection.x);
+            finalKnockback = new Vector2(pushDirX, 0.3f).normalized * e.KnockbackForce;
+        }
+        else
+        {
+            // 위/아래 타격
+            if (e.HitDirection.y > 0)
+            {
+                finalKnockback = new Vector2(0f, 1f) * e.KnockbackForce;
+            }
+            else
+            {
+                // 위에서 아래로 내려찍기 
+                // 공격자의 위치를 기준으로 플레이어가 반대편으로 밀림
+                float backwardDir = (transform.position.x > e.AttackerPosX) ? 1f : -1f;
+                finalKnockback = new Vector2(backwardDir, 0.5f).normalized * e.KnockbackForce;
+            }
+        }
+
+        Rb.linearVelocity = Vector2.zero;
+        Rb.AddForce(finalKnockback, ForceMode2D.Impulse);
+
+        //플레이어 스턴 구현 시
+        // ChangeState(new PlayerHitState(this)); 
+    }
+
 
     /// <summary>
     /// 캐릭터의 좌우 방향 전환을 처리합니다. 자식 클래스에서 오버라이드하여 방향을 고정할 수 있습니다.

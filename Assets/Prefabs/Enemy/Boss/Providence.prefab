@@ -219,6 +219,7 @@ MonoBehaviour:
   m_ExplosionStepDelay: 0.14
   m_SlashCount: 0
   m_X1Count: 0
+  m_IsPhase3: 0
   m_PurpleCirclePrefab: {fileID: 7956465108204521874, guid: 62c1ef951b8d653459827f5f8eac519f, type: 3}
   m_CircleCount: 4
   m_CircleSpawnInterval: 0.4
@@ -231,5 +232,7 @@ MonoBehaviour:
   m_TrailRenderer: {fileID: 0}
   m_SlashHitboxOffset: {x: 1.5, y: 0}
   m_SlashHitboxSize: {x: 2, y: 2}
+  m_UmbraPrefab: {fileID: -4681822585612519314, guid: 4f9a2728e8a717d40abd1bce2b39328e, type: 3}
+  m_SanctuaryGuardPrefab: {fileID: 7296318546181450997, guid: 80c7c5eb433cd304e9c09e8ed8d0416c, type: 3}
   m_CurrentState: 0
   m_CombatState: 0
