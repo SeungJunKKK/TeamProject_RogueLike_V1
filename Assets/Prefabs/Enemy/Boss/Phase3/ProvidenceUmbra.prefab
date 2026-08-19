@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 3009062142932357886}
   - component: {fileID: 8971656066643195291}
   - component: {fileID: 7028181631505580851}
-  - component: {fileID: 859458796880906227}
+  - component: {fileID: -4681822585612519314}
   m_Layer: 9
-  m_Name: Providence
-  m_TagString: Untagged
+  m_Name: ProvidenceUmbra
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,7 +106,7 @@ Animator:
   m_GameObject: {fileID: 1823091881336673170}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 916a44f130ad0be408034b9d92e21435, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0f21e4a960122704a8518dd38800b49f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -191,7 +191,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.20000002, y: 0.44}
   m_EdgeRadius: 0
---- !u!114 &859458796880906227
+--- !u!114 &-4681822585612519314
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,39 +200,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1823091881336673170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c2a86e0c137d8545a98532513fa2dc9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fbdcdc160cb5394db0dbc011b1c4e2b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProvidenceAI
-  m_Data: {fileID: 11400000, guid: 4cd52fd3095eaa542a040bc001c7d404, type: 2}
-  m_AudioSource: {fileID: 0}
-  m_MaxHearingDistance: 40
-  m_HpBar: {fileID: 0}
-  Player: {fileID: 0}
-  m_BaseDamage: 20
-  m_MoveSpeed: 4
-  m_Acceleration: 10
-  m_SlashCooldown: 2
-  m_MeleeRangeLimit: 1.5
-  m_RecoveryDelay: 0.4
-  m_ExplosionPrefab: {fileID: 6657628159511905508, guid: 4d4ff68d5c45fa547aff381ee65b08f9, type: 3}
-  m_ExplosionStep: 0.4
-  m_ExplosionStepDelay: 0.14
-  m_SlashCount: 0
-  m_X1Count: 0
-  m_IsPhase3: 0
-  m_PurpleCirclePrefab: {fileID: 7956465108204521874, guid: 62c1ef951b8d653459827f5f8eac519f, type: 3}
-  m_CircleCount: 4
-  m_CircleSpawnInterval: 0.4
-  m_GroundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  m_EditorClassIdentifier: Assembly-CSharp::ProvidenceUmbraAI
+  m_SpriteRenderer: {fileID: 2943000171821978011}
+  m_Animator: {fileID: 3009062142932357886}
+  m_Collider: {fileID: 7028181631505580851}
+  m_MinAttackInterval: 2.5
+  m_MaxAttackInterval: 4.5
+  m_SlashHitboxOffset: {x: 1.5, y: 0}
+  m_SlashHitboxSize: {x: 2, y: 2}
   m_TargetLayer:
     serializedVersion: 2
     m_Bits: 64
-  m_TrailRenderer: {fileID: 0}
-  m_SlashHitboxOffset: {x: 1.5, y: 0}
-  m_SlashHitboxSize: {x: 2, y: 2}
-  m_UmbraPrefab: {fileID: -4681822585612519314, guid: 4f9a2728e8a717d40abd1bce2b39328e, type: 3}
-  m_SanctuaryGuardPrefab: {fileID: 7296318546181450997, guid: 80c7c5eb433cd304e9c09e8ed8d0416c, type: 3}
-  m_CurrentState: 0
-  m_CombatState: 0
+  m_Damage: 15
+  m_GroundLayer:
+    serializedVersion: 2
+    m_Bits: 8

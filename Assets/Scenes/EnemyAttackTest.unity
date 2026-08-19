@@ -161,6 +161,7 @@ MonoBehaviour:
   m_SpawnHorizontalRange: 2
   m_CurrentPhase: 0
   m_EnableDebugKeys: 1
+  m_IsPhase3: 0
 --- !u!4 &168566534
 Transform:
   m_ObjectHideFlags: 0
@@ -1948,6 +1949,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8701454720315260353, guid: b3dc4cc813aae0c4a8ae9b02674b0618, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8839999119985946308, guid: b3dc4cc813aae0c4a8ae9b02674b0618, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2088,6 +2097,7 @@ MonoBehaviour:
   m_AirSpawnMaxHeight: 7
   m_AirSpawnHorizontalRange: 12
   m_ElitePrefab: {fileID: 0}
+  m_BossHPBarUI: {fileID: 0}
   m_EliteBuff:
     HPMultiplier: 4
     ScaleMultiplier: 1.6

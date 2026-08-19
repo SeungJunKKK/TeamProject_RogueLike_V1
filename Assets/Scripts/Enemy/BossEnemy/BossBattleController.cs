@@ -41,7 +41,8 @@ public class BossBattleController : MonoBehaviour
     [Header("Battle State & Debug")]
     [SerializeField] private EBossPhase m_CurrentPhase = EBossPhase.None;
     [SerializeField] private bool m_EnableDebugKeys = true;
-
+    [Header("Phase 3 Variables")]
+    public bool m_IsPhase3 = false;
     private bool m_IsBattleStarted = false;
 
     public ProvidenceAI ProvidenceBoss => m_ProvidenceBoss;
@@ -68,12 +69,35 @@ public class BossBattleController : MonoBehaviour
 
     private void Update()
     {
-        if (m_EnableDebugKeys && Input.GetKeyDown(KeyCode.T))
+        if (m_EnableDebugKeys)
         {
-            if (m_CurrentPhase == EBossPhase.Phase1)
+            // 1페이즈 -> 2페이즈 강제 전환 (T 키)
+            if (Input.GetKeyDown(KeyCode.T))
             {
-                Debug.Log("<color=cyan>[BossBattleController] 디버그: T키 입력으로 페이즈 2 강제 진입</color>");
-                TransitionToPhase2();
+                if (m_CurrentPhase == EBossPhase.Phase1)
+                {
+                    Debug.Log("<color=cyan>[BossBattleController] 디버그: T키 입력으로 페이즈 2 강제 진입</color>");
+                    TransitionToPhase2();
+                }
+            }
+
+            // 2페이즈 -> 3페이즈 강제 전환 (Y 키)
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                if (m_CurrentPhase == EBossPhase.Phase2_Wurms)
+                {
+                    Debug.Log("<color=cyan>[BossBattleController] 디버그: Y키 입력으로 페이즈 3 강제 진입</color>");
+
+                    // 💡 맵에 남아있는 웜들을 찾아서 강제로 파괴 (난장판 방지)
+                    GildedWurmBase[] activeWurms = FindObjectsByType<GildedWurmBase>(FindObjectsSortMode.None);
+                    foreach (var wurm in activeWurms)
+                    {
+                        Destroy(wurm.gameObject);
+                    }
+                    m_AliveWurmCount = 0; // 웜 카운트 초기화
+
+                    TransitionToPhase3();
+                }
             }
         }
     }
@@ -107,23 +131,22 @@ public class BossBattleController : MonoBehaviour
         m_CurrentPhase = EBossPhase.Phase2_Wurms;
         Debug.Log("<color=orange>[BossBattleController] 페이즈 2 진입 - 프로비던스 사망 연출 시작</color>");
 
-        // 💡 페이즈 전환 흐름을 코루틴으로 제어
         StartCoroutine(CoTransitionToPhase2Routine());
     }
 
     private IEnumerator CoTransitionToPhase2Routine()
     {
-        // 1. 프로비던스 퇴장 상태 진입 및 사망 모션 재생
+        // 프로비던스 퇴장 상태 진입 및 사망 모션 재생
         m_ProvidenceBoss.ExitArenaForPhase2();
 
         yield return new WaitForSeconds(2.0f);
 
-        // 3. 연출이 끝나면 프로비던스 오브젝트 숨기기
+        //연출이 끝나면 프로비던스 오브젝트 숨기기
         m_ProvidenceBoss.gameObject.SetActive(false);
 
         Debug.Log("<color=orange>[BossBattleController] 프로비던스 퇴장 완료. 웜 소환 시작!</color>");
 
-        // 4. 웜 2마리 소환 로직 실행
+        // 웜 2마리 소환 로직 실행
         m_AliveWurmCount = 2;
         Vector3 centerPos = m_ProvidenceBoss != null ? m_ProvidenceBoss.transform.position : transform.position;
         Vector3 leftPos = centerPos + new Vector3(-7f, 0f, 0f);
@@ -201,6 +224,12 @@ public class BossBattleController : MonoBehaviour
         }
 
         Debug.Log("<color=magenta>[BossBattleController] 페이즈 3 진입 - 프로비던스 복귀</color>");
+
+        if (m_ProvidenceBoss != null)
+        {
+            m_ProvidenceBoss.m_IsPhase3 = true;
+        }
+
         m_ProvidenceBoss.ReturnToArenaForPhase3();
     }
 
