@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BlueWurmData
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
   EnemyName: BlueWurmData
-  BaseHp: 2000
+  BaseHp: 5000
   HpPerLevel: 200
   BaseDamage: 20
   BaseGold: 2

@@ -24,7 +24,7 @@ public abstract class GildedWurmBase : EnemyBase
 
     private readonly List<Vector2> m_Path = new List<Vector2>();
 
-    // 💡 [추가] 부모를 떠날 몸통들을 영구적으로 기억해둘 배열
+    // 몸통들을 기억해둘 배열
     protected WurmSegmentMover[] m_CachedMovers;
 
     public float SegmentSpacing => m_SegmentSpacing;
@@ -40,17 +40,14 @@ public abstract class GildedWurmBase : EnemyBase
         base.OnSpawn();
         ResetPath();
 
-        // 💡 [수정] 1. 자식들이 독립하기 '전'에 모든 컴포넌트를 미리 찾아 저장합니다.
         m_CachedMovers = GetComponentsInChildren<WurmSegmentMover>(true);
         WurmSegment[] segments = GetComponentsInChildren<WurmSegment>(true);
 
-        // 💡 [수정] 2. 피격 판정(WurmSegment)을 먼저 초기화합니다.
         foreach (WurmSegment segment in segments)
         {
             segment.Init(this);
         }
 
-        // 💡 [수정] 3. 가장 마지막에 Mover를 초기화하며 부모 관계를 끊습니다.
         for (int i = 0; i < m_CachedMovers.Length; i++)
         {
             m_CachedMovers[i].Init(this, i + 1);
@@ -62,10 +59,9 @@ public abstract class GildedWurmBase : EnemyBase
         m_Player = player;
         m_IsActive = true;
 
-        // 1. 머리를 화면 밖 랜덤 위치로 순간이동
         transform.position = GetRandomOffScreenPosition();
 
-        // 2. 방향 결정
+        // 방향 결정
         if (m_Player != null)
         {
             Vector2 toPlayer = (m_Player.position - transform.position).normalized;
@@ -76,10 +72,8 @@ public abstract class GildedWurmBase : EnemyBase
             m_Velocity = Vector2.left * m_MaxSpeed;
         }
 
-        // 3. 쫙 펴진 상태의 경로 초기화
         ResetPath();
 
-        // 💡 [수정] 4. 머리가 이동한 즉시, 저장해둔 배열을 꺼내 몸통들도 다 같이 머리 위치로 강제 소환!
         if (m_CachedMovers != null)
         {
             for (int i = 0; i < m_CachedMovers.Length; i++)
@@ -236,10 +230,9 @@ public abstract class GildedWurmBase : EnemyBase
         if (m_IsAlreadyDead) return;
         m_IsAlreadyDead = true;
 
-        // 1. 움직임 정지
+        // 움직임 정지
         m_IsActive = false;
 
-        // 2. 부모의 Die() 호출 -> 여기서 골드, 경험치를 주고 사망 사운드를 비동기로 부름!
         base.Die();
 
         if (BossBattleController.Instance != null)
