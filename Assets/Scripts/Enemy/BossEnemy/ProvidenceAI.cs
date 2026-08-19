@@ -9,6 +9,8 @@ public enum EProvidenceCombatState { Approach, Optimal, TooClose, Attack, Recove
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class ProvidenceAI : EnemyBase
 {
+    private BossHPBarUI m_BossUI;
+
     [Header("Target & Stats")]
     public Transform Player;
     [SerializeField] private float m_BaseDamage = 20f;
@@ -104,6 +106,24 @@ public class ProvidenceAI : EnemyBase
         m_SlashCooldownTimer = 0f;
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
         ChangeState(EProvidenceState.None);
+
+        m_BossUI = UnityEngine.Object.FindAnyObjectByType<BossHPBarUI>(FindObjectsInactive.Include);
+        if (m_BossUI != null)
+        {
+            m_BossUI.gameObject.SetActive(true); 
+            m_BossUI.InitHPBar(MaxHp);           
+
+            this.OnHealthChanged -= UpdateBossHPUI; 
+            this.OnHealthChanged += UpdateBossHPUI;
+        }
+    }
+
+    private void UpdateBossHPUI(float currentHp, float maxHp)
+    {
+        if (m_BossUI != null)
+        {
+            m_BossUI.UpdateHPBar(currentHp);
+        }
     }
 
     // ==========================================
@@ -174,7 +194,7 @@ public class ProvidenceAI : EnemyBase
 
             if (hit.collider != null)
             {
-                spawnPos = new Vector3(rayStartPos.x, hit.point.y, transform.position.z);
+                spawnPos = new Vector3(rayStartPos.x, hit.point.y + 1.5f, transform.position.z);
             }
 
             // 수호자 생성
@@ -576,6 +596,12 @@ public class ProvidenceAI : EnemyBase
         if (m_SpawnedUmbra != null)
         {
             m_SpawnedUmbra.DeactivateUmbra();
+        }
+
+        if (m_BossUI != null)
+        {
+            m_BossUI.gameObject.SetActive(false);
+            this.OnHealthChanged -= UpdateBossHPUI;
         }
 
         if (m_Animator != null) m_Animator.Play("Death");

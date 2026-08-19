@@ -528,6 +528,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3592547718542356184, guid: 5d47217b89979b74fb1b53f1075afdeb, type: 3}
+      propertyPath: m_GeometryType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5310937461707022213, guid: 5d47217b89979b74fb1b53f1075afdeb, type: 3}
       propertyPath: m_Name
       value: BossStage_Tilemap

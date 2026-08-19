@@ -27,6 +27,14 @@ public class CurrentRunData
         NewlyUnlockedItems.Clear();
     }
 
+    public void AddPlayTime(float deltaTime) { PlayTime += deltaTime; }
+    public void AddKill() { Kills++; }
+    public void AddBossKill() { BossesKilled++; }
+    public void AddGold(int amount) { GoldCollected += amount; }
+    public void AddItem() { ItemsCollected++; }
+    public void AddPurchase() { Purchases++; }
+
+
     public int CalculateTotalScore()
     {
         int timePoints = Mathf.FloorToInt(PlayTime) * 3;

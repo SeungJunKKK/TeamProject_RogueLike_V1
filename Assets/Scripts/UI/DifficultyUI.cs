@@ -40,6 +40,11 @@ public class DifficultyUI : MonoBehaviour
 
         // 레벨이 상승했는지 체크
         CheckLevelUp();
+
+        if (SaveLoadManager.Instance != null && SaveLoadManager.Instance.CurrentRun != null)
+        {
+            SaveLoadManager.Instance.CurrentRun.PlayTime = DifficultyManager.Instance.ElapsedSeconds;
+        }
     }
 
     private void CheckLevelUp()
