@@ -87,14 +87,14 @@ public class Teleporter : MonoBehaviour, IInteractable
         m_ChargeTimer += Time.deltaTime;
         ChargeProgress = Mathf.Clamp01(m_ChargeTimer / m_ChargeDuration);
 
+        float remainingTime = Mathf.Max(0f, m_ChargeDuration - m_ChargeTimer);
         // 웨이브 스폰은 EnemySpawner가 TeleporterStateChangedEvent를 구독해 처리
         //   Charging: 스폰 강화 + 보스 등장 / WaitingForClear: 신규 스폰 중단
-
         EventBus.Publish(new TeleporterUpdateEvent
         {
             State = ETeleporterState.Charging,
             ProgressPercent = ChargeProgress * 100f,
-            TimeLeft = Mathf.Max(0, m_ChargeDuration - m_ChargeTimer)
+            TimeLeft = (int)remainingTime
         });
 
 

@@ -4,7 +4,7 @@ using TMPro;
 public class TeleporterObjectiveUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI m_ObjectiveText;
-    private Vector3 m_OriginalScale;
+    //private Vector3 m_OriginalScale;
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class TeleporterObjectiveUI : MonoBehaviour
         {
             m_ObjectiveText.text = "";
         }
-        m_OriginalScale = transform.localScale;
+        //m_OriginalScale = transform.localScale;
     }
 
     private void OnDestroy()
@@ -33,19 +33,19 @@ public class TeleporterObjectiveUI : MonoBehaviour
     }
 
     //Flip 방지 
-    private void LateUpdate()
-    {
-        PlayerController player = GetComponentInParent<PlayerController>();
+    //private void LateUpdate()
+    //{
+    //    PlayerController player = GetComponentInParent<PlayerController>();
 
-        if (player != null)
-        {
-            float playerSign = Mathf.Sign(player.transform.localScale.x);
+    //    if (player != null)
+    //    {
+    //        float playerSign = Mathf.Sign(player.transform.localScale.x);
 
-            transform.localScale = new Vector3(m_OriginalScale.x * playerSign, m_OriginalScale.y, m_OriginalScale.z);
-        }
+    //        transform.localScale = new Vector3(m_OriginalScale.x * playerSign, m_OriginalScale.y, m_OriginalScale.z);
+    //    }
 
-        transform.rotation = Quaternion.identity;
-    }
+    //    transform.rotation = Quaternion.identity;
+    //}
 
     private void OnTeleporterUpdate(TeleporterUpdateEvent e)
     {
@@ -54,16 +54,16 @@ public class TeleporterObjectiveUI : MonoBehaviour
         switch (e.State)
         {
             case ETeleporterState.Charging:
-                m_ObjectiveText.text = $"<color=#00FFFF>Charging Teleporter... {e.ProgressPercent:F0}%</color>\n<size=80%>Time Left: {e.TimeLeft:F1}s</size>";
+                m_ObjectiveText.text = $"<color=#00FFFF>Charging Teleporter... {e.ProgressPercent:F0}%</color> <size=80%>Time Left: {e.TimeLeft}s</size>";
                 break;
 
             case ETeleporterState.WaitingForClear:
                 string bossStatus = e.IsBossDead ? "<color=#00FF00>Defeated</color>" : "<color=#FF0000>Alive</color>";
-                m_ObjectiveText.text = $"<color=#FFA500>Eliminate Remaining</color>\n<size=80%>Enemies Left: {e.RemainingEnemies} | Boss: {bossStatus}</size>";
+                m_ObjectiveText.text = $"<color=#FFA500>Eliminate Remaining</color> <size=80%>Enemies Left: {e.RemainingEnemies} | Boss: {bossStatus}</size>";
                 break;
 
             case ETeleporterState.Cleared:
-                m_ObjectiveText.text = "<color=#00FF00>Teleporter Activated!</color>\n<size=80%>[Interact to enter next stage]</size>";
+                m_ObjectiveText.text = "<color=#00FF00>Teleporter Activated!</color> <size=80%>[Interact to enter next stage]</size>";
                 break;
 
             default:
