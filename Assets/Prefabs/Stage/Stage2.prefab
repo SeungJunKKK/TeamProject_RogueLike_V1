@@ -345,6 +345,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stage2_Tilemap
       objectReference: {fileID: 0}
+    - target: {fileID: 2039990278647514782, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2069777347139902328, guid: ba5db6a6fed972746bc2845fdb0efaea, type: 3}
       propertyPath: m_Tiles.Array.size
       value: 1756
