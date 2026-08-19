@@ -146,7 +146,7 @@ public struct TeleporterUpdateEvent
 {
     public ETeleporterState State;
     public float ProgressPercent; // 충전 퍼센트 (0~100)
-    public float TimeLeft;        // 남은 시간
+    public int TimeLeft;        // 남은 시간
     public int RemainingEnemies;  // 남은 적 수
     public bool IsBossDead;       // 보스 처치 여부
 }

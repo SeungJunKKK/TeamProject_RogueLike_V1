@@ -94,6 +94,9 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
+            Gold = 0;
+            EventBus.Publish(new GoldChangedEvent { Current = Gold, Delta = 0 });
+
             // 다음 새 게임을 위해 기존에 살아남아있던 플레이어 정보를 완전히 초기화합니다.
             if (CurrentPlayer != null)
             {
@@ -141,6 +144,8 @@ public class GameManager : Singleton<GameManager>
             return;
         }
         Gold = 0;
+        EventBus.Publish(new GoldChangedEvent { Current = Gold, Delta = 0 });
+
         ChangeState(EGameState.Playing);
     }
 
