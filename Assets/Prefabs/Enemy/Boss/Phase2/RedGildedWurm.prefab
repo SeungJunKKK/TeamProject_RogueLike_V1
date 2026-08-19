@@ -1392,8 +1392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c9ba6dcf00b2c4ca002d5b70dc796a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserCollision
-  m_BeamDamage: 15
-  m_DamageInterval: 0.08
+  m_BeamDamage: 1
+  m_DamageInterval: 0.1
 --- !u!95 &4391117913655074016
 Animator:
   serializedVersion: 7
@@ -1586,7 +1586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 490f98ba295c89c42945b6c2f3db427c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RedGildedWurm
-  m_Data: {fileID: 11400000, guid: 6bbb73f0caf55d04980039b7253b58e9, type: 2}
+  m_Data: {fileID: 11400000, guid: e6dfe4b4790c47d4ab2e47699fe69d3e, type: 2}
   m_AudioSource: {fileID: 3443097003829227986}
   m_MaxHearingDistance: 40
   m_HpBar: {fileID: 0}
@@ -1601,7 +1601,7 @@ MonoBehaviour:
   m_LaserSpriteRotationOffset: 90
   m_LaserRotationSpeed: 100
   m_LaserRange: 5
-  m_FacingThreshold: 0.9148426
+  m_FacingThreshold: 0.703
   m_AttackChance: 0.4
   m_AttackDuration: 1.5
   m_AttackCooldown: 3

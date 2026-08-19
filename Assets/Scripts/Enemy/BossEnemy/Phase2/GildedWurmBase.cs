@@ -17,6 +17,7 @@ public abstract class GildedWurmBase : EnemyBase
 
     protected Vector2 m_Velocity;
     protected bool m_IsActive = false;
+    protected bool m_IsAlreadyDead = false;
 
     protected enum EMoveState { Cruising, Overshooting }
     protected EMoveState m_CurrentMoveState = EMoveState.Cruising;
@@ -232,7 +233,34 @@ public abstract class GildedWurmBase : EnemyBase
 
     protected override void Die()
     {
+        if (m_IsAlreadyDead) return;
+        m_IsAlreadyDead = true;
+
+        // 1. 움직임 정지
+        m_IsActive = false;
+
+        // 2. 부모의 Die() 호출 -> 여기서 골드, 경험치를 주고 사망 사운드를 비동기로 부름!
         base.Die();
-        if (BossBattleController.Instance != null) BossBattleController.Instance.OnWurmDied();
+
+        if (BossBattleController.Instance != null)
+        {
+            BossBattleController.Instance.OnWurmDied();
+        }
+
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null) sr.enabled = false;
+
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+        if (m_CachedMovers != null)
+        {
+            foreach (var mover in m_CachedMovers)
+            {
+                if (mover != null) Destroy(mover.gameObject);
+            }
+        }
+
+        Destroy(gameObject, 2.0f);
     }
 }

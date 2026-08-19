@@ -13,20 +13,17 @@ MonoBehaviour:
   m_Name: BlueWurmData
   m_EditorClassIdentifier: Assembly-CSharp::BossDataSO
   EnemyName: BlueWurmData
-  BaseHp: 1000
+  BaseHp: 2000
   HpPerLevel: 200
   BaseDamage: 20
   BaseGold: 2
   BaseExp: 12
   ExpPerLevel: 3
   SpawnSoundAddress: 
-  AttackSoundAddress: BlueWurmAttack
+  AttackSoundAddress: SFX_BlueWurmAttack
   HitSoundAddress: 
-  DeathSoundAddress: 
+  DeathSoundAddress: SFX_WurmDeath
   BossName: BlueWurm
-  BaseHp: 1000
-  HpPerLevel: 200
-  BaseDamage: 20
   Sound1Address: 
   Sound2Address: 
   Sound3Address: 

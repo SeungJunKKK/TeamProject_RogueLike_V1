@@ -875,6 +875,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 2018850935}
+    - target: {fileID: 1581048893525663593, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1887249950838829506, guid: 4ba0986105d56c4459e5bf8dcf26f8f4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

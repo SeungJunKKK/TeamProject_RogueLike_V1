@@ -187,8 +187,13 @@ MonoBehaviour:
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a5f7d77c1ccad80469a0a64b9e333c98
+    m_Address: SFX_WurmDeath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ad78c4ac5173c8a43a34e4d30574c2c9
-    m_Address: BlueWurmAttack
+    m_Address: SFX_BlueWurmAttack
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -225,6 +230,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bd9220db6b9b64d449390a916b58d5e5
     m_Address: Ukulele
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf3aa80e70ef2b641bd9bcad5948934b
+    m_Address: SFX_LaserHit
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

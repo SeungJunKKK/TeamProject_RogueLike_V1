@@ -1,9 +1,12 @@
 using UnityEngine;
+using System; 
 
 public class LaserCollision : MonoBehaviour
 {
     [SerializeField] private float m_BeamDamage = 15f;
     [SerializeField] private float m_DamageInterval = 0.08f;
+
+    public Action OnDamageTick;
 
     private float m_DamageTimer = 0f;
     private bool m_IsPlayerInside = false;
@@ -25,6 +28,8 @@ public class LaserCollision : MonoBehaviour
             {
                 m_DamageTimer = 0f;
                 m_TargetPlayer.TakeDamage(m_BeamDamage);
+
+                OnDamageTick?.Invoke();
             }
         }
     }
@@ -36,7 +41,7 @@ public class LaserCollision : MonoBehaviour
         {
             m_IsPlayerInside = true;
             m_TargetPlayer = player;
-            m_DamageTimer = m_DamageInterval; // 닿자마자 바로 틱이 들어가도록 설정
+            m_DamageTimer = m_DamageInterval;
         }
     }
 
