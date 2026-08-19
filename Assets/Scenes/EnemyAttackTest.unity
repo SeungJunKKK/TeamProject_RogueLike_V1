@@ -2396,6 +2396,10 @@ PrefabInstance:
       propertyPath: CritChance.BaseValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5819902737914185849, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6293781722361756835, guid: 49b67ac82ef274e439ca68ff2952d6bd, type: 3}
       propertyPath: m_Layer
       value: 6
