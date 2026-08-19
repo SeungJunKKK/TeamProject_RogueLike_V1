@@ -162,7 +162,6 @@ public class ProvidenceAI : EnemyBase
         }
         m_SpawnedGuards.Clear();
 
-        // 좌우 2~3칸 정도의 오프셋 거리
         float[] offsets = { -3f, 3f };
         var difficulty = DifficultyManager.Instance;
         float coeff = difficulty != null ? difficulty.Coefficient : 1f;
@@ -180,7 +179,7 @@ public class ProvidenceAI : EnemyBase
                 spawnPos = new Vector3(rayStartPos.x, hit.point.y, transform.position.z);
             }
 
-            // 계산된 정확한 바닥 위치에 수호자 생성
+            // 수호자 생성
             GameObject guardObj = Instantiate(m_SanctuaryGuardPrefab, spawnPos, Quaternion.identity);
 
             if (guardObj.TryGetComponent(out SanctuaryGuardAI guardAI))

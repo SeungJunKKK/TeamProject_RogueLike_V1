@@ -1249,10 +1249,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4866082416106096123}
   - component: {fileID: 3647179265010896729}
+  - component: {fileID: 5881631665800118939}
   - component: {fileID: 8578919867298252618}
   - component: {fileID: 5946578376284756701}
   - component: {fileID: 4391117913655074016}
-  m_Layer: 17
+  m_Layer: 10
   m_Name: Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1334,6 +1335,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!50 &5881631665800118939
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443053996355569403}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!61 &8578919867298252618
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1601,8 +1629,8 @@ MonoBehaviour:
   m_LaserSpriteRotationOffset: 90
   m_LaserRotationSpeed: 100
   m_LaserRange: 5
-  m_FacingThreshold: 0.703
-  m_AttackChance: 0.4
+  m_FacingThreshold: 0.687
+  m_AttackChance: 0.525
   m_AttackDuration: 1.5
   m_AttackCooldown: 3
   m_AttackSpeedMultiplier: 0.502
