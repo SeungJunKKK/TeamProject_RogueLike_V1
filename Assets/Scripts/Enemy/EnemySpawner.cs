@@ -47,6 +47,14 @@ public class EnemySpawner : MonoBehaviour
     private readonly HashSet<GameObject> m_ActiveEnemies =
         new HashSet<GameObject>();
 
+    public int ActiveEnemyCount => m_ActiveEnemies.Count;
+
+    public HashSet<GameObject> GetActiveEnemies()
+    {
+        return m_ActiveEnemies;
+    }
+
+
     private readonly Collider2D[] m_OverlapBuffer =
         new Collider2D[1];
 
@@ -55,7 +63,7 @@ public class EnemySpawner : MonoBehaviour
     private bool m_EliteSpawned;
     private EnemyBase m_CurrentEliteEnemy;
 
-    public int ActiveEnemyCount => m_ActiveEnemies.Count;
+   
 
     private void Awake()
     {
@@ -80,6 +88,8 @@ public class EnemySpawner : MonoBehaviour
 
         UnsubscribeEliteHealthEvents();
     }
+
+   
 
     private void Start()
     {

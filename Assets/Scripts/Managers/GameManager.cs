@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Selected Player Settings")]
     public GameObject SelectedPlayerPrefab;
+    public GameObject RadarPrefab;
 
     private Coroutine m_HitStopCoroutine;
     public GameObject CurrentPlayer { get; private set; }
@@ -70,6 +71,13 @@ public class GameManager : Singleton<GameManager>
                 GameObject spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
                 CurrentPlayer.transform.position = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
+                RadarAllocator radar = CurrentPlayer.GetComponentInChildren<RadarAllocator>();
+                if (radar != null)
+                {
+                    Teleporter newTeleporter = FindAnyObjectByType<Teleporter>();
+                    radar.SetTeleporter(newTeleporter != null ? newTeleporter.transform : null);
+                }
+
                 Debug.Log($"<color=cyan>[GameManager]플레이어를 다음 스테이지({scene.name})로 이동</color>");
             }
             else
@@ -110,6 +118,16 @@ public class GameManager : Singleton<GameManager>
 
         CurrentPlayer = Instantiate(SelectedPlayerPrefab, spawnPosition, Quaternion.identity);
         DontDestroyOnLoad(CurrentPlayer);
+
+        if (RadarPrefab != null)
+        {
+            GameObject radarObj = Instantiate(RadarPrefab);
+            if (radarObj.TryGetComponent(out RadarAllocator radar))
+            {
+                Teleporter stageTeleporter = FindAnyObjectByType<Teleporter>();
+                radar.Init(CurrentPlayer.transform, stageTeleporter != null ? stageTeleporter.transform : null);
+            }
+        }
 
         SaveLoadManager.Instance.CurrentRun.ResetRun(SelectedPlayerPrefab.name);
         Debug.Log($"<color=cyan>[GameManager] 플레이어 스폰 완료 위치: {spawnPosition}</color>");
