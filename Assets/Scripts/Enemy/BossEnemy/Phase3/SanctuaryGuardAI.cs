@@ -16,7 +16,6 @@ public class SanctuaryGuardAI : EnemyBase
     [Header("References")]
     [SerializeField] private Animator m_Animator;
 
-    // 💡 부모 클래스와 충돌 및 접근 권한 문제를 피하기 위해 변수명을 고유하게 변경
     [SerializeField] private SpriteRenderer m_GuardSprite;
 
     private Transform m_Player;

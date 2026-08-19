@@ -60,10 +60,21 @@ public class BossBattleController : MonoBehaviour
 
     private void Start()
     {
+        // 💡 [핵심 추가] 인스펙터에 플레이어가 할당되지 않았다면 GameManager에서 자동으로 탐색
+        if (m_Player == null && GameManager.Instance != null && GameManager.Instance.CurrentPlayer != null)
+        {
+            m_Player = GameManager.Instance.CurrentPlayer.transform;
+            Debug.Log("<color=green>[BossBattleController] GameManager로부터 플레이어를 자동으로 찾아 할당했습니다.</color>");
+        }
+
         if (m_ProvidenceBoss != null && m_Player != null)
         {
             m_ProvidenceBoss.OnSpawn();
             StartBattle();
+        }
+        else
+        {
+            Debug.LogError("[BossBattleController] ProvidenceBoss 또는 Player가 설정되지 않았습니다!");
         }
     }
 
@@ -141,7 +152,7 @@ public class BossBattleController : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        //연출이 끝나면 프로비던스 오브젝트 숨기기
+        // 연출이 끝나면 프로비던스 오브젝트 숨기기
         m_ProvidenceBoss.gameObject.SetActive(false);
 
         Debug.Log("<color=orange>[BossBattleController] 프로비던스 퇴장 완료. 웜 소환 시작!</color>");
@@ -155,7 +166,7 @@ public class BossBattleController : MonoBehaviour
         SpawnWurmAt(m_RedWurmPrefab, leftPos);
         SpawnWurmAt(m_BlueWurmPrefab, rightPos);
 
-        // 5. 페이즈 2 크로스헤어 독립 스케줄러 시작
+        // 페이즈 2 크로스헤어 독립 스케줄러 시작
         if (m_CrosshairSchedulerRoutine != null) StopCoroutine(m_CrosshairSchedulerRoutine);
         m_CrosshairSchedulerRoutine = StartCoroutine(CrosshairAttackScheduler());
     }

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8907309463183502217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7372260641348364322}
+  - component: {fileID: 6652322437528190818}
+  m_Layer: 0
+  m_Name: BossBattleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7372260641348364322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907309463183502217}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6652322437528190818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907309463183502217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf380c3978292d24ba74d89bba15648f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossBattleController
+  m_ProvidenceBoss: {fileID: 859458796880906227, guid: f1e21c2f8a50d5148b9355394d55f030, type: 3}
+  m_Player: {fileID: 0}
+  m_RedWurmPrefab: {fileID: 7494016083134878846, guid: c9666c0b4f44447419eda03bec3d2578, type: 3}
+  m_BlueWurmPrefab: {fileID: 2733959238212645360, guid: ccacea714158495449e1f43074e2fb9b, type: 3}
+  m_CrosshairPrefab: {fileID: 7685425172967886955, guid: 88a88d61dd1743e4bb3c8b640ccd0c30, type: 3}
+  m_LaserPrefab: {fileID: 8685017280897920458, guid: 91786892a3fbeff4babc79dcd474f6c0, type: 3}
+  m_CrosshairMinInterval: 3
+  m_CrosshairMaxInterval: 6
+  m_CrosshairDuration: 1.2
+  m_SpawnHeightOffset: 2.3
+  m_SpawnHorizontalRange: 2
+  m_CurrentPhase: 0
+  m_EnableDebugKeys: 1
+  m_IsPhase3: 0
