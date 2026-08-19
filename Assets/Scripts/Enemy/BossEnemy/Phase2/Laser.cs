@@ -6,8 +6,11 @@ public class Laser : MonoBehaviour
     [SerializeField] private float m_Duration = 1.0f;
     [SerializeField] private float m_BeamDamage = 10f;
     [SerializeField] private float m_DamageInterval = 0.08f;
-    [SerializeField] private float m_LaserRange = 40f;
     [SerializeField] private LayerMask m_TargetLayer;
+
+    [Header("Overlap Box Settings")]
+    [SerializeField] private Vector2 m_BoxSize = new Vector2(0.5f, 4f); // 레이저의 두께와 길이 설정
+    [SerializeField] private Vector2 m_BoxOffset = new Vector2(0f, -2f); // 중심점 기준 오프셋
 
     [Header("Visual Settings")]
     [SerializeField] private float m_SpriteRotationOffset = -90f;
@@ -20,6 +23,7 @@ public class Laser : MonoBehaviour
     private float m_DamageTimer = 0f;
     private float m_Elapsed = 0f;
     private Transform m_PlayerTransform;
+    private readonly Collider2D[] m_HitBuffer = new Collider2D[5];
 
     public void Init(Vector2 firePos, Transform playerTransform)
     {
@@ -55,22 +59,41 @@ public class Laser : MonoBehaviour
     {
         transform.position = m_CurrentFirePosition;
 
-        Vector2 laserDir = Vector2.up;
+        Vector2 boxCenter = (Vector2)transform.position + m_BoxOffset;
+        int hitCount = Physics2D.OverlapBoxNonAlloc(boxCenter, m_BoxSize, 0f, m_HitBuffer, m_TargetLayer);
 
-        RaycastHit2D hit = Physics2D.Raycast(m_CurrentFirePosition, laserDir, m_LaserRange, m_TargetLayer);
+        bool isPlayerHit = false;
 
-        if (hit.collider != null)
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider2D col = m_HitBuffer[i];
+            if (col != null && col.CompareTag("Player"))
+            {
+                isPlayerHit = true;
+                break;
+            }
+        }
+
+        if (isPlayerHit)
         {
             m_DamageTimer += Time.deltaTime;
 
             if (m_DamageTimer >= m_DamageInterval)
             {
                 m_DamageTimer = 0f;
-
-                // IDamageable 대신 PlayerController를 직접 타겟팅
-                if (hit.collider.TryGetComponent(out PlayerController player))
+                if (hitCount > 0)
                 {
-                    player.TakeDamage(m_BeamDamage);
+                    // 널 체크 및 플레이어 컴포넌트 가져오기
+                    for (int i = 0; i < hitCount; i++)
+                    {
+                        PlayerController player = m_HitBuffer[i].GetComponent<PlayerController>() ?? m_HitBuffer[i].GetComponentInParent<PlayerController>();
+
+                        if (player != null)
+                        {
+                            player.TakeDamage(m_BeamDamage);
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -78,5 +101,13 @@ public class Laser : MonoBehaviour
         {
             m_DamageTimer = 0f;
         }
+    }
+
+    // 💡 에디터에서 판정 박스 범위를 눈으로 확인하기 위한 Gizmos
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 0f, 0f, 0.4f);
+        Vector2 boxCenter = (Vector2)transform.position + m_BoxOffset;
+        Gizmos.DrawCube(boxCenter, m_BoxSize);
     }
 }

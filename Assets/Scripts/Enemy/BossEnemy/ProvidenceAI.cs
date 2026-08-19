@@ -39,6 +39,9 @@ public class ProvidenceAI : EnemyBase
     private const int k_MaxSlashBeforeX1 = 3;
     private const int k_MaxX1BeforeC1 = 2;
 
+    [Header("Phase 3 Variables")]
+    public bool m_IsPhase3 = false;
+
     [Header("Combat: C1 Purple Circle Setting")]
     [Tooltip("플레이어 위치에 생성될 보라색 원 프리팹")]
     [SerializeField] private GameObject m_PurpleCirclePrefab;
@@ -58,6 +61,14 @@ public class ProvidenceAI : EnemyBase
     [Header("Hitbox (Z1 Slash)")]
     [SerializeField] private Vector2 m_SlashHitboxOffset = new Vector2(1.5f, 0f);
     [SerializeField] private Vector2 m_SlashHitboxSize = new Vector2(2f, 2f);
+
+    [Header("Phase 3 Umbra (Shadow Clone) Setting")]
+    [SerializeField] private ProvidenceUmbraAI m_UmbraPrefab;
+    private ProvidenceUmbraAI m_SpawnedUmbra;
+
+    [Header("Phase 3 Sanctuary Guards Setting")]
+    [SerializeField] private GameObject m_SanctuaryGuardPrefab;
+    private List<GameObject> m_SpawnedGuards = new List<GameObject>();
 
     protected Animator m_Animator;
     protected BoxCollider2D m_Collider;
@@ -109,17 +120,77 @@ public class ProvidenceAI : EnemyBase
         m_Rigidbody.linearVelocity = Vector2.zero;
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
         ChangeState(EProvidenceState.PhaseTransition);
+
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
-        gameObject.SetActive(false);
+
+        // 💡 즉시 숨기지 않고 사망("Death") 애니메이션 재생
+        if (m_Animator != null) m_Animator.Play("Death");
     }
 
     public void ReturnToArenaForPhase3()
     {
         gameObject.SetActive(true);
         m_IsBattleStarted = true;
+        m_IsPhase3 = true;
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
         ChangeCombatState(EProvidenceCombatState.Approach);
         ChangeState(EProvidenceState.Combat);
+
+        // 기존 분신(Umbra) 소환 로직 유지...
+        if (m_UmbraPrefab != null && m_SpawnedUmbra == null)
+        {
+            m_SpawnedUmbra = Instantiate(m_UmbraPrefab, transform.position, Quaternion.identity);
+        }
+        if (m_SpawnedUmbra != null)
+        {
+            m_SpawnedUmbra.ActivateUmbra(Player, 0.8f);
+        }
+
+        // 💡 [핵심 추가] 성소 수호자 2마리 소환 (본체 기준 좌우 배치)
+        if (m_SanctuaryGuardPrefab != null)
+        {
+            SpawnSanctuaryGuards();
+        }
+    }
+
+    private void SpawnSanctuaryGuards()
+    {
+        // 기존에 혹시 살아있는 수호자가 있다면 정리
+        foreach (var guard in m_SpawnedGuards)
+        {
+            if (guard != null) Destroy(guard);
+        }
+        m_SpawnedGuards.Clear();
+
+        // 좌우 2~3칸 정도의 오프셋 거리 (원하시는 간격으로 조절 가능)
+        float[] offsets = { -3f, 3f };
+        var difficulty = DifficultyManager.Instance;
+        float coeff = difficulty != null ? difficulty.Coefficient : 1f;
+
+        foreach (float offset in offsets)
+        {
+            // 💡 1. 보스 X 위치 기준 좌우, Y는 보스보다 살짝 위(하늘)에서 아래로 레이캐스트 발사
+            Vector2 rayStartPos = new Vector2(transform.position.x + offset, transform.position.y + 2f);
+
+            // m_GroundLayer는 본체나 수호자가 쓰는 지면 레이어와 동일해야 합니다.
+            RaycastHit2D hit = Physics2D.Raycast(rayStartPos, Vector2.down, 25f, m_GroundLayer);
+
+            Vector3 spawnPos = rayStartPos; // 혹시 레이가 안 닿을 경우를 대비한 기본값
+            if (hit.collider != null)
+            {
+                // 💡 2. 레이가 바닥에 닿았다면, 그 바닥 좌표(hit.point.y)를 정확한 스폰 Y로 지정
+                spawnPos = new Vector3(rayStartPos.x, hit.point.y, transform.position.z);
+            }
+
+            // 3. 계산된 정확한 바닥 위치에 수호자 생성
+            GameObject guardObj = Instantiate(m_SanctuaryGuardPrefab, spawnPos, Quaternion.identity);
+
+            if (guardObj.TryGetComponent(out SanctuaryGuardAI guardAI))
+            {
+                guardAI.InitGuard(Player, coeff);
+            }
+            m_SpawnedGuards.Add(guardObj);
+        }
     }
 
     private void Update()
@@ -181,7 +252,8 @@ public class ProvidenceAI : EnemyBase
     {
         if (m_SlashCooldownTimer > 0f) return;
 
-        if (m_SlashCount >= k_MaxSlashBeforeX1)
+        // 💡 페이즈 3이 아닐 때만 기존처럼 X1 카운트 체크 및 발동
+        if (!m_IsPhase3 && m_SlashCount >= k_MaxSlashBeforeX1)
         {
             ExecuteX1Attack();
             return;
@@ -189,11 +261,11 @@ public class ProvidenceAI : EnemyBase
 
         if (m_DistanceXToPlayer < m_MeleeRangeLimit)
         {
-            ExecuteNearRangePattern(); // 근접: Z1 / Z2 / X1 랜덤
+            ExecuteNearRangePattern();
         }
         else
         {
-            ExecuteFarRangePattern();  // 원거리: Z2 / X1 랜덤
+            ExecuteFarRangePattern();
         }
     }
 
@@ -218,7 +290,7 @@ public class ProvidenceAI : EnemyBase
 
     private void ExecuteFarRangePattern()
     {
-            ExecuteTeleportSlash();
+        ExecuteTeleportSlash();
     }
 
     // ==========================================
@@ -227,7 +299,11 @@ public class ProvidenceAI : EnemyBase
     private void ExecuteNormalSlash()
     {
         m_LastAttackName = "ShootZ1";
-        m_SlashCount++;
+        if (!m_IsPhase3)
+        {
+            m_SlashCount++;
+        }
+
         StartAction("ShootZ1");
     }
 
@@ -373,7 +449,9 @@ public class ProvidenceAI : EnemyBase
 
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = true;
         transform.position = new Vector2(Player.position.x, Player.position.y + 2.5f);
-        if (m_Animator != null) m_Animator.Play("ShootZ2");
+
+        string clipName = m_IsPhase3 ? "3ShootZ2" : "ShootZ2";
+        if (m_Animator != null) m_Animator.Play(clipName, -1, 0f);
 
         float targetY = Player.position.y;
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(Player.position.x, transform.position.y), Vector2.down, 20f, m_GroundLayer);
@@ -391,6 +469,8 @@ public class ProvidenceAI : EnemyBase
             yield return null;
         }
         transform.position = targetPos;
+
+        FinishAction();
     }
 
     public void PerformSlash()
@@ -422,7 +502,19 @@ public class ProvidenceAI : EnemyBase
         m_Rigidbody.linearVelocity = Vector2.zero;
         m_SlashCooldownTimer = m_SlashCooldown;
         m_ActionFailsafeTimer = k_MaxActionTime;
-        if (m_Animator != null) m_Animator.Play(clipName);
+
+        string actualClipName = clipName;
+
+        if (m_IsPhase3)
+        {
+            if (clipName == "ShootZ1") actualClipName = "3ShootZ1";
+            else if (clipName == "ShootZ2") actualClipName = "3ShootZ2";
+        }
+
+        if (m_Animator != null)
+        {
+            m_Animator.Play(actualClipName);
+        }
     }
 
     private void ApplyMovement()
@@ -487,10 +579,15 @@ public class ProvidenceAI : EnemyBase
         if (m_TrailRenderer != null) m_TrailRenderer.emitting = false;
         m_Rigidbody.bodyType = RigidbodyType2D.Dynamic;
 
+        // 💡 [핵심 추가] 보스가 죽으면 분신도 같이 퇴장
+        if (m_SpawnedUmbra != null)
+        {
+            m_SpawnedUmbra.DeactivateUmbra();
+        }
+
         if (m_Animator != null) m_Animator.Play("Death");
         if (BossBattleController.Instance != null) BossBattleController.Instance.OnBossDead();
     }
-
     public void DeathComplete() { gameObject.SetActive(false); }
 
     private void UpdateTimers()

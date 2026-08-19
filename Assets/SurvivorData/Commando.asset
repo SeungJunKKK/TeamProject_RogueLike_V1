@@ -55,7 +55,7 @@ MonoBehaviour:
       A strengthened skill unlocked by acquiring the Ancient
       Scepter. The sound effects are altered, and the number of attacks is increased.'
     SkillIcon: {fileID: 21300000, guid: 3bc20965ad354444c917cc8f30267e51, type: 3}
-  BaseMaxHealth: 110
+  BaseMaxHealth: 500
   BaseHealthRegen: 0.6
   BaseDamage: 12
   BaseArmor: 0

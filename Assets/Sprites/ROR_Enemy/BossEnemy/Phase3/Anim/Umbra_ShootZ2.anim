@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 3ShootZ2
+  m_Name: Umbra_ShootZ2
   serializedVersion: 8
   m_Legacy: 0
   m_Compressed: 0
@@ -141,7 +141,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1.25
-    functionName: PerformSlash
+    functionName: PerformUmbraSlash
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
