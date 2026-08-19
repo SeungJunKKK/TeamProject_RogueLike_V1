@@ -187,6 +187,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - Shared
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad78c4ac5173c8a43a34e4d30574c2c9
+    m_Address: BlueWurmAttack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aeeb0a3e923fc184f8270d8633dbaa0e
     m_Address: SFX_Wisp_Hit
     m_ReadOnly: 0

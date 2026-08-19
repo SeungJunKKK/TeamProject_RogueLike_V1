@@ -61,7 +61,9 @@ public class BlueGildedWurm : GildedWurmBase
 
         for (int burst = 0; burst < m_BurstCount; burst++)
         {
-            // 💡 발사 순간마다 m_Player 방향으로 재조준
+            PlayAddressableSFX(m_Data.AttackSoundAddress);
+
+            // 발사 순간마다 m_Player 방향으로 재조준
             Vector2 targetDir = (m_Player != null) ? ((Vector2)(m_Player.position - (m_ProjectileSpawnPoint != null ? m_ProjectileSpawnPoint.position : transform.position))).normalized : Vector2.left;
 
             FireSpreadBullets(targetDir);

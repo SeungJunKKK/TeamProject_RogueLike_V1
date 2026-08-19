@@ -191,6 +191,7 @@ public class RedGildedWurm : GildedWurmBase
 
         if (m_LaserObject != null && m_MouthPoint != null)
         {
+            // 💡 애니메이션 켜기
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
@@ -199,19 +200,17 @@ public class RedGildedWurm : GildedWurmBase
 
             m_LaserObject.SetActive(true);
 
-            // 💡 1. 빔의 회전각 계산
+            // 💡 빔의 최초 각도 계산
             Vector2 startPos = m_MouthPoint.position;
             Vector2 initialDirection = ((Vector2)m_Player.position - startPos).normalized;
 
             float initialAngle = Mathf.Atan2(initialDirection.y, initialDirection.x) * Mathf.Rad2Deg;
             m_CurrentLaserAngle = initialAngle + m_LaserSpriteRotationOffset;
 
-            // 💡 2. 빔의 길이(Scale Y) 절반만큼 빔이 바라보는 방향의 '반대쪽'으로 밀어주어 입 위치가 머리가 되게 보정
-            float beamLength = m_LaserObject.transform.localScale.y; // 스케일 Y값 기준
-            Vector3 offset = (Quaternion.Euler(0f, 0f, initialAngle) * Vector3.right) * (beamLength * 0.5f);
-
-            m_LaserObject.transform.position = startPos - (Vector2)offset;
+            // 💡 2D 방식 완벽 위치 및 회전 적용
             m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
+            float beamLength = m_LaserObject.transform.localScale.y; // 주의: 레이저 이미지가 가로로 길면 y 대신 x로 변경!
+            m_LaserObject.transform.position = startPos + (Vector2)(m_LaserObject.transform.up * (beamLength * 0.5f));
         }
 
         float elapsed = 0f;
@@ -229,6 +228,7 @@ public class RedGildedWurm : GildedWurmBase
 
         if (m_LaserObject != null)
         {
+            // 💡 애니메이션 끄기
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
@@ -243,6 +243,7 @@ public class RedGildedWurm : GildedWurmBase
 
         Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
     }
+
 
     // =========================================================
     // Laser Tracking (위치 및 회전 추적 전용)
@@ -261,6 +262,7 @@ public class RedGildedWurm : GildedWurmBase
         if (directionToPlayer.sqrMagnitude <= 0.001f)
             return;
 
+        // 💡 부드러운 회전 추적 알고리즘
         float targetAngle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
         targetAngle += m_LaserSpriteRotationOffset;
 
@@ -270,13 +272,10 @@ public class RedGildedWurm : GildedWurmBase
             m_LaserRotationSpeed * Time.deltaTime
         );
 
-        // 💡 회전각에 맞춰 빔의 중심 위치를 입 위치에서 뒤로 반칸 밀어줌 (머리가 입에 딱 고정되도록)
-        float currentRealAngle = m_CurrentLaserAngle - m_LaserSpriteRotationOffset;
-        float beamLength = m_LaserObject.transform.localScale.y;
-        Vector3 offset = (Quaternion.Euler(0f, 0f, currentRealAngle) * Vector3.right) * (beamLength * 0.5f);
-
-        m_LaserObject.transform.position = startPos - (Vector2)offset;
+        // 💡 2D 방식 완벽 위치 및 회전 적용
         m_LaserObject.transform.rotation = Quaternion.Euler(0f, 0f, m_CurrentLaserAngle);
+        float beamLength = m_LaserObject.transform.localScale.y; // 주의: 레이저 이미지가 가로로 길면 y 대신 x로 변경!
+        m_LaserObject.transform.position = startPos + (Vector2)(m_LaserObject.transform.up * (beamLength * 0.5f));
     }
 
 
