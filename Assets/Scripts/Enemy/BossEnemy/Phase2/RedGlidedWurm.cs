@@ -215,7 +215,6 @@ public class RedGildedWurm : GildedWurmBase
             Animator laserAnimator = m_LaserObject.GetComponent<Animator>();
             if (laserAnimator != null)
             {
-                // 💡 [수정됨] Animator에 'isAttacking' 파라미터가 진짜로 있는지 꼼꼼하게 검사 후 실행 (빨간 줄 에러 완벽 차단!)
                 bool hasParameter = false;
                 foreach (AnimatorControllerParameter param in laserAnimator.parameters)
                 {
@@ -287,7 +286,7 @@ public class RedGildedWurm : GildedWurmBase
         m_IsAttacking = false;
         m_CurrentCooldown = m_AttackCooldown;
 
-        Debug.Log("🔴 빨간 웜: 레이저 공격 종료");
+        Debug.Log("빨간 웜: 레이저 공격 종료");
     }
 
 

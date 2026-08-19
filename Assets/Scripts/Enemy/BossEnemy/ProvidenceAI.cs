@@ -136,7 +136,6 @@ public class ProvidenceAI : EnemyBase
         ChangeCombatState(EProvidenceCombatState.Approach);
         ChangeState(EProvidenceState.Combat);
 
-        // 기존 분신(Umbra) 소환 로직 유지...
         if (m_UmbraPrefab != null && m_SpawnedUmbra == null)
         {
             m_SpawnedUmbra = Instantiate(m_UmbraPrefab, transform.position, Quaternion.identity);
@@ -146,7 +145,6 @@ public class ProvidenceAI : EnemyBase
             m_SpawnedUmbra.ActivateUmbra(Player, 0.8f);
         }
 
-        // 💡 [핵심 추가] 성소 수호자 2마리 소환 (본체 기준 좌우 배치)
         if (m_SanctuaryGuardPrefab != null)
         {
             SpawnSanctuaryGuards();
@@ -249,7 +247,6 @@ public class ProvidenceAI : EnemyBase
     {
         if (m_SlashCooldownTimer > 0f) return;
 
-        // 💡 페이즈 3이 아닐 때만 기존처럼 X1 카운트 체크 및 발동
         if (!m_IsPhase3 && m_SlashCount >= k_MaxSlashBeforeX1)
         {
             ExecuteX1Attack();
@@ -268,7 +265,7 @@ public class ProvidenceAI : EnemyBase
 
     private void ExecuteNearRangePattern()
     {
-        // 💡 랜덤 풀에서 X1을 제거하고 Z1(일반 베기), Z2(순간이동 베기)만 남김
+
         float weightZ1 = (m_LastAttackName == "ShootZ1") ? 20f : 60f;
         float weightZ2 = (m_LastAttackName == "ShootZ2") ? 20f : 40f;
 
@@ -359,7 +356,6 @@ public class ProvidenceAI : EnemyBase
             Vector2 checkSize = new Vector2(m_ExplosionStep, 3f);
             Collider2D playerHit = Physics2D.OverlapBox(checkCenter, checkSize, 0f, m_TargetLayer);
 
-            // 💡 초기 기획대로 플레이어를 만나면 BigWave(큰 기둥)를 생성하고 루프를 즉시 종료
             if (playerHit != null)
             {
                 SpawnExplosionEffect(currentX, groundY, waveDirection, true);

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BossData
   m_EditorClassIdentifier: Assembly-CSharp::GroundEnemyDataSO
   EnemyName: Boss
-  BaseHp: 3000
+  BaseHp: 10000
   HpPerLevel: 14
   BaseDamage: 1
   BaseGold: 10
