@@ -8,8 +8,12 @@ public class ShieldSlamState : IState
     private float m_Timer;
     private bool m_HasSlammed;
 
-    // 히트박스 설정
+    private float m_ActualDuration;
+
+    private const float SlamTriggerRatio = 0.3f;
+
     private readonly Vector2 m_HitboxOffset = new Vector2(0f, 0.5f);
+    private readonly Vector2 m_HitboxSize = new Vector2(2.5f, 2.0f);
 
     public ShieldSlamState(PlayerController player, float duration)
     {
@@ -22,34 +26,33 @@ public class ShieldSlamState : IState
         m_Timer = 0f;
         m_HasSlammed = false;
 
-        Debug.Log($"<color=magenta>[디버그] AttackSpeed: {m_Player.Stats.AttackSpeed.Value} / Duration: {m_Duration} / Anim null? {m_Player.Anim == null}</color>");
-
-        if (m_Player.Rb != null)
-        {
-            m_Player.Rb.linearVelocity = new Vector2(0f, m_Player.Rb.linearVelocity.y);
-        }
+        float currentAtkSpeed = m_Player.Stats.AttackSpeed.Value;
+        m_ActualDuration = m_Duration / currentAtkSpeed;
 
         if (m_Player.Anim != null)
         {
-            m_Player.Anim.speed = m_Player.Stats.AttackSpeed.Value;
+       
+            m_Player.Anim.speed = currentAtkSpeed;
             m_Player.Anim.Play("X_Shield_Slam");
-
         }
-
-        Debug.Log("<color=cyan>[Player] 방패 밀치기(Shield Slam) 진입</color>");
     }
 
     public void Update()
     {
         m_Timer += Time.deltaTime;
 
-        if (!m_HasSlammed && m_Timer >= m_Duration * 0.3f)
+        if (m_Player.Rb != null)
+        {
+            m_Player.Rb.linearVelocity = new Vector2(0f, m_Player.Rb.linearVelocity.y);
+        }
+
+        if (!m_HasSlammed && m_Timer >= m_ActualDuration * SlamTriggerRatio)
         {
             m_HasSlammed = true;
             ExecuteSlam();
         }
 
-        if (m_Timer >= m_Duration)
+        if (m_Timer >= m_ActualDuration)
         {
             m_Player.ChangeState(new PlayerIdleState(m_Player));
         }
@@ -67,12 +70,10 @@ public class ShieldSlamState : IState
     {
         Vector2 slamDirection = m_Player.IsFacingRight ? Vector2.right : Vector2.left;
 
-        // 방패 밀치기 광역 판정 (등 뒤와 머리 위까지 커버하는 OverlapBoxAll)
         Vector2 center = (Vector2)m_Player.transform.position + m_HitboxOffset;
-        Vector2 boxSize = new Vector2(2.5f, 2.0f);
 
         LayerMask enemyLayer = LayerMask.GetMask("Enemy", "FlyingEnemy");
-        Collider2D[] hits = Physics2D.OverlapBoxAll(center, boxSize, 0f, enemyLayer);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, m_HitboxSize, 0f, enemyLayer);
 
         bool hitSomething = false;
         bool isCrit = m_Player.Stats.RollCriticalHit();

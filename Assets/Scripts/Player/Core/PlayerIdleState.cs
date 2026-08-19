@@ -1,5 +1,4 @@
-﻿using UnityEditor.U2D.Aseprite;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerIdleState : IState
 {
