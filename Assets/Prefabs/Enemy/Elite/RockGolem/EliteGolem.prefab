@@ -214,9 +214,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ee68f29ff694e4c8d813b75314c483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockGolemAI
-  m_Data: {fileID: 11400000, guid: 50378d2b606abae4ba9b6a433f33cab8, type: 2}
+  m_Data: {fileID: 11400000, guid: fa7b79bf96d557e4cb8b6718263a631d, type: 2}
   m_AudioSource: {fileID: -4967977637588585275}
-  m_MaxHearingDistance: 15
+  m_MaxHearingDistance: 50
   m_HpBar: {fileID: 0}
   m_ShockwaveSpawnPos: {fileID: 3614119596547283869}
   m_ShockwavePrefab: {fileID: 704635347304682347, guid: 53bffad15c546894381af959b091c1d7, type: 3}

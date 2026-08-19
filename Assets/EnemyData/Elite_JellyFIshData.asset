@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afc300639691e8c4b8a93c523d658b24, type: 3}
+  m_Name: Elite_JellyFIshData
+  m_EditorClassIdentifier: Assembly-CSharp::FlyingEnemyDataSO
+  EnemyName: JellyFIsh
+  BaseHp: 2500
+  HpPerLevel: 1000
+  BaseDamage: 20
+  BaseGold: 600
+  BaseExp: 100
+  ExpPerLevel: 50
+  SpawnSoundAddress: 
+  AttackSoundAddress: 
+  HitSoundAddress: SFX_JellyFish_Hit
+  DeathSoundAddress: SFX_JellyFIsh_Death
+  MoveSpeed: 3
+  Acceleration: 6
+  DashRange: 9
+  DashSpeed: 7
+  DashAcceleration: 15
+  AttackRange: 0.5
+  AttackCooldown: 2
+  AttackWindup: 0.5
+  SeparationRadius: 1
+  SeparationStrength: 2

@@ -124,4 +124,5 @@ MonoBehaviour:
   m_KnockbackForce: 10
   m_GroundLayer:
     serializedVersion: 2
-    m_Bits: 16392
+    m_Bits: 16393
+  m_HeightOffset: 0.5

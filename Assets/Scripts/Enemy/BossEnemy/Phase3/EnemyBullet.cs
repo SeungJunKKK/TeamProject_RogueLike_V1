@@ -32,7 +32,7 @@ public class EnemyBullet : MonoBehaviour
             player.TakeDamage(m_Damage);
             Destroy(gameObject);
         }
-        else if (collision.CompareTag("Ground")) // 지면에 닿으면 소멸
+        else if (collision.CompareTag("Ground") || collision.CompareTag("OneWayGround")) // 지면에 닿으면 소멸
         {
             Destroy(gameObject);
         }

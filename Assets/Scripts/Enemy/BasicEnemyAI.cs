@@ -11,39 +11,6 @@ public enum EnemyState
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class BasicEnemyAI : EnemyBase
 {
-    //[Header("Target Setting")]
-    //public Transform Player;
-
-    //[Header("Stats Setting")]
-    //[SerializeField] private float m_BaseDamage = 12f;
-    //protected float m_Damage;
-
-    //[Header("Movement Setting")]
-    //public float MoveSpeed = 3f;
-    //public float Acceleration = 15f;
-    //public float JumpForce = 6f;
-    //public float JumpCooldown = 0.5f;
-    //protected float m_LastJumpTime;
-
-    //[Header("Combat Setting")]
-    //public float AttackRange = 1.5f;
-    //public float AttackWindup = 0.5f;  // 공격 선딜레이
-    //public float AttackCooldown = 2f;  // 공격 쿨타임
-    //[Range(0f, 1f)] public float AttackMoveRatio = 0.3f;
-
-    //[Header("Raycast Sensors (자동 계산)")]
-    //public float GroundRayLength = 1.5f;
-    //public float WallRayLength = 0.2f;
-    //public LayerMask GroundLayer;
-
-    //[Header("Separation Setting")]
-    //public float SeparationRadius = 0.8f;
-    //public float SeparationForce = 2.5f;
-    //public LayerMask EnemyLayer;
-    //private readonly Collider2D[] m_NearbyEnemies = new Collider2D[10];
-    //private const float k_SeparationThreshold = 0.01f;
-    //private const float k_GroundCheckDistance = 0.1f;
-
     [Header("Target Setting")]
     public Transform Player;
     public LayerMask GroundLayer;
