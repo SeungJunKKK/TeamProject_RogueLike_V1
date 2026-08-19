@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 
 public class PlayerClimbState : IState
 {
@@ -24,13 +25,11 @@ public class PlayerClimbState : IState
 
         m_PlayerLayer = m_Player.gameObject.layer;
         m_OneWayGroundLayer = LayerMask.NameToLayer("OneWayGround");
-        //Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, true);
         
         if (m_OneWayGroundLayer != -1)
         {
             Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, true);
         }
-
 
         m_Player.Anim.Play("Climb");
     }
@@ -76,13 +75,17 @@ public class PlayerClimbState : IState
 
     public void Exit()
     {
-        m_Player.Rb.gravityScale = m_OriginalGravity;
-        //Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, false);
+        m_Player.Rb.gravityScale = m_OriginalGravity; 
+        m_Player.Anim.speed = 1f;
 
-        if (m_OneWayGroundLayer != -1)
+        if (m_OneWayGroundLayer != -1) 
         {
             Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayGroundLayer, false);
         }
-        m_Player.Anim.speed = 1f;
     }
 }
+
+
+
+
+

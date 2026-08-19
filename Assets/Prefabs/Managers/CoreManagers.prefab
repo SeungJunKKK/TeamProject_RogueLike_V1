@@ -457,6 +457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   m_TeleportInSound: {fileID: 8300000, guid: 94c9bd113ba4029458e4f5db3f39611a, type: 3}
   SelectedPlayerPrefab: {fileID: 0}
+  RadarPrefab: {fileID: 8610441308493365467, guid: 9e64acb0d2d22fe40a0a6c0466c9ae7e, type: 3}
 --- !u!114 &1271193421356028855
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,7 +31,7 @@ public class RockShockwave : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         m_Collider.isTrigger = true;
-        m_Rigidbody.isKinematic = true;
+        m_Rigidbody.bodyType = RigidbodyType2D.Kinematic;
     }
 
     public void Init(float damage, Vector2 direction, GameObject attacker, bool isElite)
@@ -62,7 +62,7 @@ public class RockShockwave : MonoBehaviour
         Vector2 currentPos = transform.position;
 
         Vector2 forwardRayOrigin = currentPos + Vector2.up * 0.5f;
-        int wallLayer = LayerMask.GetMask("Wall", "Default");
+        int wallLayer = LayerMask.GetMask("Wall");
         RaycastHit2D wallHit = Physics2D.Raycast(forwardRayOrigin, m_Direction, 0.5f, wallLayer);
 
         if (wallHit.collider != null)
@@ -73,8 +73,9 @@ public class RockShockwave : MonoBehaviour
 
         Vector2 nextPos = currentPos + (m_Direction * m_Speed * Time.deltaTime);
         Vector2 downRayOrigin = nextPos + Vector2.up * 1.5f;
-        int groundLayer = LayerMask.GetMask("Ground", "OneWayGround");
-        RaycastHit2D groundHit = Physics2D.Raycast(downRayOrigin, Vector2.down, 3f, groundLayer);
+        // int groundLayer = LayerMask.GetMask("Ground", "OneWayGround");
+        //RaycastHit2D groundHit = Physics2D.Raycast(downRayOrigin, Vector2.down, 3f, groundLayer);
+        RaycastHit2D groundHit = Physics2D.Raycast(downRayOrigin, Vector2.down, 3f, m_GroundLayer);
 
         if (groundHit.collider != null)
         {
@@ -100,7 +101,12 @@ public class RockShockwave : MonoBehaviour
             return;
         }
 
-        if (collision.gameObject == m_Attacker || hitLayer == LayerMask.NameToLayer("Enemy")) return;
+        if (collision.gameObject == m_Attacker ||
+            hitLayer == LayerMask.NameToLayer("Enemy") ||
+            hitLayer == LayerMask.NameToLayer("FlyingEnemy"))
+        {
+            return;
+        }
 
         if (collision.TryGetComponent(out IDamageable target))
         {

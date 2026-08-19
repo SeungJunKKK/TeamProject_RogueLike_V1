@@ -23,7 +23,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable, IPoolable
 
     //[SerializeField] protected float m_BaseExp = 12f;
     //[SerializeField] protected float m_ExpPerLevel = 3f;
-
+     
     protected float m_MaxHp;
     protected float m_CurrentHp;
     protected Rigidbody2D m_Rigidbody;

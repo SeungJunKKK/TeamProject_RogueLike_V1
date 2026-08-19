@@ -343,7 +343,6 @@ public class RockGolemAI : EnemyBase
     {
         if (!m_IsSpawnFinished || m_CurrentState != ERockGolemState.Attack || m_CurrentHp <= 0f) return;
 
-        // 💡 3. 승준 학생이 만들어둔 부모의 'IsElite'를 바로 꺼내서 검사합니다!
         GameObject prefabToFire = (IsElite && m_EliteShockwavePrefab != null) ? m_EliteShockwavePrefab : m_ShockwavePrefab;
 
         if (prefabToFire == null)

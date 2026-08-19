@@ -82,7 +82,7 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
 
         // 상자 오른쪽 앞 바닥 위치 (Y축 오프셋을 낮춤)
         // 맵 구조에 따라 (0.8f, -0.2f) 숫자를 살짝 조절해 보세요.
-        Vector3 dropPosition = transform.position + new Vector3(0.8f, -0.2f, 0f);
+        Vector3 dropPosition = transform.position + new Vector3(0.5f, -0.2f, 0f);
 
         DroppedItem droppedItem = Instantiate(m_DroppedItemPrefab, dropPosition, Quaternion.identity);
         droppedItem.Initialize(drawnItem);
