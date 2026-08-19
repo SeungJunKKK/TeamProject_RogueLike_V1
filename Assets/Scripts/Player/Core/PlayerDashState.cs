@@ -13,6 +13,7 @@ public class PlayerDashState : IState
 
     public void Enter()
     {
+
         m_Player.SpawnDustEffect(m_Player.IsFacingRight, EDustType.Dash);
         m_Player.Anim.Play("Dash");
         m_Player.PlayAddressableSFX(m_Player.Dash_SFXAddress);
@@ -21,12 +22,13 @@ public class PlayerDashState : IState
         m_DashDirection = new Vector2(dirX, 0f);
 
         m_Player.IsInvincible = true;
-        //Debug.Log("시스템: 플레이어 대시 상태 진입. 무적 상태 시작.");
         m_Player.gameObject.layer = LayerMask.NameToLayer("PlayerDodge");
         m_Player.CooldownManager.UseSkill(SkillType.Utility_C);
 
-        m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;
-        m_Player.Rb.gravityScale = 0f;
+        //m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;
+        //m_Player.Rb.gravityScale = 0f;
+
+        m_Player.Rb.linearVelocity = new Vector2(m_DashDirection.x * m_Player.DashSpeed, m_Player.Rb.linearVelocity.y);
     }
 
     public void Update()
@@ -45,14 +47,37 @@ public class PlayerDashState : IState
 
         m_DashTimer -= Time.deltaTime;
 
-        m_Player.Rb.linearVelocity = m_DashDirection * m_Player.DashSpeed;
+        int wallLayer = LayerMask.GetMask("Default", "Ground", "Wall");
+
+        Vector2 rayStart = (Vector2)m_Player.transform.position + new Vector2(0f, 0.25f);
+
+        bool isWallAhead = Physics2D.Raycast(rayStart, m_DashDirection, 0.3f, wallLayer);
+
+        Debug.DrawRay(rayStart, m_DashDirection * 0.3f, Color.red);
+
+        if (isWallAhead)
+        {
+            m_Player.Rb.linearVelocity = new Vector2(0f, m_Player.Rb.linearVelocity.y);
+        }
+        else
+        {
+            m_Player.Rb.linearVelocity = new Vector2(m_DashDirection.x * m_Player.DashSpeed, m_Player.Rb.linearVelocity.y);
+        }
 
         if (m_DashTimer <= 0)
         {
-            if (m_Player.MovementInput.x != 0)
+            if (Mathf.Abs(m_Player.Rb.linearVelocity.y) > 0.1f)
+            {
+                m_Player.ChangeState(new PlayerFallState(m_Player));
+            }
+            else if (m_Player.MovementInput.x != 0)
+            {
                 m_Player.ChangeState(new PlayerWalkState(m_Player));
+            }
             else
+            {
                 m_Player.ChangeState(new PlayerIdleState(m_Player));
+            }
         }
     }
 
@@ -60,8 +85,6 @@ public class PlayerDashState : IState
     {
         m_Player.IsInvincible = false;
         m_Player.gameObject.layer = m_Player.OriginalLayer;
-       // Debug.Log("시스템: 플레이어 대시 상태 종료. 무적 상태 해제.");
-        m_Player.Rb.gravityScale = 3f;
-        m_Player.Rb.linearVelocity = Vector2.zero;
+        m_Player.Rb.linearVelocity = new Vector2(0f, m_Player.Rb.linearVelocity.y);
     }
 }

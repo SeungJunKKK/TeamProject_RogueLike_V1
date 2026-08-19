@@ -390,7 +390,7 @@ public class PlayerController : MonoBehaviour,IDamageable
     /// </summary>
     public void TakeDamage(DamageInfo info)
     {
-        if (m_CurrentState is PlayerDeathState)
+        if (m_CurrentState is PlayerDeathState || IsInvincible)
         {
             return;
         }
@@ -407,12 +407,15 @@ public class PlayerController : MonoBehaviour,IDamageable
             {
                 Debug.Log($"<color=cyan>[방어 성공]</color> 방패로 데미지 {info.Amount:F1}를 막아냈습니다!");
 
+
                 EventBus.Publish<PlayerBlockSuccessEvent>(new PlayerBlockSuccessEvent
                 {
                     BlockedAmount = info.Amount,
-                    HitPoint = transform.position + new Vector3(0, 1f, 0) 
+                    HitPoint = transform.position + new Vector3(0, 1f, 0)
                 });
-                // PlayAddressableSFX(m_ShieldBlockSound);
+                
+                OnBlockSuccess(info);   //자식 클래스가 가져가서 사용 
+
                 return; 
             }
         }
@@ -446,6 +449,14 @@ public class PlayerController : MonoBehaviour,IDamageable
                 Die();
             }
         }
+    }
+
+    /// <summary>
+    /// 방어 성공 시 호출됩니다. 자식 클래스(Enforcer)에서 오버라이드하여 사운드나 이펙트를 추가할 수 있습니다.
+    /// </summary>
+    protected virtual void OnBlockSuccess(DamageInfo info)
+    {
+        // 기본 플레이어는 아무것도 안 해도 됩니다.
     }
 
     public void TakeDamage(float incomingDamage)

@@ -79,6 +79,7 @@ public struct ItemPickedUpEvent
     public EStatType TargetStat;  // 예: StatType.AttackSpeed
     public StatModifier Modifier; // 예: (0.15f, PercentAdd) 
 }
+
 public struct WeaponFiredEvent
 {
     public string SoundAddress;  // 예: "Commando_Shoot_SFX"
@@ -119,6 +120,13 @@ public struct InteractableInRangeEvent
 
 public struct InteractableOutOfRangeEvent { }
 
+public struct ItemPickupTextPopupEvent // 아이템 획득 시 텍스트 팝업 이벤트
+{
+    public Vector3 WorldPosition;   // 텍스트가 생성될 월드 좌표
+    public string ItemName;         // 아이템 이름
+    public string ItemDescription;  // 아이템 설명
+    public Color ItemColor;         // 아이템 등급 색상
+}
 
 public struct PlayerBlockSuccessEvent
 {

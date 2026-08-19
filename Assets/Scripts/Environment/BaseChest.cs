@@ -10,6 +10,7 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
     [Header("Item Drop Settings")]
     [Tooltip("이 상자에서 나올 수 있는 아이템 데이터들")]
     [SerializeField] protected ItemData[] m_PossibleItems;
+    [SerializeField] protected DroppedItem m_DroppedItemPrefab;
 
     protected Animator m_Animator;
 
@@ -68,7 +69,23 @@ public abstract class BaseChest : MonoBehaviour, IInteractable
     {
         m_Animator.SetTrigger("Open");
         PlayOpenSound();
-        GiveRandomItem(interactor);
+        DropRandomItem();
+    }
+
+    private void DropRandomItem()
+    {
+        if (m_PossibleItems == null || m_PossibleItems.Length == 0) return;
+        if (m_DroppedItemPrefab == null) return;
+
+        int randomIndex = Random.Range(0, m_PossibleItems.Length);
+        ItemData drawnItem = m_PossibleItems[randomIndex];
+
+        // 상자 오른쪽 앞 바닥 위치 (Y축 오프셋을 낮춤)
+        // 맵 구조에 따라 (0.8f, -0.2f) 숫자를 살짝 조절해 보세요.
+        Vector3 dropPosition = transform.position + new Vector3(0.8f, -0.2f, 0f);
+
+        DroppedItem droppedItem = Instantiate(m_DroppedItemPrefab, dropPosition, Quaternion.identity);
+        droppedItem.Initialize(drawnItem);
     }
 
     private void GiveRandomItem(GameObject interactor)

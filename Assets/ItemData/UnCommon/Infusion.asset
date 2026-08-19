@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46f3348a4d4452541a9dcbc747a74586, type: 3}
+  m_Name: Infusion
+  m_EditorClassIdentifier: Assembly-CSharp::Item_Infusion
+  itemName: Infusion
+  description: Killing an enemy increases your health permanently by 1.
+  itemIcon: {fileID: -3563363799746650301, guid: 83d3ab1f195546c498c0e98d5af57873, type: 3}
+  tier: 1
+  isStackable: 1
+  maxStack: 0
+  cooldown: 0

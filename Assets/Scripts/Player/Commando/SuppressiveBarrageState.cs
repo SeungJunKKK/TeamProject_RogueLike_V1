@@ -32,8 +32,6 @@ namespace Player.Commando
 
         protected override void ExecuteShoot()
         {
-            
-
             m_CurrentShotCount++;
             Vector2 shootDirection;
             Vector2 shootOrigin;
@@ -67,16 +65,25 @@ namespace Player.Commando
                 }
             }
 
-            float attackRange = 40f; 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange);
-            bool hitSomething = false;
+            float attackRange = 30f;
+            int hitLayerMask = LayerMask.GetMask("Enemy", "FlyingEnemy", "Ground", "OneWayGround", "Wall", "Default");
+            RaycastHit2D[] hits = Physics2D.RaycastAll(shootOrigin, shootDirection, attackRange, hitLayerMask);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
+            bool hitSomething = false;
             bool isCrit = m_Player.Stats.RollCriticalHit();
-            float baseDamage = m_Player.Stats.Damage.Value * 0.6f; 
+            float baseDamage = m_Player.Stats.Damage.Value * 0.6f; // 데미지 배수
             float finalDamage = isCrit ? baseDamage * m_Player.Stats.CritDamage.Value : baseDamage;
 
             foreach (RaycastHit2D hit in hits)
             {
+                int hitLayer = hit.collider.gameObject.layer;
+
+                if (hitLayer == LayerMask.NameToLayer("Ground") || hitLayer == LayerMask.NameToLayer("Wall") ||
+                    hitLayer == LayerMask.NameToLayer("Default") || hitLayer == LayerMask.NameToLayer("OneWayGround"))
+                {
+                    break;
+                }
 
                 IDamageable damageable = hit.collider.GetComponent<IDamageable>();
                 if (damageable != null)
@@ -86,7 +93,7 @@ namespace Player.Commando
                         Amount = finalDamage,
                         HitPoint = hit.point,
                         HitDirection = shootDirection,
-                        KnockbackForce = 0.5f,
+                        KnockbackForce = 0.5f, // 넉백 수치
                         Attacker = m_Player.gameObject,
                         IsCrit = isCrit,
                         CanProc = true
@@ -99,20 +106,18 @@ namespace Player.Commando
                     {
                         m_Player.OnEnemyHit(hit.collider.gameObject, finalDamage);
                     }
+
                 }
             }
-
             if (hitSomething)
-            {
-                m_Player.TriggerHitFeedback(shootDirection, 0.7f, 0f);
-            }
-            else
             {
                 m_Player.TriggerHitFeedback(shootDirection, 0.4f, 0f);
             }
-
-            m_Player.PlayAddressableSFX(m_Player.VStrengthened_SFXAddress);
-
+            else
+            {
+                m_Player.TriggerHitFeedback(shootDirection, 0.2f, 0f);
+            }
+            m_Player.PlayAddressableSFX(m_Player.V_SFXAddress);
         }
     }
 }

@@ -70,4 +70,11 @@ public class EnforcerController : PlayerController
             shotgunState.FireShotgun();
         }
     }
+    protected override void OnBlockSuccess(DamageInfo info)
+    {
+        //base.OnBlockSuccess(info);
+
+        PlayAddressableSFX(X_SFXAddress);
+    }
+
 }
