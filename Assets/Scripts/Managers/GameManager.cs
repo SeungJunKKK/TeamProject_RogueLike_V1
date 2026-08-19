@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
                 GameObject spawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
                 CurrentPlayer.transform.position = spawnPoint != null ? spawnPoint.transform.position : Vector3.zero;
 
-                RadarAllocator radar = CurrentPlayer.GetComponentInChildren<RadarAllocator>();
+                RadarAllocator radar = FindAnyObjectByType<RadarAllocator>();
                 if (radar != null)
                 {
                     Teleporter newTeleporter = FindAnyObjectByType<Teleporter>();

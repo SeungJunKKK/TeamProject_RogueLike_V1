@@ -5,7 +5,7 @@ public class RadarAllocator : MonoBehaviour
 {
     [Header("Targeting Settings")]
     [Tooltip("플레이어 주변을 도는 레이더의 반지름")]
-    [SerializeField] private float m_Radius = 0.5f;
+    [SerializeField] private float m_Radius = 1.5f;
     [Tooltip("타겟을 갱신하는 주기 (최적화용)")]
     [SerializeField] private float m_SearchInterval = 0.2f;
 
@@ -46,18 +46,21 @@ public class RadarAllocator : MonoBehaviour
 
         m_MainCamera = Camera.main;
 
-        transform.SetParent(m_Player);
-        transform.localPosition = Vector3.zero;
+        //transform.SetParent(m_Player);
+        //transform.localPosition = Vector3.zero;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnTeleporterStateChanged(TeleporterStateChangedEvent e)
     {
-       
-        if (e.State == ETeleporterState.Charging || e.State == ETeleporterState.WaitingForClear)
+        if (e.State == ETeleporterState.Charging ||
+            e.State == ETeleporterState.WaitingForClear||
+            e.State== ETeleporterState.Cleared)
         {
             m_IsActive = true;
             m_SpriteRenderer.enabled = true;
-            m_SearchTimer = m_SearchInterval; // 즉시 탐색
+            m_SearchTimer = m_SearchInterval; 
         }
         else 
         {
@@ -81,9 +84,19 @@ public class RadarAllocator : MonoBehaviour
 
     private void Update()
     {
-        if (!m_IsActive || m_Player == null) return;
+        if (m_Player == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (!m_IsActive)
+        {
+            return;
+        }
 
         m_SearchTimer += Time.deltaTime;
+
         if (m_SearchTimer >= m_SearchInterval)
         {
             m_SearchTimer = 0f;
@@ -98,19 +111,46 @@ public class RadarAllocator : MonoBehaviour
 
     private void FindNearestTarget()
     {
-        if (EnemySpawner.Instance == null) return;
+        if (EnemySpawner.Instance == null)
+        {
+            return;
+        }
+
         HashSet<GameObject> activeEnemies = EnemySpawner.Instance.GetActiveEnemies();
+
+        if (m_MainCamera == null)
+        {
+            m_MainCamera = Camera.main;
+            if (m_MainCamera == null)
+            {
+                return;
+            }
+        }
 
         if (activeEnemies.Count == 0)
         {
-            m_CurrentTarget = m_Teleporter;
-            m_SpriteRenderer.sprite = m_TeleporterArrowSprite;
+            if (m_Teleporter == null)
+            {
+                Teleporter stageTeleporter = FindAnyObjectByType<Teleporter>();
+                if (stageTeleporter != null)
+                {
+                    m_Teleporter = stageTeleporter.transform;
+                }
+            }
 
+            m_CurrentTarget = m_Teleporter;
+
+            if (m_CurrentTarget == null)
+            {
+                m_SpriteRenderer.enabled = false;
+                return;
+            }
+
+            m_SpriteRenderer.sprite = m_TeleporterArrowSprite;
             m_SpriteRenderer.enabled = true;
 
             return;
         }
-
         m_SpriteRenderer.sprite = m_MonsterArrowSprite;
 
         float minDistanceSqr = Mathf.Infinity;
@@ -140,6 +180,8 @@ public class RadarAllocator : MonoBehaviour
             }
         }
 
+        m_CurrentTarget = nearestOffScreenMonster;
+
         m_SpriteRenderer.enabled = (m_CurrentTarget != null);
     }
     private void UpdateRadarTransform()
@@ -155,6 +197,7 @@ public class RadarAllocator : MonoBehaviour
     public void SetTeleporter(Transform newTeleporter)
     {
         m_Teleporter = newTeleporter;
-    }
 
+        DeactivateRadar();
+    }
 }

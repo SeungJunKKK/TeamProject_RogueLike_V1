@@ -4,15 +4,50 @@ public class PlayerFallState : IState
 {
     private PlayerController m_Player;
 
+    private int m_PlayerLayer;
+    private int m_OneWayLayer;
+    private bool m_IsPassingThrough;
+
     public PlayerFallState(PlayerController player) { this.m_Player = player; }
 
     public void Enter()
     {
         m_Player.Anim.Play("Jump");
+
+        m_PlayerLayer = m_Player.gameObject.layer;
+        m_OneWayLayer = LayerMask.NameToLayer("OneWayGround");
+
+        Collider2D playerCol = m_Player.GetComponent<Collider2D>();
+        if (playerCol != null && m_OneWayLayer != -1)
+        {
+            int layerMask = 1 << m_OneWayLayer;
+            Collider2D hit = Physics2D.OverlapBox(playerCol.bounds.center, playerCol.bounds.size, 0f, layerMask);
+
+            if (hit != null)
+            {
+                m_IsPassingThrough = true;
+                Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayLayer, true);
+            }
+        }
+
     }
 
     public void Update()
     {
+        if (m_IsPassingThrough)
+        {
+            Collider2D playerCol = m_Player.GetComponent<Collider2D>();
+            int layerMask = 1 << m_OneWayLayer;
+            Collider2D hit = Physics2D.OverlapBox(playerCol.bounds.center, playerCol.bounds.size, 0f, layerMask);
+
+            if (hit == null) // 겹친 곳 없이 완전히 빠져나왔다면
+            {
+                // 통과 모드 OFF, 다시 발판을 밟을 수 있게 충돌 복구!
+                m_IsPassingThrough = false;
+                Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayLayer, false);
+            }
+        }
+
         m_Player.Rb.linearVelocity = new Vector2(m_Player.MovementInput.x * m_Player.Stats.MoveSpeed.Value, m_Player.Rb.linearVelocity.y);
 
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -27,9 +62,12 @@ public class PlayerFallState : IState
             return;
         }
 
-        //바닥 체크 
-        int groundLayer = LayerMask.GetMask("Default", "Ground", "OneWayGround", "Wall");
-        //bool isGrounded = Physics2D.Raycast(m_Player.FeetPos.position, Vector2.down, 0.15f, groundLayer);
+        int groundLayer = LayerMask.GetMask("Default", "Ground", "Wall");
+        if (!m_IsPassingThrough)
+        {
+            groundLayer |= (1 << m_OneWayLayer);
+        }
+
 
         Vector2 boxSize = new Vector2(0.4f, 0.1f);
         RaycastHit2D groundHit = Physics2D.BoxCast(m_Player.FeetPos.position, boxSize, 0f, Vector2.down, 0.2f, groundLayer);
@@ -75,5 +113,12 @@ public class PlayerFallState : IState
         }
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        if (m_IsPassingThrough && m_OneWayLayer != -1)
+        {
+            Physics2D.IgnoreLayerCollision(m_PlayerLayer, m_OneWayLayer, false);
+            m_IsPassingThrough = false;
+        }
+    }
 }
